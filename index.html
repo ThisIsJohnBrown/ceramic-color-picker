@@ -1002,12 +1002,11 @@
             }
         }
 
-        // Hardcoded Slack configuration
-        const slackWebhookUrl = 'https://hooks.slack.com/services/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';
+        // Slack bot configuration
         const slackMentionUser = '@thisisjohnbrown';
+        const API_BASE_URL = window.location.origin; // Use same origin for API calls
 
-
-        // Send to Slack function
+        // Send to Slack function using the new bot API
         async function sendToSlack() {
             // Show loading state
             const slackBtn = document.querySelector('.slack-btn');
@@ -1016,78 +1015,41 @@
             slackBtn.disabled = true;
 
             try {
-                console.log('🚀 Starting Slack send process...');
+                console.log('🚀 Starting Slack bot send process...');
                 
-                // Generate shareable URL
-                const shareUrl = generateShareUrl();
-                
-                // Create a simple text message with clickable link
-                const message = {
-                    text: `🎨 New ceramic pattern design! ${slackMentionUser} Check out this color combination:\n\n*Pattern:* ${currentPattern.replace('.svg', '')}\n*Background Color:* ${currentBgColorName} (${currentBgColor})\n*Pattern Color:* ${currentPatternColorName} (${currentPatternColor})\n\n🔗 <${shareUrl}|View this combination>`
+                // Prepare the data for the API
+                const requestData = {
+                    pattern: currentPattern,
+                    bgColor: currentBgColor,
+                    patternColor: currentPatternColor,
+                    bgColorName: currentBgColorName,
+                    patternColorName: currentPatternColorName,
+                    channel: '#color-requests' // Default channel
                 };
 
-                console.log('📝 Message payload created');
-                console.log('📝 Message text length:', message.text.length);
+                console.log('📝 Sending data to bot API:', requestData);
                 
-                // Try direct fetch first
-                try {
-                    const response = await fetch(slackWebhookUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(message)
-                    });
-                    
-                    if (response.ok) {
-                        console.log('✅ Message sent successfully');
-                        alert('Successfully sent to Slack! Check your #color-requests channel.');
-                    } else {
-                        console.error('❌ Slack webhook error:', response.status, response.statusText);
-                        throw new Error(`Slack webhook returned ${response.status}: ${response.statusText}`);
-                    }
-                    
-                } catch (fetchError) {
-                    console.error('❌ Direct fetch failed:', fetchError);
-                    console.log('🔄 Trying alternative method...');
-                    
-                    // Alternative: Use a simple form submission (CORS workaround)
-                    try {
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.action = slackWebhookUrl;
-                        form.target = '_blank'; // Open in new tab to avoid disrupting user experience
-                        form.style.display = 'none';
-                        
-                        const payloadInput = document.createElement('input');
-                        payloadInput.type = 'hidden';
-                        payloadInput.name = 'payload';
-                        payloadInput.value = JSON.stringify(message);
-                        
-                        form.appendChild(payloadInput);
-                        document.body.appendChild(form);
-                        
-                        // Submit the form
-                        form.submit();
-                        
-                        // Clean up immediately
-                        setTimeout(() => {
-                            if (document.body.contains(form)) {
-                                document.body.removeChild(form);
-                            }
-                        }, 100);
-                        
-                        console.log('✅ Message sent via form submission (CORS workaround)');
-                        alert('Successfully sent to Slack! Check your #color-requests channel.');
-                        
-                    } catch (altError) {
-                        console.error('❌ Alternative method also failed:', altError);
-                        throw new Error('Both methods failed: ' + fetchError.message);
-                    }
+                // Send to our bot API
+                const response = await fetch(`${API_BASE_URL}/api/send-to-slack`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    console.log('✅ Pattern sent successfully via bot:', result);
+                    // Success - no alert needed
+                } else {
+                    console.error('❌ Bot API error:', result);
+                    throw new Error(result.error || 'Failed to send to Slack');
                 }
 
             } catch (error) {
-                console.error('💥 Error sending to Slack:', error);
+                console.error('💥 Error sending to Slack via bot:', error);
                 alert('Error sending to Slack: ' + error.message);
             } finally {
                 // Reset button state
