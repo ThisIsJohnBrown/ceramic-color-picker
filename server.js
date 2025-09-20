@@ -6,6 +6,7 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 const puppeteer = require('puppeteer');
+const sharp = require('sharp');
 require('dotenv').config();
 
 // Initialize Slack app
@@ -77,7 +78,28 @@ function generateSVG(pattern, bgColor, patternColor) {
   return svgContent;
 }
 
-// Helper function to convert SVG to PNG using Puppeteer with tight cropping
+// Fallback function to convert SVG to PNG using Sharp (simpler, more reliable)
+async function svgToPngSharp(svgContent, width = 800, height = 600) {
+  const outputPngPath = path.join(__dirname, 'uploads', `output_${Date.now()}.png`);
+  
+  try {
+    console.log('🔄 Using Sharp fallback for SVG conversion...');
+    
+    // Convert SVG to PNG using Sharp
+    await sharp(Buffer.from(svgContent))
+      .resize(width, height)
+      .png()
+      .toFile(outputPngPath);
+    
+    console.log('✅ Sharp conversion successful:', outputPngPath);
+    return outputPngPath;
+  } catch (error) {
+    console.error('❌ Sharp conversion failed:', error);
+    throw error;
+  }
+}
+
+// Helper function to convert SVG to PNG using Puppeteer with Railway-optimized fallbacks
 async function svgToPng(svgContent, width = 800, height = 600) {
   const tempSvgPath = path.join(__dirname, 'uploads', `temp_${Date.now()}.svg`);
   const outputPngPath = path.join(__dirname, 'uploads', `output_${Date.now()}.png`);
@@ -90,14 +112,32 @@ async function svgToPng(svgContent, width = 800, height = 600) {
     fs.writeFileSync(tempSvgPath, svgContent);
     
     console.log('🚀 Launching Puppeteer browser...');
-    // Set environment variable for Chrome
-    process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = 'true';
-    process.env.PUPPETEER_EXECUTABLE_PATH = '/usr/bin/chromium-browser';
+    
+    // Try multiple Chrome executable paths for Railway compatibility
+    const possiblePaths = [
+      '/usr/bin/chromium-browser',
+      '/usr/bin/chromium',
+      '/usr/bin/google-chrome-stable',
+      '/usr/bin/google-chrome',
+      '/opt/google/chrome/chrome'
+    ];
+    
+    let executablePath = null;
+    for (const chromePath of possiblePaths) {
+      if (fs.existsSync(chromePath)) {
+        executablePath = chromePath;
+        console.log('✅ Found Chrome at:', chromePath);
+        break;
+      }
+    }
+    
+    if (!executablePath) {
+      console.log('⚠️ No Chrome found, using default Puppeteer Chrome');
+    }
     
     // Launch Puppeteer browser with Railway-optimized configuration
-    browser = await puppeteer.launch({
-      headless: true,
-      executablePath: '/usr/bin/chromium-browser',
+    const launchOptions = {
+      headless: 'new',
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -110,10 +150,31 @@ async function svgToPng(svgContent, width = 800, height = 600) {
         '--no-zygote',
         '--disable-background-timer-throttling',
         '--disable-backgrounding-occluded-windows',
-        '--disable-renderer-backgrounding'
+        '--disable-renderer-backgrounding',
+        '--disable-features=VizDisplayCompositor',
+        '--disable-ipc-flooding-protection',
+        '--disable-hang-monitor',
+        '--disable-prompt-on-repost',
+        '--disable-sync',
+        '--disable-translate',
+        '--disable-windows10-custom-titlebar',
+        '--disable-client-side-phishing-detection',
+        '--disable-component-extensions-with-background-pages',
+        '--disable-default-apps',
+        '--disable-features=TranslateUI',
+        '--disable-ipc-flooding-protection',
+        '--memory-pressure-off',
+        '--max_old_space_size=4096'
       ],
-      timeout: 30000
-    });
+      timeout: 60000,
+      protocolTimeout: 60000
+    };
+    
+    if (executablePath) {
+      launchOptions.executablePath = executablePath;
+    }
+    
+    browser = await puppeteer.launch(launchOptions);
     
     console.log('📄 Creating new page...');
     const page = await browser.newPage();
@@ -125,15 +186,19 @@ async function svgToPng(svgContent, width = 800, height = 600) {
     // Load the SVG file
     const fileUrl = `file://${tempSvgPath}`;
     await page.goto(fileUrl, { 
-      waitUntil: 'load',
-      timeout: 10000
+      waitUntil: 'networkidle0',
+      timeout: 30000
     });
+    
+    // Wait a bit for any animations or rendering to complete
+    await page.waitForTimeout(1000);
     
     console.log('📸 Taking screenshot...');
     await page.screenshot({
       path: outputPngPath,
       type: 'png',
-      fullPage: true
+      fullPage: true,
+      omitBackground: false
     });
     
     console.log('✅ Screenshot saved to:', outputPngPath);
@@ -143,16 +208,35 @@ async function svgToPng(svgContent, width = 800, height = 600) {
     
     return outputPngPath;
   } catch (error) {
-    console.error('❌ Error in svgToPng:', error);
+    console.error('❌ Puppeteer failed, trying Sharp fallback:', error.message);
+    
     // Clean up on error
     if (fs.existsSync(tempSvgPath)) {
       fs.unlinkSync(tempSvgPath);
     }
-    throw error;
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (closeError) {
+        console.error('Error closing browser:', closeError);
+      }
+    }
+    
+    // Try Sharp fallback
+    try {
+      return await svgToPngSharp(svgContent, width, height);
+    } catch (sharpError) {
+      console.error('❌ Both Puppeteer and Sharp failed:', sharpError);
+      throw new Error(`SVG conversion failed: ${error.message}. Fallback also failed: ${sharpError.message}`);
+    }
   } finally {
     if (browser) {
       console.log('🔒 Closing browser...');
-      await browser.close();
+      try {
+        await browser.close();
+      } catch (closeError) {
+        console.error('Error closing browser:', closeError);
+      }
     }
   }
 }
