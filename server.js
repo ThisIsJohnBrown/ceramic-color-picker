@@ -60,11 +60,14 @@ function generateSVG(pattern, bgColor, patternColor) {
   // Update background color
   svgContent = svgContent.replace(/<svg[^>]*>/, (match) => {
     if (match.includes('style=')) {
-      // Preserve existing styles and add background-color
-      return match.replace(/style="([^"]*)"/, `style="$1;background-color: ${bgColor}"`);
-    } else {
-      return match.replace('>', ` style="background-color: ${bgColor}">`);
+      // Extract existing styles and add background-color
+      const styleMatch = match.match(/style="([^"]*)"/);
+      if (styleMatch) {
+        const existingStyles = styleMatch[1];
+        return match.replace(/style="[^"]*"/, `style="${existingStyles}; background-color: ${bgColor}"`);
+      }
     }
+    return match.replace('>', ` style="background-color: ${bgColor}">`);
   });
   
   // Update pattern color for the main element
@@ -192,7 +195,7 @@ async function svgToPng(svgContent, width = 800, height = 600) {
     });
     
     // Wait a bit for any animations or rendering to complete
-    await page.waitForTimeout(1000);
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     console.log('📸 Taking screenshot...');
     await page.screenshot({
