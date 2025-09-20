@@ -1029,45 +1029,55 @@
                 console.log('📝 Message payload created');
                 console.log('📝 Message text length:', message.text.length);
                 
-                // Try direct fetch without proxy first
+                // Try direct fetch first
                 try {
                     const response = await fetch(slackWebhookUrl, {
                         method: 'POST',
-                        mode: 'no-cors', // This bypasses CORS but we can't read response
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify(message)
                     });
                     
-                    console.log('✅ Message sent (no-cors mode)');
-                    alert('Successfully sent to Slack! Check your #color-requests channel.');
+                    if (response.ok) {
+                        console.log('✅ Message sent successfully');
+                        alert('Successfully sent to Slack! Check your #color-requests channel.');
+                    } else {
+                        console.error('❌ Slack webhook error:', response.status, response.statusText);
+                        throw new Error(`Slack webhook returned ${response.status}: ${response.statusText}`);
+                    }
                     
                 } catch (fetchError) {
-                    console.log('❌ Direct fetch failed, trying alternative method...');
+                    console.error('❌ Direct fetch failed:', fetchError);
+                    console.log('🔄 Trying alternative method...');
                     
                     // Alternative: Use a simple form submission
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = slackWebhookUrl;
-                    form.target = '_blank';
-                    form.style.display = 'none';
-                    
-                    const payloadInput = document.createElement('input');
-                    payloadInput.type = 'hidden';
-                    payloadInput.name = 'payload';
-                    payloadInput.value = JSON.stringify(message);
-                    
-                    form.appendChild(payloadInput);
-                    document.body.appendChild(form);
-                    form.submit();
-                    
-                    setTimeout(() => {
-                        document.body.removeChild(form);
-                    }, 1000);
-                    
-                    console.log('✅ Alternative method used');
-                    alert('Successfully sent to Slack! Check your #color-requests channel.');
+                    try {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = slackWebhookUrl;
+                        form.target = '_blank';
+                        form.style.display = 'none';
+                        
+                        const payloadInput = document.createElement('input');
+                        payloadInput.type = 'hidden';
+                        payloadInput.name = 'payload';
+                        payloadInput.value = JSON.stringify(message);
+                        
+                        form.appendChild(payloadInput);
+                        document.body.appendChild(form);
+                        form.submit();
+                        
+                        setTimeout(() => {
+                            document.body.removeChild(form);
+                        }, 1000);
+                        
+                        console.log('✅ Alternative method used');
+                        alert('Message sent via alternative method. Check your #color-requests channel.');
+                    } catch (altError) {
+                        console.error('❌ Alternative method also failed:', altError);
+                        throw new Error('Both methods failed: ' + fetchError.message);
+                    }
                 }
 
             } catch (error) {
