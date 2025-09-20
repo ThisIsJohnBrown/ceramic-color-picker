@@ -60,7 +60,8 @@ function generateSVG(pattern, bgColor, patternColor) {
   // Update background color
   svgContent = svgContent.replace(/<svg[^>]*>/, (match) => {
     if (match.includes('style=')) {
-      return match.replace(/style="[^"]*"/, `style="background-color: ${bgColor}"`);
+      // Preserve existing styles and add background-color
+      return match.replace(/style="([^"]*)"/, `style="$1;background-color: ${bgColor}"`);
     } else {
       return match.replace('>', ` style="background-color: ${bgColor}">`);
     }
