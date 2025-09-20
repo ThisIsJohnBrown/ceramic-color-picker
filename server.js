@@ -240,7 +240,8 @@ app.command('/ceramic', async ({ command, ack, respond, client }) => {
     const shareUrl = `${baseUrl}?pattern=${encodeURIComponent(pattern)}&bgColor=${encodeURIComponent(bgColor)}&patternColor=${encodeURIComponent(patternColor)}`;
     
     // Upload PNG to Slack
-    const filename = `ceramic-${pattern.replace('.svg', '')}-${Date.now()}.png`;
+    const patternName = pattern.replace('.svg', '');
+    const filename = `${bgColor.replace('#', '')}_${patternColor.replace('#', '')}_${patternName}.png`;
     const result = await client.files.uploadV2({
       channel_id: command.channel_id,
       file: fs.createReadStream(pngPath),
@@ -282,7 +283,8 @@ expressApp.post('/api/send-to-slack', async (req, res) => {
     console.log('📝 Received PNG data from frontend, size:', pngData.length, 'characters');
     
     // Save PNG data directly to file
-    const filename = `ceramic-${pattern.replace('.svg', '')}-${Date.now()}.png`;
+    const patternName = pattern.replace('.svg', '');
+    const filename = `${bgColorName.replace(/[^a-zA-Z0-9]/g, '_')}_${patternColorName.replace(/[^a-zA-Z0-9]/g, '_')}_${patternName}.png`;
     const pngPath = path.join(__dirname, 'uploads', filename);
     
     // Convert base64 to buffer and save
