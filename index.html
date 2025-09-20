@@ -275,16 +275,6 @@
             box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
         }
 
-        .download-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .download-buttons .download-btn {
-            flex: 1;
-            min-width: 120px;
-        }
 
         .slack-btn {
             background: linear-gradient(135deg, #4a154b 0%, #611f69 100%);
@@ -447,10 +437,7 @@
                     <span class="color-name" id="patternColorName">Select a glaze color</span>
                 </div>
                 <div class="color-info-item">
-                    <div class="download-buttons">
-                        <button class="download-btn" onclick="downloadSVG()">Download SVG</button>
-                        <button class="download-btn" onclick="downloadPNG()">Download PNG</button>
-                    </div>
+                    <button class="download-btn" onclick="downloadPNG()">Download PNG</button>
                     <button class="slack-btn" onclick="sendToSlack()">Send to Slack</button>
                 </div>
             </div>
@@ -889,93 +876,6 @@
         }
 
 
-        // Download SVG
-        function downloadSVG() {
-            const svgObject = document.getElementById('svgObject');
-            const bgColor = currentBgColor;
-            const patternColor = currentPatternColor;
-
-            svgObject.addEventListener('load', function() {
-                const svgDoc = svgObject.contentDocument;
-                if (svgDoc) {
-                    const svgElement = svgDoc.querySelector('svg');
-                    
-                    // Find the main element
-                    const path = svgDoc.querySelector('#main');
-                    
-                    if (svgElement && path) {
-                        // Create a copy of the SVG
-                        const svgClone = svgElement.cloneNode(true);
-                        
-                        // Find the corresponding main element in the clone
-                        const pathClone = svgClone.querySelector('#main');
-                        
-                        // Apply colors
-                        svgClone.style.backgroundColor = bgColor;
-                        if (pathClone) {
-                            // Set both fill attribute and style fill for compatibility
-                            pathClone.setAttribute('fill', patternColor);
-                            pathClone.style.fill = patternColor;
-                        }
-                        
-                        
-                        // Convert to string
-                        const svgString = new XMLSerializer().serializeToString(svgClone);
-                        const blob = new Blob([svgString], { type: 'image/svg+xml' });
-                        const url = URL.createObjectURL(blob);
-                        
-                        // Create download link with descriptive filename
-                        const a = document.createElement('a');
-                        a.href = url;
-                        const patternName = currentPattern.replace('.svg', '');
-                        const filename = `${currentBgColorName.replace(/[^a-zA-Z0-9]/g, '_')}_${currentPatternColorName.replace(/[^a-zA-Z0-9]/g, '_')}_${patternName}.svg`;
-                        a.download = filename;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                    }
-                }
-            });
-
-            // If already loaded, download immediately
-            if (svgObject.contentDocument) {
-                const svgDoc = svgObject.contentDocument;
-                const svgElement = svgDoc.querySelector('svg');
-                
-                // Find the main element (consistent with event listener)
-                const path = svgDoc.querySelector('#main');
-                
-                if (svgElement && path) {
-                    const svgClone = svgElement.cloneNode(true);
-                    
-                    // Find the corresponding main element in the clone
-                    const pathClone = svgClone.querySelector('#main');
-                    
-                    // Apply colors
-                    svgClone.style.backgroundColor = bgColor;
-                    if (pathClone) {
-                        // Set both fill attribute and style fill for compatibility
-                        pathClone.setAttribute('fill', patternColor);
-                        pathClone.style.fill = patternColor;
-                    }
-                    
-                    const svgString = new XMLSerializer().serializeToString(svgClone);
-                    const blob = new Blob([svgString], { type: 'image/svg+xml' });
-                    const url = URL.createObjectURL(blob);
-                    
-                    const a = document.createElement('a');
-                    a.href = url;
-                    const patternName = currentPattern.replace('.svg', '');
-                    const filename = `${currentBgColorName.replace(/[^a-zA-Z0-9]/g, '_')}_${currentPatternColorName.replace(/[^a-zA-Z0-9]/g, '_')}_${patternName}.svg`;
-                    a.download = filename;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                }
-            }
-        }
 
         async function downloadPNG() {
             try {
