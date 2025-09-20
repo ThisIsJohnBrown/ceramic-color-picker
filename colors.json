@@ -3,412 +3,494 @@
     {
       "id": "SC-16",
       "name": "Cotton Tail",
-      "color": "#dbdcd6"
+      "color": "#dbdcd6",
+      "image": "glaze_images/sc_16_cone06.jpg"
     },
     {
       "id": "SC-37",
       "name": "Ivory Tower",
-      "color": "#d6d6bb"
+      "color": "#d6d6bb",
+      "image": "glaze_images/sc_37_cone06.jpg"
     },
     {
       "id": "SC-55",
       "name": "Yella Bout It",
-      "color": "#dcd57a"
+      "color": "#dcd57a",
+      "image": "glaze_images/sc_55_cone06.jpg"
     },
     {
       "id": "SC-6",
       "name": "Sunkissed",
-      "color": "#e8cc00"
+      "color": "#e8cc00",
+      "image": "glaze_images/sc_6_cone06.jpg"
     },
     {
       "id": "SC-42",
       "name": "Butter Me Up",
-      "color": "#d7b053"
+      "color": "#d7b053",
+      "image": "glaze_images/sc_42_cone06.jpg"
     },
     {
       "id": "SC-24",
       "name": "Dandelion",
-      "color": "#e6a300"
+      "color": "#e6a300",
+      "image": "glaze_images/sc_24_cone06.jpg"
     },
     {
       "id": "SC-97",
       "name": "Cant-elope",
-      "color": "#e37506"
+      "color": "#e37506",
+      "image": "glaze_images/sc_97_cone06.jpg"
     },
     {
       "id": "SC-102",
       "name": "Just Peachy",
-      "color": "#f6a173"
+      "color": "#f6a173",
+      "image": "glaze_images/sc_102_cone06.jpg"
     },
     {
       "id": "SC-23",
-      "name": "Jack O’Lantern",
-      "color": "#f28930"
+      "name": "Jack O'Lantern",
+      "color": "#f28930",
+      "image": "glaze_images/sc_23_cone06.jpg"
     },
     {
       "id": "SC-75",
       "name": "Orange-A-Peel",
-      "color": "#ff4c01"
+      "color": "#ff4c01",
+      "image": "glaze_images/sc_75_cone06.jpg"
     },
     {
       "id": "SC-50",
       "name": "Orange Ya Happy",
-      "color": "#dc5c28"
+      "color": "#dc5c28",
+      "image": "glaze_images/sc_50_cone06.jpg"
     },
     {
       "id": "SC-2",
       "name": "Melon-choly",
-      "color": "#e28673"
+      "color": "#e28673",
+      "image": "glaze_images/sc_2_cone06.jpg"
     },
     {
       "id": "SC-89",
       "name": "Cutie Pie Coral",
-      "color": "#eb594e"
+      "color": "#eb594e",
+      "image": "glaze_images/sc_89_cone06.jpg"
     },
     {
       "id": "SC-88",
       "name": "Tu Tu Tango",
-      "color": "#e92f01"
+      "color": "#e92f01",
+      "image": "glaze_images/sc_88_cone06.jpg"
     },
     {
       "id": "SC-73",
       "name": "Candy Apple Red",
-      "color": "#c41b05"
+      "color": "#c41b05",
+      "image": "glaze_images/sc_73_cone06.jpg"
     },
     {
       "id": "SC-74",
       "name": "Hot Tamale",
-      "color": "#971f17"
+      "color": "#971f17",
+      "image": "glaze_images/sc_74_cone06.jpg"
     },
     {
       "id": "SC-87",
       "name": "Ruby Slippers",
-      "color": "#8c201a"
+      "color": "#8c201a",
+      "image": "glaze_images/sc_87_cone06.jpg"
     },
     {
       "id": "SC-81",
       "name": "Cinnamon Stix",
-      "color": "#6b2218"
+      "color": "#6b2218",
+      "image": "glaze_images/sc_81_cone06.jpg"
     },
     {
       "id": "SC-1",
       "name": "Pink-A-Boo",
-      "color": "#dfa49e"
+      "color": "#dfa49e",
+      "image": "glaze_images/sc_1_cone06.jpg"
     },
     {
       "id": "SC-100",
       "name": "Makin Me Blush",
-      "color": "#f2d9d4"
+      "color": "#f2d9d4",
+      "image": "glaze_images/sc_100_cone06.jpg"
     },
     {
       "id": "SC-70",
       "name": "Pink-A-Dot",
-      "color": "#cb7b8a"
+      "color": "#cb7b8a",
+      "image": "glaze_images/sc_70_cone06.jpg"
     },
     {
       "id": "SC-95",
       "name": "Pinkie Swear",
-      "color": "#ab4f65"
+      "color": "#ab4f65",
+      "image": "glaze_images/sc_95_cone06.jpg"
     },
     {
       "id": "SC-17",
       "name": "Cheeky Pinky",
-      "color": "#b0666b"
+      "color": "#b0666b",
+      "image": "glaze_images/sc_17_cone06.jpg"
     },
     {
       "id": "SC-18",
       "name": "Rosey Posey",
-      "color": "#9a474c"
+      "color": "#9a474c",
+      "image": "glaze_images/sc_18_cone06.jpg"
     },
     {
       "id": "SC-3",
       "name": "Wine About It",
-      "color": "#5f2327"
+      "color": "#5f2327",
+      "image": "glaze_images/sc_3_cone06.jpg"
     },
     {
       "id": "SC-40",
       "name": "Blueberry Hill",
-      "color": "#371625"
+      "color": "#371625",
+      "image": "glaze_images/sc_40_cone06.jpg"
     },
     {
       "id": "SC-13",
       "name": "Grapel",
-      "color": "#61274a"
+      "color": "#61274a",
+      "image": "glaze_images/sc_13_cone06.jpg"
     },
     {
       "id": "SC-85",
       "name": "Orkid",
-      "color": "#b68ba7"
+      "color": "#b68ba7",
+      "image": "glaze_images/sc_85_cone06.jpg"
     },
     {
       "id": "SC-103",
       "name": "Lavendear",
-      "color": "#a897bb"
+      "color": "#a897bb",
+      "image": "glaze_images/sc_103_cone06.jpg"
     },
     {
       "id": "SC-53",
       "name": "Purple Haze",
-      "color": "#64587c"
+      "color": "#64587c",
+      "image": "glaze_images/sc_53_cone06.jpg"
     },
     {
       "id": "SC-72",
       "name": "Grape Jelly",
-      "color": "#5d4b68"
+      "color": "#5d4b68",
+      "image": "glaze_images/sc_72_cone06.jpg"
     },
     {
       "id": "SC-71",
       "name": "Purple-Licious",
-      "color": "#473348"
+      "color": "#473348",
+      "image": "glaze_images/sc_71_cone06.jpg"
     },
     {
       "id": "SC-33",
       "name": "Fruit Of The Vine",
-      "color": "#3d2950"
+      "color": "#3d2950",
+      "image": "glaze_images/sc_33_cone06.jpg"
     },
     {
       "id": "SC-104",
       "name": "Grape Expectations",
-      "color": "#241827"
+      "color": "#241827",
+      "image": "glaze_images/sc_104_cone06.jpg"
     },
     {
       "id": "SC-45",
       "name": "My Blue Heaven",
-      "color": "#a3c7ca"
+      "color": "#a3c7ca",
+      "image": "glaze_images/sc_45_cone06.jpg"
     },
     {
       "id": "SC-91",
       "name": "Seabreeze",
-      "color": "#b2c1bd"
+      "color": "#b2c1bd",
+      "image": "glaze_images/sc_91_cone06.jpg"
     },
     {
       "id": "SC-65",
       "name": "Peri-Twinkle",
-      "color": "#93a4b5"
+      "color": "#93a4b5",
+      "image": "glaze_images/sc_65_cone06.jpg"
     },
     {
       "id": "SC-30",
       "name": "Blue Dawn",
-      "color": "#7e98b6"
+      "color": "#7e98b6",
+      "image": "glaze_images/sc_30_cone06.jpg"
     },
     {
       "id": "SC-31",
       "name": "The Blues",
-      "color": "#486298"
+      "color": "#486298",
+      "image": "glaze_images/sc_31_cone06.jpg"
     },
     {
       "id": "SC-11",
       "name": "Blue Yonder",
-      "color": "#248db6"
+      "color": "#248db6",
+      "image": "glaze_images/sc_11_cone06.jpg"
     },
     {
       "id": "SC-58",
       "name": "501 Blues",
-      "color": "#2d364a"
+      "color": "#2d364a",
+      "image": "glaze_images/sc_58_cone06.jpg"
     },
     {
       "id": "SC-76",
       "name": "Cara-bein Blue",
-      "color": "#172a61"
+      "color": "#172a61",
+      "image": "glaze_images/sc_76_cone06.jpg"
     },
     {
       "id": "SC-12",
       "name": "Moody Blue",
-      "color": "#181338"
+      "color": "#181338",
+      "image": "glaze_images/sc_12_cone06.jpg"
     },
     {
       "id": "SC-96",
       "name": "Aqu-ward",
-      "color": "#96b79a"
+      "color": "#96b79a",
+      "image": "glaze_images/sc_96_cone06.jpg"
     },
     {
       "id": "SC-101",
       "name": "Spruce It Up",
-      "color": "#85baaf"
+      "color": "#85baaf",
+      "image": "glaze_images/sc_101_cone06.jpg"
     },
     {
       "id": "SC-9",
       "name": "Jaded",
-      "color": "#2a8c72"
+      "color": "#2a8c72",
+      "image": "glaze_images/sc_9_cone06.jpg"
     },
     {
       "id": "SC-28",
       "name": "Blue Isle",
-      "color": "#2e818c"
+      "color": "#2e818c",
+      "image": "glaze_images/sc_28_cone06.jpg"
     },
     {
       "id": "SC-10",
       "name": "Teal Next Time",
-      "color": "#024d4a"
+      "color": "#024d4a",
+      "image": "glaze_images/sc_10_cone06.jpg"
     },
     {
       "id": "SC-29",
       "name": "Blue Grass",
-      "color": "#103d46"
+      "color": "#103d46",
+      "image": "glaze_images/sc_29_cone06.jpg"
     },
     {
       "id": "SC-32",
       "name": "Bluebeard",
-      "color": "#0a181d"
+      "color": "#0a181d",
+      "image": "glaze_images/sc_32_cone06.jpg"
     },
     {
       "id": "SC-93",
       "name": "Honeydew List",
-      "color": "#d7dc99"
+      "color": "#d7dc99",
+      "image": "glaze_images/sc_93_cone06.jpg"
     },
     {
       "id": "SC-43",
       "name": "Lettuce Alone",
-      "color": "#8cae78"
+      "color": "#8cae78",
+      "image": "glaze_images/sc_43_cone06.jpg"
     },
     {
       "id": "SC-7",
-      "name": "Leapin’ Lizard",
-      "color": "#4c9457"
+      "name": "Leapin' Lizard",
+      "color": "#4c9457",
+      "image": "glaze_images/sc_7_cone06.jpg"
     },
     {
       "id": "SC-26",
       "name": "Green Thumb",
-      "color": "#405e2d"
+      "color": "#405e2d",
+      "image": "glaze_images/sc_26_cone06.jpg"
     },
     {
       "id": "SC-8",
       "name": "Just Froggy",
-      "color": "#2d5231"
+      "color": "#2d5231",
+      "image": "glaze_images/sc_8_cone06.jpg"
     },
     {
       "id": "SC-36",
       "name": "Irish Luck",
-      "color": "#264329"
+      "color": "#264329",
+      "image": "glaze_images/sc_36_cone06.jpg"
     },
     {
       "id": "SC-77",
       "name": "Glo-Worm",
-      "color": "#c5c003"
+      "color": "#c5c003",
+      "image": "glaze_images/sc_77_cone06.jpg"
     },
     {
       "id": "SC-78",
       "name": "Lime Light",
-      "color": "#a0b663"
+      "color": "#a0b663",
+      "image": "glaze_images/sc_78_cone06.jpg"
     },
     {
       "id": "SC-98",
       "name": "Slime Time",
-      "color": "#accb63"
+      "color": "#accb63",
+      "image": "glaze_images/sc_98_cone06.jpg"
     },
     {
       "id": "SC-27",
       "name": "Sour Apple",
-      "color": "#9da82f"
+      "color": "#9da82f",
+      "image": "glaze_images/sc_27_cone06.jpg"
     },
     {
       "id": "SC-52",
       "name": "Toad-ily Green",
-      "color": "#74732e"
+      "color": "#74732e",
+      "image": "glaze_images/sc_52_cone06.jpg"
     },
     {
       "id": "SC-79",
-      "name": "It’s Sage",
-      "color": "#8a8755"
+      "name": "It's Sage",
+      "color": "#8a8755",
+      "image": "glaze_images/sc_79_cone06.jpg"
     },
     {
       "id": "SC-39",
       "name": "Army Surplus",
-      "color": "#4c5829"
+      "color": "#4c5829",
+      "image": "glaze_images/sc_39_cone06.jpg"
     },
     {
       "id": "SC-86",
       "name": "Old Lace",
-      "color": "#d6ccb9"
+      "color": "#d6ccb9",
+      "image": "glaze_images/sc_86_cone06.jpg"
     },
     {
       "id": "SC-54",
       "name": "Vanilla Dip",
-      "color": "#ccb999"
+      "color": "#ccb999",
+      "image": "glaze_images/sc_54_cone06.jpg"
     },
     {
       "id": "SC-20",
       "name": "Cashew Later",
-      "color": "#cea380"
+      "color": "#cea380",
+      "image": "glaze_images/sc_20_cone06.jpg"
     },
     {
       "id": "SC-46",
       "name": "Rawhide",
-      "color": "#c5a371"
+      "color": "#c5a371",
+      "image": "glaze_images/sc_46_cone06.jpg"
     },
     {
       "id": "SC-51",
       "name": "Poo Bear",
-      "color": "#c88b2a"
+      "color": "#c88b2a",
+      "image": "glaze_images/sc_51_cone06.jpg"
     },
     {
       "id": "SC-5",
       "name": "Tiger Tail",
-      "color": "#af5f0f"
+      "color": "#af5f0f",
+      "image": "glaze_images/sc_5_cone06.jpg"
     },
     {
       "id": "SC-25",
       "name": "Crackerjack Brown",
-      "color": "#8a3f10"
+      "color": "#8a3f10",
+      "image": "glaze_images/sc_25_cone06.jpg"
     },
     {
       "id": "SC-80",
       "name": "Basketball",
-      "color": "#b5451c"
+      "color": "#b5451c",
+      "image": "glaze_images/sc_80_cone06.jpg"
     },
     {
       "id": "SC-41",
       "name": "Brown Cow",
-      "color": "#73472f"
+      "color": "#73472f",
+      "image": "glaze_images/sc_41_cone06.jpg"
     },
     {
       "id": "SC-48",
       "name": "Camel Back",
-      "color": "#522d19"
+      "color": "#522d19",
+      "image": "glaze_images/sc_48_cone06.jpg"
     },
     {
       "id": "SC-14",
       "name": "Java Bean",
-      "color": "#4b1d0c"
+      "color": "#4b1d0c",
+      "image": "glaze_images/sc_14_cone06.jpg"
     },
     {
       "id": "SC-34",
       "name": "Down To Earth",
-      "color": "#25170f"
+      "color": "#25170f",
+      "image": "glaze_images/sc_34_cone06.jpg"
     },
     {
       "id": "SC-92",
       "name": "Café Ole",
-      "color": "#806347"
+      "color": "#806347",
+      "image": "glaze_images/sc_92_cone06.jpg"
     },
     {
       "id": "SC-90",
       "name": "Elephant Ears",
-      "color": "#948c7b"
+      "color": "#948c7b",
+      "image": "glaze_images/sc_90_cone06.jpg"
     },
     {
       "id": "SC-83",
       "name": "Tip Taupe",
-      "color": "#a4957c"
+      "color": "#a4957c",
+      "image": "glaze_images/sc_83_cone06.jpg"
     },
     {
       "id": "SC-60",
       "name": "Silver Lining",
-      "color": "#a2a9a5"
+      "color": "#a2a9a5",
+      "image": "glaze_images/sc_60_cone06.jpg"
     },
     {
       "id": "SC-35",
       "name": "Gray Hare",
-      "color": "#767b7a"
+      "color": "#767b7a",
+      "image": "glaze_images/sc_35_cone06.jpg"
     },
     {
       "id": "SC-99",
       "name": "Char-ming",
-      "color": "#373832"
+      "color": "#373832",
+      "image": "glaze_images/sc_99_cone06.jpg"
     },
     {
       "id": "SC-15",
       "name": "Tuxedo",
-      "color": "#0c0c0c"
+      "color": "#0c0c0c",
+      "image": "glaze_images/sc_15_cone06.jpg"
     }
   ],
   "underglazes": [
@@ -416,367 +498,428 @@
       "id": "UG-51",
       "name": "China White",
       "left": "#cdc8c4",
-      "top": "#dcd8d7"
+      "top": "#dcd8d7",
+      "image": "underglaze_images/ug-51_cone06.jpg"
     },
     {
       "id": "UG-67",
       "name": "Ivory",
       "left": "#d0c8b6",
-      "top": "#e0dbc8"
+      "top": "#e0dbc8",
+      "image": "underglaze_images/ug-67_cone06.jpg"
     },
     {
       "id": "UG-222",
       "name": "Soft Yellow",
       "left": "#e8d896",
-      "top": "#ebd975"
+      "top": "#ebd975",
+      "image": "underglaze_images/ug-222.jpg"
     },
     {
       "id": "UG-46",
       "name": "Bright Yellow",
       "left": "#cfb847",
-      "top": "#e2c608"
+      "top": "#e2c608",
+      "image": "underglaze_images/ug-46_cone06.jpg"
     },
     {
       "id": "UG-203",
       "name": "Squash Yellow",
       "left": "#daa35a",
-      "top": "#e7a31e"
+      "top": "#e7a31e",
+      "image": "underglaze_images/ug-203_cone06.jpg"
     },
     {
       "id": "UG-58",
       "name": "Harvest Gold",
       "left": "#e29458",
-      "top": "#ef9120"
+      "top": "#ef9120",
+      "image": "underglaze_images/ug-58_cone06.jpg"
     },
     {
       "id": "UG-85",
       "name": "Orange Sorbet",
       "left": "#e8ac89",
-      "top": "#f89f52"
+      "top": "#f89f52",
+      "image": "underglaze_images/ug-85_cone06.jpg"
     },
     {
       "id": "UG-223",
       "name": "Apricot",
       "left": "#feb25f",
-      "top": "#fb9e19"
+      "top": "#fb9e19",
+      "image": "underglaze_images/ug-223.jpg"
     },
     {
       "id": "UG-204",
       "name": "Orange",
       "left": "#fb916a",
-      "top": "#fd6d23"
+      "top": "#fd6d23",
+      "image": "underglaze_images/ug-204_cone06.jpg"
     },
     {
       "id": "UG-217",
       "name": "Red Coral",
       "left": "#f5836c",
-      "top": "#fa5f32"
+      "top": "#fa5f32",
+      "image": "underglaze_images/ug-217_cone06.jpg"
     },
     {
       "id": "UG-206",
       "name": "Fire Engine Red",
       "left": "#d16d56",
-      "top": "#d23c1b"
+      "top": "#d23c1b",
+      "image": "underglaze_images/ug-206_cone06.jpg"
     },
     {
       "id": "UG-207",
       "name": "Flame Red",
       "left": "#cc8074",
-      "top": "#c94533"
+      "top": "#c94533",
+      "image": "underglaze_images/ug-207_cone06.jpg"
     },
     {
       "id": "UG-208",
       "name": "Dragon Red",
       "left": "#c0776c",
-      "top": "#b83f31"
+      "top": "#b83f31",
+      "image": "underglaze_images/ug-208_cone06.jpg"
     },
     {
       "id": "UG-215",
       "name": "Blush",
       "left": "#dabfbc",
-      "top": "#deb4af"
+      "top": "#deb4af",
+      "image": "underglaze_images/ug-215_cone06.jpg"
     },
     {
       "id": "UG-146",
       "name": "Pink Pink",
       "left": "#c8b0a7",
-      "top": "#d5b8b1"
+      "top": "#d5b8b1",
+      "image": "underglaze_images/ug-146_cone06.jpg"
     },
     {
       "id": "UG-216",
       "name": "Peach",
       "left": "#daa39e",
-      "top": "#e68c7b"
+      "top": "#e68c7b",
+      "image": "underglaze_images/ug-216_cone06.jpg"
     },
     {
       "id": "UG-224",
       "name": "Rose",
       "left": "#dcacad",
-      "top": "#dc8f94"
+      "top": "#dc8f94",
+      "image": "underglaze_images/ug-224.jpg"
     },
     {
       "id": "UG-10",
       "name": "Crimson",
       "left": "#c6a4a7",
-      "top": "#8d4b55"
+      "top": "#8d4b55",
+      "image": "underglaze_images/ug-10_cone06.jpg"
     },
     {
       "id": "UG-92",
       "name": "Lilac",
       "left": "#dac3c6",
-      "top": "#dbb7ca"
+      "top": "#dbb7ca",
+      "image": "underglaze_images/ug-92_cone06.jpg"
     },
     {
       "id": "UG-87",
       "name": "Regal Purple",
       "left": "#d8aeca",
-      "top": "#bd74aa"
+      "top": "#bd74aa",
+      "image": "underglaze_images/ug-87_cone06.jpg"
     },
     {
       "id": "UG-225",
       "name": "Plum",
       "left": "#7d535d",
-      "top": "#4c273c"
+      "top": "#4c273c",
+      "image": "underglaze_images/ug-225.jpg"
     },
     {
       "id": "UG-226",
       "name": "Lavender",
       "left": "#c2bbc5",
-      "top": "#a99bb4"
+      "top": "#a99bb4",
+      "image": "underglaze_images/ug-226.jpg"
     },
     {
       "id": "UG-93",
       "name": "Wild Violet",
       "left": "#c5b6cf",
-      "top": "#a781b2"
+      "top": "#a781b2",
+      "image": "underglaze_images/ug-93_cone06.jpg"
     },
     {
       "id": "UG-94",
       "name": "Pansy Purple",
       "left": "#ada2c4",
-      "top": "#755a8d"
+      "top": "#755a8d",
+      "image": "underglaze_images/ug-94_cone06.jpg"
     },
     {
       "id": "UG-227",
       "name": "Concord Grape",
       "left": "#645b74",
-      "top": "#4c235a"
+      "top": "#4c235a",
+      "image": "underglaze_images/ug-227.jpg"
     },
     {
       "id": "UG-3",
       "name": "Baby Blue",
       "left": "#c6cedb",
-      "top": "#c4ccdb"
+      "top": "#c4ccdb",
+      "image": "underglaze_images/ug-3_cone06.jpg"
     },
     {
       "id": "UG-72",
       "name": "Wedgewood Blue",
       "left": "#b7c3d7",
-      "top": "#a9bdd8"
+      "top": "#a9bdd8",
+      "image": "underglaze_images/ug-72_cone06.jpg"
     },
     {
       "id": "UG-2",
       "name": "Sea Blue",
       "left": "#a9b3cd",
-      "top": "#93a3cc"
+      "top": "#93a3cc",
+      "image": "underglaze_images/ug-2_cone06.jpg"
     },
     {
       "id": "UG-97",
       "name": "Bright Blue",
       "left": "#8a9bbc",
-      "top": "#738cbd"
+      "top": "#738cbd",
+      "image": "underglaze_images/ug-97_cone06.jpg"
     },
     {
       "id": "UG-1",
       "name": "Kings Blue",
       "left": "#50729f",
-      "top": "#06336b"
+      "top": "#06336b",
+      "image": "underglaze_images/ug-1_cone06.jpg"
     },
     {
       "id": "UG-228",
       "name": "Midnight Blue",
       "left": "#465b78",
-      "top": "#101e27"
+      "top": "#101e27",
+      "image": "underglaze_images/ug-228.jpg"
     },
     {
       "id": "UG-19",
       "name": "Electra Blue",
       "left": "#90a8b9",
-      "top": "#76a1bc"
+      "top": "#76a1bc",
+      "image": "underglaze_images/ug-19_cone06.jpg"
     },
     {
       "id": "UG-82",
       "name": "Tucson Turquoise",
       "left": "#b4c8c6",
-      "top": "#abc9cb"
+      "top": "#abc9cb",
+      "image": "underglaze_images/ug-82_cone06.jpg"
     },
     {
       "id": "UG-229",
       "name": "Aquamarine",
       "left": "#406f84",
-      "top": "#013a4a"
+      "top": "#013a4a",
+      "image": "underglaze_images/ug-229.jpg"
     },
     {
       "id": "UG-209",
       "name": "Jade",
       "left": "#8aac94",
-      "top": "#6da988"
+      "top": "#6da988",
+      "image": "underglaze_images/ug-209_cone06.jpg"
     },
     {
       "id": "UG-91",
       "name": "True Teal",
       "left": "#78a29b",
-      "top": "#3c6c62"
+      "top": "#3c6c62",
+      "image": "underglaze_images/ug-91_cone06.jpg"
     },
     {
       "id": "UG-219",
       "name": "Marine Blue",
       "left": "#92b5ba",
-      "top": "#4997a0"
+      "top": "#4997a0",
+      "image": "underglaze_images/ug-219_cone06.jpg"
     },
     {
       "id": "UG-230",
       "name": "Blue Grass",
       "left": "#446a74",
-      "top": "#01332e"
+      "top": "#01332e",
+      "image": "underglaze_images/ug-230.jpg"
     },
     {
       "id": "UG-218",
       "name": "Pear Green",
       "left": "#d5c268",
-      "top": "#e1c933"
+      "top": "#e1c933",
+      "image": "underglaze_images/ug-218_cone06.jpg"
     },
     {
       "id": "UG-231",
       "name": "Lime Green",
       "left": "#cac961",
-      "top": "#b8c501"
+      "top": "#b8c501",
+      "image": "underglaze_images/ug-231.jpg"
     },
     {
       "id": "UG-22",
       "name": "Spring Green",
       "left": "#a4a545",
-      "top": "#868906"
+      "top": "#868906",
+      "image": "underglaze_images/ug-22_cone06.jpg"
     },
     {
       "id": "UG-68",
       "name": "Apple Green",
       "left": "#d4d8b1",
-      "top": "#cfd882"
+      "top": "#cfd882",
+      "image": "underglaze_images/ug-68_cone06.jpg"
     },
     {
       "id": "UG-233",
       "name": "Eucalyptus",
       "left": "#bfc3ab",
-      "top": "#b7c498"
+      "top": "#b7c498",
+      "image": "underglaze_images/ug-233.jpg"
     },
     {
       "id": "UG-90",
       "name": "Green Mist",
       "left": "#b5c997",
-      "top": "#93bb6c"
+      "top": "#93bb6c",
+      "image": "underglaze_images/ug-90_cone06.jpg"
     },
     {
       "id": "UG-21",
       "name": "Leaf Green",
       "left": "#98a66d",
-      "top": "#52602a"
+      "top": "#52602a",
+      "image": "underglaze_images/ug-21_cone06.jpg"
     },
     {
       "id": "UG-210",
       "name": "Forest Green",
       "left": "#34522c",
-      "top": "#40562f"
+      "top": "#40562f",
+      "image": "underglaze_images/ug-210_cone06.jpg"
     },
     {
       "id": "UG-232",
       "name": "Olive",
       "left": "#8e8f69",
-      "top": "#5e5c25"
+      "top": "#5e5c25",
+      "image": "underglaze_images/ug-232.jpg"
     },
     {
       "id": "UG-220",
       "name": "Sage",
       "left": "#c4be9d",
-      "top": "#b4af6b"
+      "top": "#b4af6b",
+      "image": "underglaze_images/ug-220_cone06.jpg"
     },
     {
       "id": "UG-234",
       "name": "Ivory Pearl",
       "left": "#d2bfa6",
-      "top": "#ccb386"
+      "top": "#ccb386",
+      "image": "underglaze_images/ug-234.jpg"
     },
     {
       "id": "UG-32",
       "name": "Cocoa",
       "left": "#c8bcb2",
-      "top": "#d2bda5"
+      "top": "#d2bda5",
+      "image": "underglaze_images/ug-32_cone06.jpg"
     },
     {
       "id": "UG-30",
       "name": "Sand",
       "left": "#ccb69a",
-      "top": "#cfa46c"
+      "top": "#cfa46c",
+      "image": "underglaze_images/ug-30_cone06.jpg"
     },
     {
       "id": "UG-235",
       "name": "Oatmeal",
       "left": "#ceb9a9",
-      "top": "#c0a281"
+      "top": "#c0a281",
+      "image": "underglaze_images/ug-235.jpg"
     },
     {
       "id": "UG-57",
       "name": "Spice Brown",
       "left": "#d6aa7d",
-      "top": "#dd994a"
+      "top": "#dd994a",
+      "image": "underglaze_images/ug-57_cone06.jpg"
     },
     {
       "id": "UG-213",
       "name": "Cinnamon",
       "left": "#c5886c",
-      "top": "#bb5123"
+      "top": "#bb5123",
+      "image": "underglaze_images/ug-213_cone06.jpg"
     },
     {
       "id": "UG-31",
       "name": "Chocolate",
       "left": "#b57f5b",
-      "top": "#a05011"
+      "top": "#a05011",
+      "image": "underglaze_images/ug-31_cone06.jpg"
     },
     {
       "id": "UG-221",
       "name": "Cement",
       "left": "#afa89c",
-      "top": "#a79c87"
+      "top": "#a79c87",
+      "image": "underglaze_images/ug-221_cone06.jpg"
     },
     {
       "id": "UG-34",
       "name": "Chestnut Brown",
       "left": "#7d6354",
-      "top": "#5a3a22"
+      "top": "#5a3a22",
+      "image": "underglaze_images/ug-34_cone06.jpg"
     },
     {
       "id": "UG-53",
       "name": "Silver Grey",
       "left": "#bbbbbb",
-      "top": "#babab9"
+      "top": "#babab9",
+      "image": "underglaze_images/ug-53_cone06.jpg"
     },
     {
       "id": "UG-236",
       "name": "Grey",
       "left": "#bebcbf",
-      "top": "#928f90"
+      "top": "#928f90",
+      "image": "underglaze_images/ug-236.jpg"
     },
     {
       "id": "UG-198",
       "name": "Dark Grey",
       "left": "#beb9b6",
-      "top": "#928780"
+      "top": "#928780",
+      "image": "underglaze_images/ug-198_cone06.jpg"
     },
     {
       "id": "UG-50",
       "name": "Jet Black",
       "left": "#434447",
-      "top": "#171312"
+      "top": "#171312",
+      "image": "underglaze_images/ug-50_cone06.jpg"
     }
   ]
 }

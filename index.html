@@ -98,6 +98,11 @@
             text-align: center;
             background: #1a1a1a;
             border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
         }
         
         .pattern-thumbnails {
@@ -158,6 +163,9 @@
             border: 3px solid transparent;
             transition: all 0.2s ease;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .preset-color:hover {
@@ -186,31 +194,46 @@
         }
 
         .color-info {
-            padding: 20px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
+            padding: 15px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
+            gap: 15px;
+            min-width: 300px;
         }
 
         .color-info-item {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
-            gap: 5px;
+            gap: 10px;
+            justify-content: center;
+        }
+
+
+        .color-info-swatch {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 2px solid #dee2e6;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .color-label {
             font-size: 0.9rem;
-            color: #6c757d;
+            color: #b0b0b0;
             font-weight: 500;
         }
 
         .color-name {
             font-size: 1.1rem;
-            color: #495057;
+            color: #ffffff;
             font-weight: 600;
             text-align: center;
         }
@@ -232,34 +255,19 @@
             display: block;
         }
 
-        .reset-btn {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-        }
-
-        .reset-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-        }
 
         .download-btn {
             background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.2s ease;
             box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
-            margin-left: 10px;
+            font-size: 0.9rem;
+            white-space: nowrap;
         }
 
         .download-btn:hover {
@@ -297,6 +305,11 @@
         }
 
         @media (max-width: 1200px) {
+            .pattern-selector {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
             .color-sections {
                 flex-direction: column;
                 gap: 20px;
@@ -309,6 +322,23 @@
         }
         
         @media (max-width: 768px) {
+            .pattern-selector {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .color-info {
+                gap: 15px;
+                padding: 15px;
+                min-width: auto;
+            }
+            
+            .color-info-item {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            
             .control-group {
                 flex-direction: column;
                 align-items: flex-start;
@@ -329,14 +359,19 @@
                 width: 35px;
                 height: 35px;
             }
-            
-            .color-info {
-                gap: 20px;
-                padding: 15px;
-            }
         }
         
         @media (max-width: 480px) {
+            .color-info-item {
+                flex-direction: column;
+                gap: 3px;
+            }
+            
+            .color-info-swatch {
+                width: 25px;
+                height: 25px;
+            }
+            
             .preset-colors {
                 grid-template-columns: repeat(6, 1fr);
             }
@@ -369,6 +404,19 @@
                     <span class="pattern-name">Loopy Lines</span>
                 </div>
             </div>
+            <div class="color-info">
+                <div class="color-info-item">
+                    <div class="color-info-swatch" id="bgColorSwatch"></div>
+                    <span class="color-name" id="bgColorName">Select an underglaze color</span>
+                </div>
+                <div class="color-info-item">
+                    <div class="color-info-swatch" id="patternColorSwatch"></div>
+                    <span class="color-name" id="patternColorName">Select a glaze color</span>
+                </div>
+                <div class="color-info-item">
+                    <button class="download-btn" onclick="downloadSVG()">Download</button>
+                </div>
+            </div>
         </div>
         
         <div class="sticky-pattern-container">
@@ -379,16 +427,6 @@
                     </object>
                 </div>
             </div>
-            <div class="color-info">
-                <div class="color-info-item">
-                    <span class="color-label">Background:</span>
-                    <span class="color-name" id="bgColorName">Select an underglaze color</span>
-                </div>
-                <div class="color-info-item">
-                    <span class="color-label">Pattern:</span>
-                    <span class="color-name" id="patternColorName">Select a glaze color</span>
-                </div>
-            </div>
         </div>
         
         <div class="controls">
@@ -396,10 +434,6 @@
                 <!-- Color sections will be added by JavaScript -->
             </div>
             
-            <div class="control-group">
-                <button class="reset-btn" onclick="resetColors()">Reset to Default</button>
-                <button class="download-btn" onclick="downloadSVG()">Download SVG</button>
-            </div>
         </div>
     </div>
 
@@ -413,6 +447,46 @@
         let currentPatternColorName = 'Select a glaze color';
         let currentPattern = 'metaAndLines.svg';
         let clearGlazeMode = false;
+        let currentBgSwatch = null;
+        let currentPatternSwatch = null;
+        let currentBgSwatchImage = null;
+        let currentPatternSwatchImage = null;
+
+        // Update swatch images in color info section
+        function updateColorInfoSwatches() {
+            const bgSwatchElement = document.getElementById('bgColorSwatch');
+            const patternSwatchElement = document.getElementById('patternColorSwatch');
+            
+            if (bgSwatchElement && currentBgSwatchImage) {
+                bgSwatchElement.style.backgroundImage = `url(${currentBgSwatchImage})`;
+            } else if (bgSwatchElement) {
+                bgSwatchElement.style.backgroundImage = 'none';
+                bgSwatchElement.style.backgroundColor = currentBgColor;
+            }
+            
+            if (patternSwatchElement && currentPatternSwatchImage) {
+                patternSwatchElement.style.backgroundImage = `url(${currentPatternSwatchImage})`;
+            } else if (patternSwatchElement) {
+                patternSwatchElement.style.backgroundImage = 'none';
+                patternSwatchElement.style.backgroundColor = currentPatternColor;
+            }
+        }
+
+        // Update active states of swatches
+        function updateSwatchActiveStates() {
+            // Remove active class from all swatches
+            document.querySelectorAll('.preset-color').forEach(swatch => {
+                swatch.classList.remove('active');
+            });
+            
+            // Add active class to currently selected swatches
+            if (currentBgSwatch) {
+                currentBgSwatch.classList.add('active');
+            }
+            if (currentPatternSwatch) {
+                currentPatternSwatch.classList.add('active');
+            }
+        }
 
         // Create thumbnail for pattern
         function createThumbnail(patternFile, containerId) {
@@ -502,14 +576,16 @@
                 underglazeColors = colorsData.underglazes.map(ug => ({
                     id: ug.id,
                     name: ug.name,
-                    color: ug.left
+                    color: ug.left,
+                    image: ug.image
                 }));
                 
                 // Extract glaze colors for pattern
                 glazeColors = colorsData.glazes.map(g => ({
                     id: g.id,
                     name: g.name,
-                    color: g.color
+                    color: g.color,
+                    image: g.image
                 }));
                 
                 console.log('Loaded colors:', { underglazeColors: underglazeColors.length, glazeColors: glazeColors.length });
@@ -541,21 +617,25 @@
             underglazeColors.forEach(ug => {
                 const colorBtn = document.createElement('div');
                 colorBtn.className = 'preset-color';
-                colorBtn.style.backgroundColor = ug.color;
+                colorBtn.style.backgroundImage = `url(${ug.image})`;
                 colorBtn.title = `${ug.name} (${ug.id})`;
                 colorBtn.onclick = () => {
                     currentBgColor = ug.color;
                     currentBgColorName = `${ug.name} (${ug.id})`;
+                    currentBgSwatch = colorBtn;
+                    currentBgSwatchImage = ug.image;
                     
                     // If clear glaze mode is on, also set pattern color to the "top" color
                     if (clearGlazeMode && colorsData && colorsData.underglazes) {
                         const underglazeData = colorsData.underglazes.find(u => u.left === ug.color);
                         if (underglazeData && underglazeData.top) {
                             currentPatternColor = underglazeData.top;
-                            currentPatternColorName = `${underglazeData.name} (${underglazeData.id}) - Top`;
+                            currentPatternColorName = 'Clear glaze';
                         }
                     }
                     
+                    updateSwatchActiveStates();
+                    updateColorInfoSwatches();
                     updateColors();
                 };
                 underglazeGrid.appendChild(colorBtn);
@@ -574,7 +654,7 @@
             glazeColors.forEach(g => {
                 const colorBtn = document.createElement('div');
                 colorBtn.className = 'preset-color';
-                colorBtn.style.backgroundColor = g.color;
+                colorBtn.style.backgroundImage = `url(${g.image})`;
                 colorBtn.title = `${g.name} (${g.id})`;
                 colorBtn.onclick = () => {
                     // Turn off clear glaze mode when selecting a glaze color
@@ -587,6 +667,10 @@
                     
                     currentPatternColor = g.color;
                     currentPatternColorName = `${g.name} (${g.id})`;
+                    currentPatternSwatch = colorBtn;
+                    currentPatternSwatchImage = g.image;
+                    updateSwatchActiveStates();
+                    updateColorInfoSwatches();
                     updateColors();
                 };
                 glazeGrid.appendChild(colorBtn);
@@ -605,7 +689,7 @@
             underglazeColors.forEach(ug => {
                 const colorBtn = document.createElement('div');
                 colorBtn.className = 'preset-color';
-                colorBtn.style.backgroundColor = ug.color;
+                colorBtn.style.backgroundImage = `url(${ug.image})`;
                 colorBtn.title = `${ug.name} (${ug.id})`;
                 colorBtn.onclick = () => {
                     // Turn off clear glaze mode when selecting an underglaze pattern color
@@ -618,6 +702,10 @@
                     
                     currentPatternColor = ug.color;
                     currentPatternColorName = `${ug.name} (${ug.id})`;
+                    currentPatternSwatch = colorBtn;
+                    currentPatternSwatchImage = ug.image;
+                    updateSwatchActiveStates();
+                    updateColorInfoSwatches();
                     updateColors();
                 };
                 underglazePatternGrid.appendChild(colorBtn);
@@ -653,7 +741,18 @@
                 currentPatternColorName = `${glazeColors[0].name} (${glazeColors[0].id})`;
             }
 
+            // Set initial swatch references
+            const underglazeSwatches = document.querySelectorAll('.color-section')[0]?.querySelectorAll('.preset-color');
+            currentBgSwatch = underglazeSwatches && underglazeSwatches.length > 0 ? underglazeSwatches[0] : null;
+            currentBgSwatchImage = underglazeColors.length > 0 ? underglazeColors[0].image : null;
+            
+            const glazeSwatches = document.querySelectorAll('.color-section')[1]?.querySelectorAll('.preset-color');
+            currentPatternSwatch = glazeSwatches && glazeSwatches.length > 0 ? glazeSwatches[0] : null;
+            currentPatternSwatchImage = glazeColors.length > 0 ? glazeColors[0].image : null;
+
             // Initial update
+            updateSwatchActiveStates();
+            updateColorInfoSwatches();
             updateColors();
         }
 
@@ -755,7 +854,13 @@
                 
                 if (currentUnderglaze && currentUnderglaze.top) {
                     currentPatternColor = currentUnderglaze.top;
-                    currentPatternColorName = `${currentUnderglaze.name} (${currentUnderglaze.id}) - Top`;
+                    currentPatternColorName = 'Clear glaze';
+                    
+                    // Clear pattern swatch reference since we're in clear glaze mode
+                    currentPatternSwatch = null;
+                    currentPatternSwatchImage = null;
+                    updateSwatchActiveStates();
+                    updateColorInfoSwatches();
                     updateColors();
                 } else {
                     console.warn('Could not find matching underglaze for current background color');
@@ -763,19 +868,6 @@
             }
         }
 
-        // Reset to default colors
-        function resetColors() {
-            const defaultBgColor = underglazeColors.length > 0 ? underglazeColors[0].color : '#ffffff';
-            const defaultPatternColor = glazeColors.length > 0 ? glazeColors[0].color : '#000000';
-            const defaultBgColorName = underglazeColors.length > 0 ? `${underglazeColors[0].name} (${underglazeColors[0].id})` : 'Select an underglaze color';
-            const defaultPatternColorName = glazeColors.length > 0 ? `${glazeColors[0].name} (${glazeColors[0].id})` : 'Select a glaze color';
-            
-            currentBgColor = defaultBgColor;
-            currentPatternColor = defaultPatternColor;
-            currentBgColorName = defaultBgColorName;
-            currentPatternColorName = defaultPatternColorName;
-            updateColors();
-        }
 
         // Download SVG
         function downloadSVG() {
