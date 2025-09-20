@@ -1031,9 +1031,27 @@
                             const canvas = document.createElement('canvas');
                             const ctx = canvas.getContext('2d');
                             
-                            // Set canvas size
-                            const width = 800;
-                            const height = 600;
+                            // Get SVG dimensions from viewBox (most reliable)
+                            const viewBox = svgElement.getAttribute('viewBox');
+                            let width = 800;
+                            let height = 600;
+                            
+                            if (viewBox) {
+                                const [, , vbWidth, vbHeight] = viewBox.split(' ').map(Number);
+                                if (vbWidth && vbHeight) {
+                                    width = vbWidth;
+                                    height = vbHeight;
+                                }
+                            } else {
+                                // Fallback to width/height attributes
+                                const svgWidth = svgElement.getAttribute('width');
+                                const svgHeight = svgElement.getAttribute('height');
+                                if (svgWidth && svgHeight) {
+                                    width = parseInt(svgWidth) || 800;
+                                    height = parseInt(svgHeight) || 600;
+                                }
+                            }
+                            
                             canvas.width = width;
                             canvas.height = height;
                             
