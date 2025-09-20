@@ -275,6 +275,28 @@
             box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
         }
 
+        .slack-btn {
+            background: linear-gradient(135deg, #4a154b 0%, #611f69 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(74, 21, 75, 0.3);
+            font-size: 0.9rem;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+
+        .slack-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 21, 75, 0.4);
+        }
+
+
+
         .clear-glaze-btn {
             background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
             color: #333;
@@ -415,6 +437,7 @@
                 </div>
                 <div class="color-info-item">
                     <button class="download-btn" onclick="downloadSVG()">Download</button>
+                    <button class="slack-btn" onclick="sendToSlack()">Send to Slack</button>
                 </div>
             </div>
         </div>
@@ -979,8 +1002,189 @@
             }
         }
 
+        // Hardcoded Slack configuration
+        const slackWebhookUrl = 'https://hooks.slack.com/services/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';
+        const slackMentionUser = '@thisisjohnbrown';
+
+
+        // Send to Slack function
+        async function sendToSlack() {
+            // Show loading state
+            const slackBtn = document.querySelector('.slack-btn');
+            const originalText = slackBtn.textContent;
+            slackBtn.textContent = 'Sending...';
+            slackBtn.disabled = true;
+
+            try {
+                console.log('🚀 Starting Slack send process...');
+                
+                // Generate shareable URL
+                const shareUrl = generateShareUrl();
+                
+                // Create a simple text message with clickable link
+                const message = {
+                    text: `🎨 New ceramic pattern design! ${slackMentionUser} Check out this color combination:\n\n*Pattern:* ${currentPattern.replace('.svg', '')}\n*Background Color:* ${currentBgColorName} (${currentBgColor})\n*Pattern Color:* ${currentPatternColorName} (${currentPatternColor})\n\n🔗 <${shareUrl}|View this combination>`
+                };
+
+                console.log('📝 Message payload created');
+                console.log('📝 Message text length:', message.text.length);
+                
+                // Try direct fetch without proxy first
+                try {
+                    const response = await fetch(slackWebhookUrl, {
+                        method: 'POST',
+                        mode: 'no-cors', // This bypasses CORS but we can't read response
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(message)
+                    });
+                    
+                    console.log('✅ Message sent (no-cors mode)');
+                    alert('Successfully sent to Slack! Check your #color-requests channel.');
+                    
+                } catch (fetchError) {
+                    console.log('❌ Direct fetch failed, trying alternative method...');
+                    
+                    // Alternative: Use a simple form submission
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = slackWebhookUrl;
+                    form.target = '_blank';
+                    form.style.display = 'none';
+                    
+                    const payloadInput = document.createElement('input');
+                    payloadInput.type = 'hidden';
+                    payloadInput.name = 'payload';
+                    payloadInput.value = JSON.stringify(message);
+                    
+                    form.appendChild(payloadInput);
+                    document.body.appendChild(form);
+                    form.submit();
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(form);
+                    }, 1000);
+                    
+                    console.log('✅ Alternative method used');
+                    alert('Successfully sent to Slack! Check your #color-requests channel.');
+                }
+
+            } catch (error) {
+                console.error('💥 Error sending to Slack:', error);
+                alert('Error sending to Slack: ' + error.message);
+            } finally {
+                // Reset button state
+                slackBtn.textContent = originalText;
+                slackBtn.disabled = false;
+            }
+        }
+
+        // Parse URL parameters
+        function getUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                pattern: urlParams.get('pattern'),
+                bgColor: urlParams.get('bgColor'),
+                patternColor: urlParams.get('patternColor'),
+                bgColorName: urlParams.get('bgColorName'),
+                patternColorName: urlParams.get('patternColorName')
+            };
+        }
+
+        // Apply URL parameters to the color picker
+        function applyUrlParams() {
+            const params = getUrlParams();
+            
+            if (params.pattern) {
+                console.log('🎯 Loading pattern from URL:', params.pattern);
+                switchPattern(params.pattern);
+            }
+            
+            if (params.bgColor && params.bgColorName) {
+                console.log('🎨 Loading background color from URL:', params.bgColorName, params.bgColor);
+                currentBgColor = params.bgColor;
+                currentBgColorName = decodeURIComponent(params.bgColorName);
+                
+                // Find and select the matching underglaze swatch
+                const underglazeSwatches = document.querySelectorAll('.color-section')[0]?.querySelectorAll('.preset-color');
+                if (underglazeSwatches) {
+                    underglazeSwatches.forEach(swatch => {
+                        const swatchTitle = swatch.title || '';
+                        const decodedBgColorName = decodeURIComponent(params.bgColorName);
+                        
+                        // Check if this swatch matches the background color name
+                        if (swatchTitle.includes(decodedBgColorName) || swatchTitle.includes(params.bgColorName)) {
+                            currentBgSwatch = swatch;
+                            currentBgSwatchImage = swatch.style.backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/, '$1');
+                            console.log('✅ Found matching background swatch:', swatchTitle);
+                        }
+                    });
+                }
+            }
+            
+            if (params.patternColor && params.patternColorName) {
+                console.log('🎨 Loading pattern color from URL:', params.patternColorName, params.patternColor);
+                currentPatternColor = params.patternColor;
+                currentPatternColorName = decodeURIComponent(params.patternColorName);
+                
+                // Find and select the matching pattern color swatch
+                const patternColorSections = document.querySelectorAll('.color-section');
+                for (let i = 1; i < patternColorSections.length; i++) {
+                    const swatches = patternColorSections[i].querySelectorAll('.preset-color');
+                    swatches.forEach(swatch => {
+                        const swatchTitle = swatch.title || '';
+                        const decodedPatternColorName = decodeURIComponent(params.patternColorName);
+                        
+                        // Check if this swatch matches the pattern color name
+                        if (swatchTitle.includes(decodedPatternColorName) || swatchTitle.includes(params.patternColorName)) {
+                            currentPatternSwatch = swatch;
+                            currentPatternSwatchImage = swatch.style.backgroundImage.replace(/url\(['"]?(.*?)['"]?\)/, '$1');
+                            console.log('✅ Found matching pattern swatch:', swatchTitle);
+                        }
+                    });
+                }
+            }
+            
+            // Update the display with a slight delay to ensure DOM is ready
+            setTimeout(() => {
+                updateSwatchActiveStates();
+                updateColorInfoSwatches();
+                updateColors();
+                console.log('🎨 Applied URL parameters - current state:', {
+                    pattern: currentPattern,
+                    bgColor: currentBgColor,
+                    bgColorName: currentBgColorName,
+                    patternColor: currentPatternColor,
+                    patternColorName: currentPatternColorName
+                });
+            }, 100);
+        }
+
+        // Generate shareable URL
+        function generateShareUrl() {
+            const baseUrl = window.location.origin + window.location.pathname;
+            const params = new URLSearchParams();
+            
+            params.set('pattern', currentPattern);
+            params.set('bgColor', currentBgColor);
+            params.set('patternColor', currentPatternColor);
+            params.set('bgColorName', encodeURIComponent(currentBgColorName));
+            params.set('patternColorName', encodeURIComponent(currentPatternColorName));
+            
+            return `${baseUrl}?${params.toString()}`;
+        }
+
+
         // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', initColorPicker);
+        document.addEventListener('DOMContentLoaded', function() {
+            initColorPicker();
+            
+            // Apply URL parameters after a short delay to ensure everything is loaded
+            setTimeout(() => {
+                applyUrlParams();
+            }, 500);
+        });
     </script>
 </body>
 </html>
