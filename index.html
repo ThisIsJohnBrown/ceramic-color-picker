@@ -437,7 +437,7 @@
                     <span class="color-name" id="patternColorName">Select a glaze color</span>
                 </div>
                 <div class="color-info-item">
-                    <button class="download-btn" onclick="downloadPNG()">Download PNG</button>
+                    <button class="download-btn" onclick="downloadPNG()">Download</button>
                     <button class="slack-btn" onclick="sendToSlack()">Send to Slack</button>
                 </div>
             </div>
@@ -567,6 +567,7 @@
             // Update colors after pattern loads
             setTimeout(() => {
                 updateColors();
+                updateUrl();
             }, 100);
         }
         
@@ -661,6 +662,7 @@
                     updateSwatchActiveStates();
                     updateColorInfoSwatches();
                     updateColors();
+                    updateUrl();
                 };
                 underglazeGrid.appendChild(colorBtn);
             });
@@ -696,6 +698,7 @@
                     updateSwatchActiveStates();
                     updateColorInfoSwatches();
                     updateColors();
+                    updateUrl();
                 };
                 glazeGrid.appendChild(colorBtn);
             });
@@ -731,6 +734,7 @@
                     updateSwatchActiveStates();
                     updateColorInfoSwatches();
                     updateColors();
+                    updateUrl();
                 };
                 underglazePatternGrid.appendChild(colorBtn);
             });
@@ -851,6 +855,7 @@
                     updateColors();
                 }
             }
+            updateUrl();
         }
 
         // Apply clear glaze mode - set pattern color to "top" color of current underglaze
@@ -869,6 +874,7 @@
                     updateSwatchActiveStates();
                     updateColorInfoSwatches();
                     updateColors();
+                    updateUrl();
                 } else {
                     console.warn('Could not find matching underglaze for current background color');
                 }
@@ -1157,6 +1163,13 @@
             params.set('patternColorName', encodeURIComponent(currentPatternColorName));
             
             return `${baseUrl}?${params.toString()}`;
+        }
+
+        // Update URL with current parameters
+        function updateUrl() {
+            const newUrl = generateShareUrl();
+            // Use replaceState to avoid adding to browser history
+            window.history.replaceState({}, '', newUrl);
         }
 
 
