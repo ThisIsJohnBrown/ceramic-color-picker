@@ -90,7 +90,7 @@ async function svgToPng(svgContent, width = 800, height = 600) {
     fs.writeFileSync(tempSvgPath, svgContent);
     
     console.log('🚀 Launching Puppeteer browser...');
-    // Launch Puppeteer browser with simpler configuration
+    // Launch Puppeteer browser with Railway-optimized configuration
     browser = await puppeteer.launch({
       headless: true,
       args: [
@@ -98,9 +98,15 @@ async function svgToPng(svgContent, width = 800, height = 600) {
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
         '--disable-gpu',
-        '--disable-web-security'
+        '--disable-web-security',
+        '--disable-extensions',
+        '--disable-plugins',
+        '--disable-images',
+        '--disable-javascript',
+        '--single-process',
+        '--no-zygote'
       ],
-      timeout: 10000
+      timeout: 30000
     });
     
     console.log('📄 Creating new page...');
