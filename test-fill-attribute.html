@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Fill Attribute</title>
+</head>
+<body>
+    <h1>Test Fill Attribute</h1>
+    <div id="svgContainer">
+        <object id="svgObject" data="patterns/metaAndLines.svg" type="image/svg+xml" width="400" height="400">
+            Your browser does not support SVG
+        </object>
+    </div>
+    <button onclick="testFillAttribute()">Test Fill Attribute</button>
+    <div id="result"></div>
+
+    <script>
+        let currentPattern = 'metaAndLines.svg';
+        let currentBgColor = '#ff0000';
+        let currentPatternColor = '#00ff00';
+
+        function updateColors() {
+            const svgObject = document.getElementById('svgObject');
+            const bgColor = currentBgColor;
+            const patternColor = currentPatternColor;
+            
+            // Wait for SVG to load
+            svgObject.addEventListener('load', function() {
+                const svgDoc = svgObject.contentDocument;
+                if (svgDoc) {
+                    // Update background
+                    const svgElement = svgDoc.querySelector('svg');
+                    if (svgElement) {
+                        svgElement.style.backgroundColor = bgColor;
+                    }
+
+                    // Update pattern color
+                    let path = null;
+                    if (currentPattern === 'metaAndLines.svg') {
+                        path = svgDoc.querySelector('#path1514');
+                    } else {
+                        path = svgDoc.querySelector('path');
+                    }
+                    
+                    if (path) {
+                        path.setAttribute('fill', patternColor);
+                    }
+                }
+            });
+            
+            // If already loaded, update immediately
+            if (svgObject.contentDocument) {
+                const svgDoc = svgObject.contentDocument;
+                const svgElement = svgDoc.querySelector('svg');
+                
+                if (svgElement) {
+                    svgElement.style.backgroundColor = bgColor;
+                }
+                
+                // Update pattern color
+                let path = null;
+                if (currentPattern === 'metaAndLines.svg') {
+                    path = svgDoc.querySelector('#path1514');
+                } else {
+                    path = svgDoc.querySelector('path');
+                }
+                
+                if (path) {
+                    path.setAttribute('fill', patternColor);
+                }
+            }
+        }
+
+        function testFillAttribute() {
+            const svgObject = document.getElementById('svgObject');
+            
+            svgObject.addEventListener('load', function() {
+                const svgDoc = svgObject.contentDocument;
+                if (svgDoc) {
+                    const svgElement = svgDoc.querySelector('svg');
+                    
+                    // Find the correct path element based on current pattern
+                    let path = null;
+                    if (currentPattern === 'metaAndLines.svg') {
+                        path = svgDoc.querySelector('#path1514');
+                    } else {
+                        path = svgDoc.querySelector('path');
+                    }
+                    
+                    if (svgElement && path) {
+                        // The SVG already has the correct colors applied by updateColors()
+                        // Just convert it to string directly
+                        const svgString = new XMLSerializer().serializeToString(svgElement);
+                        
+                        // Check if the colors are in the SVG
+                        const hasBgColor = svgString.includes('background-color: #ff0000');
+                        const hasPatternColor = svgString.includes('fill="#00ff00"');
+                        
+                        document.getElementById('result').innerHTML = `
+                            <h3>Extraction Results:</h3>
+                            <p>SVG Length: ${svgString.length}</p>
+                            <p>Has Background Color: ${hasBgColor}</p>
+                            <p>Has Pattern Color: ${hasPatternColor}</p>
+                            <p>Path Element: ${path.outerHTML.substring(0, 200)}...</p>
+                            <p>Path fill attribute: ${path.getAttribute('fill')}</p>
+                        `;
+                    }
+                }
+            });
+            
+            // If already loaded, trigger immediately
+            if (svgObject.contentDocument) {
+                svgObject.dispatchEvent(new Event('load'));
+            }
+        }
+
+        // Initialize
+        updateColors();
+    </script>
+</body>
+</html>

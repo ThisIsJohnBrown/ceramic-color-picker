@@ -799,22 +799,12 @@
                         svgElement.style.backgroundColor = bgColor;
                     }
 
-                    // Update pattern color - try different selectors based on pattern
-                    let path = null;
-                    if (currentPattern === 'metaAndLines.svg') {
-                        path = svgDoc.querySelector('#path1514');
-                    } else if (currentPattern === 'metaOriginal.svg') {
-                        // For metaOriginal pattern, try to find the main path element
-                        path = svgDoc.querySelector('path');
-                    } else if (currentPattern === 'truchet.svg') {
-                        // For truchet pattern, try to find the main path element
-                        path = svgDoc.querySelector('path');
-                    } else if (currentPattern === 'loopyLines.svg') {
-                        // For loopyLines pattern, try to find the main path element
-                        path = svgDoc.querySelector('path');
-                    }
+                    // Update pattern color for the main element
+                    const path = svgDoc.querySelector('#main');
                     
                     if (path) {
+                        // Set both fill attribute and style fill for compatibility
+                        path.setAttribute('fill', patternColor);
                         path.style.fill = patternColor;
                     }
                 }
@@ -829,19 +819,12 @@
                     svgElement.style.backgroundColor = bgColor;
                 }
                 
-                // Update pattern color - try different selectors based on pattern
-                let path = null;
-                if (currentPattern === 'metaAndLines.svg') {
-                    path = svgDoc.querySelector('#path1514');
-                } else if (currentPattern === 'metaOriginal.svg') {
-                    path = svgDoc.querySelector('path');
-                } else if (currentPattern === 'truchet.svg') {
-                    path = svgDoc.querySelector('path');
-                } else if (currentPattern === 'loopyLines.svg') {
-                    path = svgDoc.querySelector('path');
-                }
+                // Update pattern color for the main element
+                const path = svgDoc.querySelector('#main');
                 
                 if (path) {
+                    // Set both fill attribute and style fill for compatibility
+                    path.setAttribute('fill', patternColor);
                     path.style.fill = patternColor;
                 }
             }
@@ -903,35 +886,24 @@
                 if (svgDoc) {
                     const svgElement = svgDoc.querySelector('svg');
                     
-                    // Find the correct path element based on current pattern
-                    let path = null;
-                    if (currentPattern === 'metaAndLines.svg') {
-                        path = svgDoc.querySelector('#path1514');
-                    } else if (currentPattern === 'metaOriginal.svg') {
-                        path = svgDoc.querySelector('path');
-                    } else if (currentPattern === 'truchet.svg') {
-                        path = svgDoc.querySelector('path');
-                    } else if (currentPattern === 'loopyLines.svg') {
-                        path = svgDoc.querySelector('path');
-                    }
+                    // Find the main element
+                    const path = svgDoc.querySelector('#main');
                     
                     if (svgElement && path) {
                         // Create a copy of the SVG
                         const svgClone = svgElement.cloneNode(true);
                         
-                        // Find the corresponding path in the clone
-                        let pathClone = null;
-                        if (currentPattern === 'metaAndLines.svg') {
-                            pathClone = svgClone.querySelector('#path1514');
-                        } else {
-                            pathClone = svgClone.querySelector('path');
-                        }
+                        // Find the corresponding main element in the clone
+                        const pathClone = svgClone.querySelector('#main');
                         
                         // Apply colors
                         svgClone.style.backgroundColor = bgColor;
                         if (pathClone) {
+                            // Set both fill attribute and style fill for compatibility
+                            pathClone.setAttribute('fill', patternColor);
                             pathClone.style.fill = patternColor;
                         }
+                        
                         
                         // Convert to string
                         const svgString = new XMLSerializer().serializeToString(svgClone);
@@ -957,31 +929,20 @@
                 const svgDoc = svgObject.contentDocument;
                 const svgElement = svgDoc.querySelector('svg');
                 
-                // Find the correct path element based on current pattern
-                let path = null;
-                if (currentPattern === 'metaAndLines.svg') {
-                    path = svgDoc.querySelector('#path1514');
-                } else if (currentPattern === 'metaOriginal.svg') {
-                    path = svgDoc.querySelector('path');
-                } else if (currentPattern === 'truchet.svg') {
-                    path = svgDoc.querySelector('path');
-                } else if (currentPattern === 'loopyLines.svg') {
-                    path = svgDoc.querySelector('path');
-                }
+                // Find the main element (consistent with event listener)
+                const path = svgDoc.querySelector('#main');
                 
                 if (svgElement && path) {
                     const svgClone = svgElement.cloneNode(true);
                     
-                    // Find the corresponding path in the clone
-                    let pathClone = null;
-                    if (currentPattern === 'metaAndLines.svg') {
-                        pathClone = svgClone.querySelector('#path1514');
-                    } else {
-                        pathClone = svgClone.querySelector('path');
-                    }
+                    // Find the corresponding main element in the clone
+                    const pathClone = svgClone.querySelector('#main');
                     
+                    // Apply colors
                     svgClone.style.backgroundColor = bgColor;
                     if (pathClone) {
+                        // Set both fill attribute and style fill for compatibility
+                        pathClone.setAttribute('fill', patternColor);
                         pathClone.style.fill = patternColor;
                     }
                     
@@ -1017,8 +978,57 @@
             try {
                 console.log('🚀 Starting Slack bot send process...');
                 
+                // Extract SVG using EXACT same logic as downloadSVG
+                const svgObject = document.getElementById('svgObject');
+                const bgColor = currentBgColor;
+                const patternColor = currentPatternColor;
+                
+                const svgString = await new Promise((resolve, reject) => {
+                    svgObject.addEventListener('load', function() {
+                        const svgDoc = svgObject.contentDocument;
+                        if (svgDoc) {
+                            const svgElement = svgDoc.querySelector('svg');
+                            
+                            // Find the main element
+                            const path = svgDoc.querySelector('#main');
+                            
+                            if (svgElement && path) {
+                                // Create a copy of the SVG
+                                const svgClone = svgElement.cloneNode(true);
+                                
+                                // Find the corresponding main element in the clone
+                                const pathClone = svgClone.querySelector('#main');
+                                
+                                // Apply colors
+                                svgClone.style.backgroundColor = bgColor;
+                                if (pathClone) {
+                                    // Set both fill attribute and style fill for compatibility
+                                    pathClone.setAttribute('fill', patternColor);
+                                    pathClone.style.fill = patternColor;
+                                }
+                                
+                                // Convert to string
+                                const svgString = new XMLSerializer().serializeToString(svgClone);
+                                resolve(svgString);
+                            } else {
+                                reject(new Error('Could not find SVG element or path'));
+                            }
+                        } else {
+                            reject(new Error('Could not access SVG document'));
+                        }
+                    });
+                    
+                    // If already loaded, trigger immediately
+                    if (svgObject.contentDocument) {
+                        svgObject.dispatchEvent(new Event('load'));
+                    }
+                });
+                
+                console.log('📝 Extracted SVG from webpage, length:', svgString.length);
+                
                 // Prepare the data for the API
                 const requestData = {
+                    svgContent: svgString,
                     pattern: currentPattern,
                     bgColor: currentBgColor,
                     patternColor: currentPatternColor,
@@ -1027,7 +1037,7 @@
                     channel: '#color-requests' // Default channel
                 };
 
-                console.log('📝 Sending data to bot API:', requestData);
+                console.log('📝 Sending SVG data to bot API');
                 
                 // Send to our bot API
                 const response = await fetch(`${API_BASE_URL}/api/send-to-slack`, {

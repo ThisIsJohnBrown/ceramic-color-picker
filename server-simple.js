@@ -4,6 +4,7 @@ const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const puppeteer = require('puppeteer');
 require('dotenv').config();
 
 // Initialize Slack app
@@ -20,7 +21,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 expressApp.use(cors());
-expressApp.use(express.json());
+expressApp.use(express.json({ limit: '10mb' })); // Increase limit to handle large SVG files
 expressApp.use(express.static('.'));
 
 // Configure multer for file uploads
@@ -63,24 +64,84 @@ function generateSVG(pattern, bgColor, patternColor) {
     }
   });
   
-  // Update pattern color based on pattern type
-  if (pattern === 'metaAndLines.svg') {
-    svgContent = svgContent.replace(/id="path1514"[^>]*fill="[^"]*"/, `id="path1514" fill="${patternColor}"`);
-  } else {
-    // For other patterns, update the first path element
-    svgContent = svgContent.replace(/<path[^>]*fill="[^"]*"/, (match) => {
-      return match.replace(/fill="[^"]*"/, `fill="${patternColor}"`);
-    });
+  // Update pattern color for the main element
+  // First try to replace existing fill attribute
+  svgContent = svgContent.replace(/id="main"[^>]*fill="[^"]*"/, `id="main" fill="${patternColor}"`);
+  
+  // If no fill attribute exists, add one
+  if (!svgContent.includes(`id="main" fill="${patternColor}"`)) {
+    svgContent = svgContent.replace(/id="main"([^>]*)style="([^"]*)"/, `id="main"$1style="$2" fill="${patternColor}"`);
   }
   
   return svgContent;
 }
 
-// Helper function to save SVG file (no conversion needed for Slack)
-function saveSVG(svgContent, filename) {
-  const outputPath = path.join(__dirname, 'uploads', filename);
-  fs.writeFileSync(outputPath, svgContent);
-  return outputPath;
+// Helper function to convert SVG to PNG using Puppeteer with tight cropping
+async function svgToPng(svgContent, width = 800, height = 600) {
+  const tempSvgPath = path.join(__dirname, 'uploads', `temp_${Date.now()}.svg`);
+  const outputPngPath = path.join(__dirname, 'uploads', `output_${Date.now()}.png`);
+  
+  let browser;
+  
+  try {
+    console.log('📝 Writing SVG to temp file:', tempSvgPath);
+    // Write SVG to temporary file
+    fs.writeFileSync(tempSvgPath, svgContent);
+    
+    console.log('🚀 Launching Puppeteer browser...');
+    // Launch Puppeteer browser with simpler configuration
+    browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--disable-web-security'
+      ],
+      timeout: 10000
+    });
+    
+    console.log('📄 Creating new page...');
+    const page = await browser.newPage();
+    
+    // Set viewport size
+    await page.setViewport({ width, height });
+    
+    console.log('🌐 Loading SVG file...');
+    // Load the SVG file
+    const fileUrl = `file://${tempSvgPath}`;
+    await page.goto(fileUrl, { 
+      waitUntil: 'load',
+      timeout: 10000
+    });
+    
+    console.log('📸 Taking screenshot...');
+    await page.screenshot({
+      path: outputPngPath,
+      type: 'png',
+      fullPage: true
+    });
+    
+    console.log('✅ Screenshot saved to:', outputPngPath);
+    
+    // Clean up temporary SVG file
+    fs.unlinkSync(tempSvgPath);
+    
+    return outputPngPath;
+  } catch (error) {
+    console.error('❌ Error in svgToPng:', error);
+    // Clean up on error
+    if (fs.existsSync(tempSvgPath)) {
+      fs.unlinkSync(tempSvgPath);
+    }
+    throw error;
+  } finally {
+    if (browser) {
+      console.log('🔒 Closing browser...');
+      await browser.close();
+    }
+  }
 }
 
 // Slack command handler
@@ -96,21 +157,25 @@ app.command('/ceramic', async ({ command, ack, respond, client }) => {
     // Generate SVG
     const svgContent = generateSVG(pattern, bgColor, patternColor);
     
-    // Save SVG file
-    const filename = `ceramic-${pattern.replace('.svg', '')}-${Date.now()}.svg`;
-    const svgPath = saveSVG(svgContent, filename);
+    // Convert SVG to PNG
+    const pngPath = await svgToPng(svgContent);
     
-    // Upload to Slack
+    // Generate shareable URL
+    const baseUrl = process.env.BASE_URL || 'https://ceramic-color-picker.vercel.app';
+    const shareUrl = `${baseUrl}?pattern=${encodeURIComponent(pattern)}&bgColor=${encodeURIComponent(bgColor)}&patternColor=${encodeURIComponent(patternColor)}`;
+    
+    // Upload PNG to Slack
+    const filename = `ceramic-${pattern.replace('.svg', '')}-${Date.now()}.png`;
     const result = await client.files.upload({
       channels: command.channel_id,
-      file: fs.createReadStream(svgPath),
+      file: fs.createReadStream(pngPath),
       filename: filename,
       title: `Ceramic Pattern: ${pattern}`,
-      initial_comment: `🎨 Ceramic pattern generated!\n*Pattern:* ${pattern}\n*Background:* ${bgColor}\n*Pattern Color:* ${patternColor}`
+      initial_comment: `🎨 Ceramic pattern generated!\n*Pattern:* ${pattern}\n*Background:* ${bgColor}\n*Pattern Color:* ${patternColor}\n\n🔗 <${shareUrl}|View and edit this design>`
     });
     
-    // Clean up SVG file
-    fs.unlinkSync(svgPath);
+    // Clean up PNG file
+    fs.unlinkSync(pngPath);
     
     await respond({
       text: `✅ Pattern generated and uploaded!`,
@@ -127,32 +192,35 @@ app.command('/ceramic', async ({ command, ack, respond, client }) => {
 });
 
 // API endpoint for web app integration
-expressApp.post('/api/send-to-slack', upload.single('image'), async (req, res) => {
+expressApp.post('/api/send-to-slack', async (req, res) => {
   try {
-    const { pattern, bgColor, patternColor, bgColorName, patternColorName, channel } = req.body;
+    const { svgContent, pattern, bgColor, patternColor, bgColorName, patternColorName, channel } = req.body;
     
-    if (!pattern || !bgColor || !patternColor) {
+    if (!svgContent || !pattern || !bgColor || !patternColor) {
       return res.status(400).json({ error: 'Missing required parameters' });
     }
     
-    // Generate SVG
-    const svgContent = generateSVG(pattern, bgColor, patternColor);
+    // Convert SVG to PNG
+    const pngPath = await svgToPng(svgContent);
     
-    // Save SVG file
-    const filename = `ceramic-${pattern.replace('.svg', '')}-${Date.now()}.svg`;
-    const svgPath = saveSVG(svgContent, filename);
+    // Generate shareable URL using the request origin
+    const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
+    const host = req.headers['x-forwarded-host'] || req.headers.host;
+    const baseUrl = process.env.BASE_URL || `${protocol}://${host}`;
+    const shareUrl = `${baseUrl}?pattern=${encodeURIComponent(pattern)}&bgColor=${encodeURIComponent(bgColor)}&patternColor=${encodeURIComponent(patternColor)}&bgColorName=${encodeURIComponent(bgColorName)}&patternColorName=${encodeURIComponent(patternColorName)}`;
     
-    // Upload to Slack
+    // Upload PNG to Slack
+    const filename = `ceramic-${pattern.replace('.svg', '')}-${Date.now()}.png`;
     const result = await app.client.files.upload({
       channels: channel || '#color-requests',
-      file: fs.createReadStream(svgPath),
+      file: fs.createReadStream(pngPath),
       filename: filename,
       title: `Ceramic Pattern: ${pattern}`,
-      initial_comment: `🎨 New ceramic pattern design!\n\n*Pattern:* ${pattern.replace('.svg', '')}\n*Background Color:* ${bgColorName} (${bgColor})\n*Pattern Color:* ${patternColorName} (${patternColor})`
+      initial_comment: `🎨 New ceramic pattern design!\n\n*Pattern:* ${pattern.replace('.svg', '')}\n*Background Color:* ${bgColorName} (${bgColor})\n*Pattern Color:* ${patternColorName} (${patternColor})\n\n🔗 <${shareUrl}|View and edit this design>`
     });
     
-    // Clean up SVG file
-    fs.unlinkSync(svgPath);
+    // Clean up PNG file
+    fs.unlinkSync(pngPath);
     
     res.json({ 
       success: true, 
