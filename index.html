@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Pattern Color Picker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-label {
+            font-weight: 600;
+            color: #495057;
+            min-width: 120px;
+        }
+
+
+        .color-value {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .preset-colors {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 8px;
+            max-width: 100%;
+        }
+        
+        .color-sections {
+            display: flex;
+            gap: 30px;
+            justify-content: stretch;
+            flex-wrap: wrap;
+        }
+        
+        .color-section {
+            flex: 1;
+            min-width: 300px;
+            max-width: none;
+        }
+        
+        .pattern-color-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+            min-width: 300px;
+            max-width: none;
+        }
+        
+        .pattern-selector {
+            padding: 20px;
+            text-align: center;
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+        }
+        
+        .pattern-thumbnails {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .pattern-thumb {
+            cursor: pointer;
+            padding: 10px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            background: #2a2a2a;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: inline-block;
+            width: auto;
+            min-width: 140px;
+            box-sizing: border-box;
+        }
+        
+        .pattern-thumb:hover {
+            border-color: #666;
+            background: #333;
+        }
+        
+        .pattern-thumb.active {
+            border-color: #4ecdc4;
+            background: #333;
+        }
+        
+        .thumbnail-preview {
+            width: 120px;
+            height: 80px;
+            background: #000;
+            border: 1px solid #555;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .pattern-name {
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .preset-color {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .preset-color:hover {
+            transform: scale(1.1);
+            border-color: #667eea;
+        }
+
+        .preset-color.active {
+            border-color: #667eea;
+            transform: scale(1.1);
+        }
+
+        .sticky-pattern-container {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .svg-container {
+            padding: 0;
+            text-align: center;
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .color-info {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .color-info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .color-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .color-name {
+            font-size: 1.1rem;
+            color: #495057;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .svg-wrapper {
+            display: block;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .svg-wrapper:hover {
+            transform: scale(1.02);
+        }
+
+        .svg-pattern {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+            margin-left: 10px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+        }
+
+        @media (max-width: 1200px) {
+            .color-sections {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .pattern-color-container {
+                min-width: 100%;
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .control-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .color-sections {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .preset-colors {
+                grid-template-columns: repeat(8, 1fr);
+                max-width: 100%;
+                gap: 6px;
+            }
+            
+            .preset-color {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .color-info {
+                gap: 20px;
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .preset-colors {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            
+            .preset-color {
+                width: 30px;
+                height: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="pattern-selector">
+            <div class="pattern-thumbnails">
+                <div class="pattern-thumb" data-pattern="metaAndLines.svg">
+                    <div class="thumbnail-preview" id="metaAndLinesThumb"></div>
+                    <span class="pattern-name">Meta & Lines</span>
+                </div>
+                <div class="pattern-thumb" data-pattern="metaOriginal.svg">
+                    <div class="thumbnail-preview" id="metaOriginalThumb"></div>
+                    <span class="pattern-name">Meta Original</span>
+                </div>
+                <div class="pattern-thumb" data-pattern="truchet.svg">
+                    <div class="thumbnail-preview" id="truchetThumb"></div>
+                    <span class="pattern-name">Truchet</span>
+                </div>
+                <div class="pattern-thumb" data-pattern="loopyLines.svg">
+                    <div class="thumbnail-preview" id="loopyLinesThumb"></div>
+                    <span class="pattern-name">Loopy Lines</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sticky-pattern-container">
+            <div class="svg-container">
+                <div class="svg-wrapper">
+                    <object id="svgObject" data="patterns/metaAndLines.svg" type="image/svg+xml" class="svg-pattern">
+                        Your browser does not support SVG
+                    </object>
+                </div>
+            </div>
+            <div class="color-info">
+                <div class="color-info-item">
+                    <span class="color-label">Background:</span>
+                    <span class="color-name" id="bgColorName">Select an underglaze color</span>
+                </div>
+                <div class="color-info-item">
+                    <span class="color-label">Pattern:</span>
+                    <span class="color-name" id="patternColorName">Select a glaze color</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="color-sections" id="presetColors">
+                <!-- Color sections will be added by JavaScript -->
+            </div>
+            
+            <div class="control-group">
+                <button class="reset-btn" onclick="resetColors()">Reset to Default</button>
+                <button class="download-btn" onclick="downloadSVG()">Download SVG</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let colorsData = null;
+        let underglazeColors = [];
+        let glazeColors = [];
+        let currentBgColor = '#ffffff';
+        let currentPatternColor = '#000000';
+        let currentBgColorName = 'Select an underglaze color';
+        let currentPatternColorName = 'Select a glaze color';
+        let currentPattern = 'metaAndLines.svg';
+
+        // Create thumbnail for pattern
+        function createThumbnail(patternFile, containerId) {
+            const container = document.getElementById(containerId);
+            const object = document.createElement('object');
+            object.data = `patterns/${patternFile}`;
+            object.type = 'image/svg+xml';
+            object.style.width = '100%';
+            object.style.height = '100%';
+            
+            object.addEventListener('load', function() {
+                const svgDoc = object.contentDocument;
+                if (svgDoc) {
+                    const svg = svgDoc.querySelector('svg');
+                    if (svg) {
+                        svg.style.width = '100%';
+                        svg.style.height = '100%';
+                        svg.style.backgroundColor = '#000000';
+                        
+                        // Find and modify the path element for thumbnails
+                        let path = null;
+                        if (patternFile === 'metaAndLines.svg') {
+                            path = svgDoc.querySelector('#path1514');
+                        } else if (patternFile === 'metaOriginal.svg') {
+                            path = svgDoc.querySelector('path');
+                        } else if (patternFile === 'truchet.svg') {
+                            path = svgDoc.querySelector('path');
+                        } else if (patternFile === 'loopyLines.svg') {
+                            path = svgDoc.querySelector('path');
+                        }
+                        
+                        if (path) {
+                            path.style.fill = '#ffffff';
+                        }
+                    }
+                }
+            });
+            
+            container.appendChild(object);
+        }
+        
+        // Switch pattern
+        function switchPattern(patternFile) {
+            currentPattern = patternFile;
+            const svgObject = document.getElementById('svgObject');
+            svgObject.data = `patterns/${patternFile}`;
+            
+            // Update active thumbnail
+            document.querySelectorAll('.pattern-thumb').forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+            document.querySelector(`[data-pattern="${patternFile}"]`).classList.add('active');
+            
+            // Update colors after pattern loads
+            setTimeout(() => {
+                updateColors();
+            }, 100);
+        }
+        
+        // Set up pattern selector
+        function setupPatternSelector() {
+            // Create thumbnails
+            createThumbnail('metaAndLines.svg', 'metaAndLinesThumb');
+            createThumbnail('metaOriginal.svg', 'metaOriginalThumb');
+            createThumbnail('truchet.svg', 'truchetThumb');
+            createThumbnail('loopyLines.svg', 'loopyLinesThumb');
+            
+            // Add click handlers
+            document.querySelectorAll('.pattern-thumb').forEach(thumb => {
+                thumb.addEventListener('click', function() {
+                    const patternFile = this.getAttribute('data-pattern');
+                    switchPattern(patternFile);
+                });
+            });
+            
+            // Set initial active pattern
+            document.querySelector('[data-pattern="metaAndLines.svg"]').classList.add('active');
+        }
+        
+        // Load colors from JSON file
+        async function loadColors() {
+            try {
+                const response = await fetch('colors.json');
+                colorsData = await response.json();
+                
+                // Extract underglaze left colors for background
+                underglazeColors = colorsData.underglazes.map(ug => ({
+                    id: ug.id,
+                    name: ug.name,
+                    color: ug.left
+                }));
+                
+                // Extract glaze colors for pattern
+                glazeColors = colorsData.glazes.map(g => ({
+                    id: g.id,
+                    name: g.name,
+                    color: g.color
+                }));
+                
+                console.log('Loaded colors:', { underglazeColors: underglazeColors.length, glazeColors: glazeColors.length });
+            } catch (error) {
+                console.error('Error loading colors:', error);
+                // Fallback to default colors
+                underglazeColors = [{ id: 'default', name: 'White', color: '#ffffff' }];
+                glazeColors = [{ id: 'default', name: 'Black', color: '#000000' }];
+            }
+        }
+
+        // Initialize the color picker
+        async function initColorPicker() {
+            await loadColors();
+            
+            // Set up pattern selector
+            setupPatternSelector();
+            
+            const presetContainer = document.getElementById('presetColors');
+
+            // Create underglaze color buttons for background
+            const underglazeSection = document.createElement('div');
+            underglazeSection.className = 'color-section';
+            underglazeSection.innerHTML = '<h4 style="margin-bottom: 10px; color: #495057; font-size: 0.9rem;">Underglaze Colors (Background):</h4>';
+            
+            const underglazeGrid = document.createElement('div');
+            underglazeGrid.className = 'preset-colors';
+            
+            underglazeColors.forEach(ug => {
+                const colorBtn = document.createElement('div');
+                colorBtn.className = 'preset-color';
+                colorBtn.style.backgroundColor = ug.color;
+                colorBtn.title = `${ug.name} (${ug.id})`;
+                colorBtn.onclick = () => {
+                    currentBgColor = ug.color;
+                    currentBgColorName = `${ug.name} (${ug.id})`;
+                    updateColors();
+                };
+                underglazeGrid.appendChild(colorBtn);
+            });
+            
+            underglazeSection.appendChild(underglazeGrid);
+            
+            // Create glaze color buttons for pattern
+            const glazeSection = document.createElement('div');
+            glazeSection.className = 'color-section';
+            glazeSection.innerHTML = '<h4 style="margin-bottom: 10px; color: #495057; font-size: 0.9rem;">Glaze Colors (Pattern):</h4>';
+            
+            const glazeGrid = document.createElement('div');
+            glazeGrid.className = 'preset-colors';
+            
+            glazeColors.forEach(g => {
+                const colorBtn = document.createElement('div');
+                colorBtn.className = 'preset-color';
+                colorBtn.style.backgroundColor = g.color;
+                colorBtn.title = `${g.name} (${g.id})`;
+                colorBtn.onclick = () => {
+                    currentPatternColor = g.color;
+                    currentPatternColorName = `${g.name} (${g.id})`;
+                    updateColors();
+                };
+                glazeGrid.appendChild(colorBtn);
+            });
+            
+            glazeSection.appendChild(glazeGrid);
+            
+            // Create underglaze color buttons for pattern (duplicate from left side)
+            const underglazePatternSection = document.createElement('div');
+            underglazePatternSection.className = 'color-section';
+            underglazePatternSection.innerHTML = '<h4 style="margin-bottom: 10px; color: #495057; font-size: 0.9rem;">Underglaze Colors (Pattern):</h4>';
+            
+            const underglazePatternGrid = document.createElement('div');
+            underglazePatternGrid.className = 'preset-colors';
+            
+            underglazeColors.forEach(ug => {
+                const colorBtn = document.createElement('div');
+                colorBtn.className = 'preset-color';
+                colorBtn.style.backgroundColor = ug.color;
+                colorBtn.title = `${ug.name} (${ug.id})`;
+                colorBtn.onclick = () => {
+                    currentPatternColor = ug.color;
+                    currentPatternColorName = `${ug.name} (${ug.id})`;
+                    updateColors();
+                };
+                underglazePatternGrid.appendChild(colorBtn);
+            });
+            
+            underglazePatternSection.appendChild(underglazePatternGrid);
+            
+            presetContainer.appendChild(underglazeSection);
+            
+            // Create a container for the pattern color sections
+            const patternColorContainer = document.createElement('div');
+            patternColorContainer.className = 'pattern-color-container';
+            patternColorContainer.appendChild(glazeSection);
+            patternColorContainer.appendChild(underglazePatternSection);
+            
+            presetContainer.appendChild(patternColorContainer);
+
+            // Set default colors from the first items
+            if (underglazeColors.length > 0) {
+                currentBgColor = underglazeColors[0].color;
+                currentBgColorName = `${underglazeColors[0].name} (${underglazeColors[0].id})`;
+            }
+            if (glazeColors.length > 0) {
+                currentPatternColor = glazeColors[0].color;
+                currentPatternColorName = `${glazeColors[0].name} (${glazeColors[0].id})`;
+            }
+
+            // Initial update
+            updateColors();
+        }
+
+        // Update SVG colors
+        function updateColors() {
+            const svgObject = document.getElementById('svgObject');
+            const bgColor = currentBgColor;
+            const patternColor = currentPatternColor;
+            
+            // Update color name displays
+            document.getElementById('bgColorName').textContent = currentBgColorName;
+            document.getElementById('patternColorName').textContent = currentPatternColorName;
+
+            // Wait for SVG to load
+            svgObject.addEventListener('load', function() {
+                const svgDoc = svgObject.contentDocument;
+                if (svgDoc) {
+                    // Update background
+                    const svgElement = svgDoc.querySelector('svg');
+                    if (svgElement) {
+                        svgElement.style.backgroundColor = bgColor;
+                    }
+
+                    // Update pattern color - try different selectors based on pattern
+                    let path = null;
+                    if (currentPattern === 'metaAndLines.svg') {
+                        path = svgDoc.querySelector('#path1514');
+                    } else if (currentPattern === 'metaOriginal.svg') {
+                        // For metaOriginal pattern, try to find the main path element
+                        path = svgDoc.querySelector('path');
+                    } else if (currentPattern === 'truchet.svg') {
+                        // For truchet pattern, try to find the main path element
+                        path = svgDoc.querySelector('path');
+                    } else if (currentPattern === 'loopyLines.svg') {
+                        // For loopyLines pattern, try to find the main path element
+                        path = svgDoc.querySelector('path');
+                    }
+                    
+                    if (path) {
+                        path.style.fill = patternColor;
+                    }
+                }
+            });
+
+            // If already loaded, update immediately
+            if (svgObject.contentDocument) {
+                const svgDoc = svgObject.contentDocument;
+                const svgElement = svgDoc.querySelector('svg');
+                
+                if (svgElement) {
+                    svgElement.style.backgroundColor = bgColor;
+                }
+                
+                // Update pattern color - try different selectors based on pattern
+                let path = null;
+                if (currentPattern === 'metaAndLines.svg') {
+                    path = svgDoc.querySelector('#path1514');
+                } else if (currentPattern === 'metaOriginal.svg') {
+                    path = svgDoc.querySelector('path');
+                } else if (currentPattern === 'truchet.svg') {
+                    path = svgDoc.querySelector('path');
+                } else if (currentPattern === 'loopyLines.svg') {
+                    path = svgDoc.querySelector('path');
+                }
+                
+                if (path) {
+                    path.style.fill = patternColor;
+                }
+            }
+        }
+
+        // Reset to default colors
+        function resetColors() {
+            const defaultBgColor = underglazeColors.length > 0 ? underglazeColors[0].color : '#ffffff';
+            const defaultPatternColor = glazeColors.length > 0 ? glazeColors[0].color : '#000000';
+            const defaultBgColorName = underglazeColors.length > 0 ? `${underglazeColors[0].name} (${underglazeColors[0].id})` : 'Select an underglaze color';
+            const defaultPatternColorName = glazeColors.length > 0 ? `${glazeColors[0].name} (${glazeColors[0].id})` : 'Select a glaze color';
+            
+            currentBgColor = defaultBgColor;
+            currentPatternColor = defaultPatternColor;
+            currentBgColorName = defaultBgColorName;
+            currentPatternColorName = defaultPatternColorName;
+            updateColors();
+        }
+
+        // Download SVG
+        function downloadSVG() {
+            const svgObject = document.getElementById('svgObject');
+            const bgColor = currentBgColor;
+            const patternColor = currentPatternColor;
+
+            svgObject.addEventListener('load', function() {
+                const svgDoc = svgObject.contentDocument;
+                if (svgDoc) {
+                    const svgElement = svgDoc.querySelector('svg');
+                    
+                    // Find the correct path element based on current pattern
+                    let path = null;
+                    if (currentPattern === 'metaAndLines.svg') {
+                        path = svgDoc.querySelector('#path1514');
+                    } else if (currentPattern === 'metaOriginal.svg') {
+                        path = svgDoc.querySelector('path');
+                    } else if (currentPattern === 'truchet.svg') {
+                        path = svgDoc.querySelector('path');
+                    } else if (currentPattern === 'loopyLines.svg') {
+                        path = svgDoc.querySelector('path');
+                    }
+                    
+                    if (svgElement && path) {
+                        // Create a copy of the SVG
+                        const svgClone = svgElement.cloneNode(true);
+                        
+                        // Find the corresponding path in the clone
+                        let pathClone = null;
+                        if (currentPattern === 'metaAndLines.svg') {
+                            pathClone = svgClone.querySelector('#path1514');
+                        } else {
+                            pathClone = svgClone.querySelector('path');
+                        }
+                        
+                        // Apply colors
+                        svgClone.style.backgroundColor = bgColor;
+                        if (pathClone) {
+                            pathClone.style.fill = patternColor;
+                        }
+                        
+                        // Convert to string
+                        const svgString = new XMLSerializer().serializeToString(svgClone);
+                        const blob = new Blob([svgString], { type: 'image/svg+xml' });
+                        const url = URL.createObjectURL(blob);
+                        
+                        // Create download link with descriptive filename
+                        const a = document.createElement('a');
+                        a.href = url;
+                        const patternName = currentPattern.replace('.svg', '');
+                        const filename = `${currentBgColorName.replace(/[^a-zA-Z0-9]/g, '_')}_${currentPatternColorName.replace(/[^a-zA-Z0-9]/g, '_')}_${patternName}.svg`;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    }
+                }
+            });
+
+            // If already loaded, download immediately
+            if (svgObject.contentDocument) {
+                const svgDoc = svgObject.contentDocument;
+                const svgElement = svgDoc.querySelector('svg');
+                
+                // Find the correct path element based on current pattern
+                let path = null;
+                if (currentPattern === 'metaAndLines.svg') {
+                    path = svgDoc.querySelector('#path1514');
+                } else if (currentPattern === 'metaOriginal.svg') {
+                    path = svgDoc.querySelector('path');
+                } else if (currentPattern === 'truchet.svg') {
+                    path = svgDoc.querySelector('path');
+                } else if (currentPattern === 'loopyLines.svg') {
+                    path = svgDoc.querySelector('path');
+                }
+                
+                if (svgElement && path) {
+                    const svgClone = svgElement.cloneNode(true);
+                    
+                    // Find the corresponding path in the clone
+                    let pathClone = null;
+                    if (currentPattern === 'metaAndLines.svg') {
+                        pathClone = svgClone.querySelector('#path1514');
+                    } else {
+                        pathClone = svgClone.querySelector('path');
+                    }
+                    
+                    svgClone.style.backgroundColor = bgColor;
+                    if (pathClone) {
+                        pathClone.style.fill = patternColor;
+                    }
+                    
+                    const svgString = new XMLSerializer().serializeToString(svgClone);
+                    const blob = new Blob([svgString], { type: 'image/svg+xml' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.href = url;
+                    const patternName = currentPattern.replace('.svg', '');
+                    const filename = `${currentBgColorName.replace(/[^a-zA-Z0-9]/g, '_')}_${currentPatternColorName.replace(/[^a-zA-Z0-9]/g, '_')}_${patternName}.svg`;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initColorPicker);
+    </script>
+</body>
+</html>
