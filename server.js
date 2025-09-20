@@ -47,40 +47,6 @@ try {
   console.error('Error loading colors.json:', error);
 }
 
-// Helper function to generate SVG with colors
-function generateSVG(pattern, bgColor, patternColor) {
-  const patternPath = path.join(__dirname, 'patterns', pattern);
-  
-  if (!fs.existsSync(patternPath)) {
-    throw new Error(`Pattern file not found: ${pattern}`);
-  }
-  
-  let svgContent = fs.readFileSync(patternPath, 'utf8');
-  
-  // Update background color
-  svgContent = svgContent.replace(/<svg[^>]*>/, (match) => {
-    if (match.includes('style=')) {
-      // Extract existing styles and add background-color
-      const styleMatch = match.match(/style="([^"]*)"/);
-      if (styleMatch) {
-        const existingStyles = styleMatch[1];
-        return match.replace(/style="[^"]*"/, `style="${existingStyles}; background-color: ${bgColor}"`);
-      }
-    }
-    return match.replace('>', ` style="background-color: ${bgColor}">`);
-  });
-  
-  // Update pattern color for the main element
-  // First try to replace existing fill attribute
-  svgContent = svgContent.replace(/id="main"[^>]*fill="[^"]*"/, `id="main" fill="${patternColor}"`);
-  
-  // If no fill attribute exists, add one
-  if (!svgContent.includes(`id="main" fill="${patternColor}"`)) {
-    svgContent = svgContent.replace(/id="main"([^>]*)style="([^"]*)"/, `id="main"$1style="$2" fill="${patternColor}"`);
-  }
-  
-  return svgContent;
-}
 
 // Fallback function to convert SVG to PNG using Sharp (simpler, more reliable)
 async function svgToPngSharp(svgContent, width = 800, height = 600) {
@@ -112,6 +78,8 @@ async function svgToPng(svgContent, width = 800, height = 600) {
   
   try {
     console.log('📝 Writing SVG to temp file:', tempSvgPath);
+    
+    
     // Write SVG to temporary file
     fs.writeFileSync(tempSvgPath, svgContent);
     
@@ -197,6 +165,7 @@ async function svgToPng(svgContent, width = 800, height = 600) {
     // Wait a bit for any animations or rendering to complete
     await new Promise(resolve => setTimeout(resolve, 1000));
     
+    
     console.log('📸 Taking screenshot...');
     await page.screenshot({
       path: outputPngPath,
@@ -255,8 +224,13 @@ app.command('/ceramic', async ({ command, ack, respond, client }) => {
     const bgColor = args[1] || '#ffffff';
     const patternColor = args[2] || '#000000';
     
-    // Generate SVG
-    const svgContent = generateSVG(pattern, bgColor, patternColor);
+    // For Slack commands, we need to generate SVG (frontend not available)
+    // This is a simplified version for Slack commands only
+    const patternPath = path.join(__dirname, 'patterns', pattern);
+    if (!fs.existsSync(patternPath)) {
+      return respond({ text: `Pattern file not found: ${pattern}` });
+    }
+    const svgContent = fs.readFileSync(patternPath, 'utf8');
     
     // Convert SVG to PNG
     const pngPath = await svgToPng(svgContent);
