@@ -1,0 +1,774 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1335" height="1075" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title {
+        font-family: Arial, sans-serif;
+        font-size: 20px;
+        font-weight: bold;
+        text-anchor: middle;
+        fill: #333;
+      }
+      .subtitle {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        text-anchor: middle;
+        fill: #666;
+      }
+      .color-name {
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        font-weight: bold;
+        fill: #333;
+      }
+      .color-code {
+        font-family: Arial, sans-serif;
+        font-size: 9px;
+        fill: #666;
+      }
+      .hex-code {
+        font-family: 'Courier New', monospace;
+        font-size: 8px;
+        fill: #333;
+      }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="667" y="25" class="title">Mayco Underglaze Colors - Cone 06</text>
+  <text x="667" y="40" class="subtitle">L: 45% w/55% h | T: Top middle</text>
+  
+  <!-- Color swatches -->
+
+  <!-- China White -->
+  <text x="20" y="70" class="color-name">China White</text>
+  <text x="20" y="80" class="color-code">UG-51</text>
+  
+  <!-- Left color swatch -->
+  <rect x="20" y="85" width="40" height="40" fill="#cdc8c4" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="97" class="hex-code">#cdc8c4</text>
+  
+  <!-- Top color swatch -->
+  <rect x="20" y="130" width="40" height="40" fill="#dcd8d7" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="142" class="hex-code">#dcd8d7</text>
+
+  <!-- Ivory -->
+  <text x="185" y="70" class="color-name">Ivory</text>
+  <text x="185" y="80" class="color-code">UG-67</text>
+  
+  <!-- Left color swatch -->
+  <rect x="185" y="85" width="40" height="40" fill="#d0c8b6" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="97" class="hex-code">#d0c8b6</text>
+  
+  <!-- Top color swatch -->
+  <rect x="185" y="130" width="40" height="40" fill="#e0dbc8" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="142" class="hex-code">#e0dbc8</text>
+
+  <!-- Soft Yellow -->
+  <text x="350" y="70" class="color-name">Soft Yellow</text>
+  <text x="350" y="80" class="color-code">UG-222</text>
+  
+  <!-- Left color swatch -->
+  <rect x="350" y="85" width="40" height="40" fill="#e8d896" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="97" class="hex-code">#e8d896</text>
+  
+  <!-- Top color swatch -->
+  <rect x="350" y="130" width="40" height="40" fill="#ebd975" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="142" class="hex-code">#ebd975</text>
+
+  <!-- Bright Yellow -->
+  <text x="515" y="70" class="color-name">Bright Yellow</text>
+  <text x="515" y="80" class="color-code">UG-46</text>
+  
+  <!-- Left color swatch -->
+  <rect x="515" y="85" width="40" height="40" fill="#cfb847" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="97" class="hex-code">#cfb847</text>
+  
+  <!-- Top color swatch -->
+  <rect x="515" y="130" width="40" height="40" fill="#e2c608" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="142" class="hex-code">#e2c608</text>
+
+  <!-- Squash Yellow -->
+  <text x="680" y="70" class="color-name">Squash Yellow</text>
+  <text x="680" y="80" class="color-code">UG-203</text>
+  
+  <!-- Left color swatch -->
+  <rect x="680" y="85" width="40" height="40" fill="#daa35a" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="97" class="hex-code">#daa35a</text>
+  
+  <!-- Top color swatch -->
+  <rect x="680" y="130" width="40" height="40" fill="#e7a31e" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="142" class="hex-code">#e7a31e</text>
+
+  <!-- Harvest Gold -->
+  <text x="845" y="70" class="color-name">Harvest Gold</text>
+  <text x="845" y="80" class="color-code">UG-58</text>
+  
+  <!-- Left color swatch -->
+  <rect x="845" y="85" width="40" height="40" fill="#e29458" stroke="#ccc" stroke-width="0.5"/>
+  <text x="890" y="97" class="hex-code">#e29458</text>
+  
+  <!-- Top color swatch -->
+  <rect x="845" y="130" width="40" height="40" fill="#ef9120" stroke="#ccc" stroke-width="0.5"/>
+  <text x="890" y="142" class="hex-code">#ef9120</text>
+
+  <!-- Orange Sorbet -->
+  <text x="1010" y="70" class="color-name">Orange Sorbet</text>
+  <text x="1010" y="80" class="color-code">UG-85</text>
+  
+  <!-- Left color swatch -->
+  <rect x="1010" y="85" width="40" height="40" fill="#e8ac89" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1055" y="97" class="hex-code">#e8ac89</text>
+  
+  <!-- Top color swatch -->
+  <rect x="1010" y="130" width="40" height="40" fill="#f89f52" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1055" y="142" class="hex-code">#f89f52</text>
+
+  <!-- Apricot -->
+  <text x="1175" y="70" class="color-name">Apricot</text>
+  <text x="1175" y="80" class="color-code">UG-223</text>
+  
+  <!-- Left color swatch -->
+  <rect x="1175" y="85" width="40" height="40" fill="#feb25f" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1220" y="97" class="hex-code">#feb25f</text>
+  
+  <!-- Top color swatch -->
+  <rect x="1175" y="130" width="40" height="40" fill="#fb9e19" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1220" y="142" class="hex-code">#fb9e19</text>
+
+  <!-- Orange -->
+  <text x="20" y="195" class="color-name">Orange</text>
+  <text x="20" y="205" class="color-code">UG-204</text>
+  
+  <!-- Left color swatch -->
+  <rect x="20" y="210" width="40" height="40" fill="#fb916a" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="222" class="hex-code">#fb916a</text>
+  
+  <!-- Top color swatch -->
+  <rect x="20" y="255" width="40" height="40" fill="#fd6d23" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="267" class="hex-code">#fd6d23</text>
+
+  <!-- Red Coral -->
+  <text x="185" y="195" class="color-name">Red Coral</text>
+  <text x="185" y="205" class="color-code">UG-217</text>
+  
+  <!-- Left color swatch -->
+  <rect x="185" y="210" width="40" height="40" fill="#f5836c" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="222" class="hex-code">#f5836c</text>
+  
+  <!-- Top color swatch -->
+  <rect x="185" y="255" width="40" height="40" fill="#fa5f32" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="267" class="hex-code">#fa5f32</text>
+
+  <!-- Fire Engine Red -->
+  <text x="350" y="195" class="color-name">Fire Engine Red</text>
+  <text x="350" y="205" class="color-code">UG-206</text>
+  
+  <!-- Left color swatch -->
+  <rect x="350" y="210" width="40" height="40" fill="#d16d56" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="222" class="hex-code">#d16d56</text>
+  
+  <!-- Top color swatch -->
+  <rect x="350" y="255" width="40" height="40" fill="#d23c1b" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="267" class="hex-code">#d23c1b</text>
+
+  <!-- Flame Red -->
+  <text x="515" y="195" class="color-name">Flame Red</text>
+  <text x="515" y="205" class="color-code">UG-207</text>
+  
+  <!-- Left color swatch -->
+  <rect x="515" y="210" width="40" height="40" fill="#cc8074" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="222" class="hex-code">#cc8074</text>
+  
+  <!-- Top color swatch -->
+  <rect x="515" y="255" width="40" height="40" fill="#c94533" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="267" class="hex-code">#c94533</text>
+
+  <!-- Dragon Red -->
+  <text x="680" y="195" class="color-name">Dragon Red</text>
+  <text x="680" y="205" class="color-code">UG-208</text>
+  
+  <!-- Left color swatch -->
+  <rect x="680" y="210" width="40" height="40" fill="#c0776c" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="222" class="hex-code">#c0776c</text>
+  
+  <!-- Top color swatch -->
+  <rect x="680" y="255" width="40" height="40" fill="#b83f31" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="267" class="hex-code">#b83f31</text>
+
+  <!-- Blush -->
+  <text x="845" y="195" class="color-name">Blush</text>
+  <text x="845" y="205" class="color-code">UG-215</text>
+  
+  <!-- Left color swatch -->
+  <rect x="845" y="210" width="40" height="40" fill="#dabfbc" stroke="#ccc" stroke-width="0.5"/>
+  <text x="890" y="222" class="hex-code">#dabfbc</text>
+  
+  <!-- Top color swatch -->
+  <rect x="845" y="255" width="40" height="40" fill="#deb4af" stroke="#ccc" stroke-width="0.5"/>
+  <text x="890" y="267" class="hex-code">#deb4af</text>
+
+  <!-- Pink Pink -->
+  <text x="1010" y="195" class="color-name">Pink Pink</text>
+  <text x="1010" y="205" class="color-code">UG-146</text>
+  
+  <!-- Left color swatch -->
+  <rect x="1010" y="210" width="40" height="40" fill="#c8b0a7" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1055" y="222" class="hex-code">#c8b0a7</text>
+  
+  <!-- Top color swatch -->
+  <rect x="1010" y="255" width="40" height="40" fill="#d5b8b1" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1055" y="267" class="hex-code">#d5b8b1</text>
+
+  <!-- Peach -->
+  <text x="1175" y="195" class="color-name">Peach</text>
+  <text x="1175" y="205" class="color-code">UG-216</text>
+  
+  <!-- Left color swatch -->
+  <rect x="1175" y="210" width="40" height="40" fill="#daa39e" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1220" y="222" class="hex-code">#daa39e</text>
+  
+  <!-- Top color swatch -->
+  <rect x="1175" y="255" width="40" height="40" fill="#e68c7b" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1220" y="267" class="hex-code">#e68c7b</text>
+
+  <!-- Rose -->
+  <text x="20" y="320" class="color-name">Rose</text>
+  <text x="20" y="330" class="color-code">UG-224</text>
+  
+  <!-- Left color swatch -->
+  <rect x="20" y="335" width="40" height="40" fill="#dcacad" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="347" class="hex-code">#dcacad</text>
+  
+  <!-- Top color swatch -->
+  <rect x="20" y="380" width="40" height="40" fill="#dc8f94" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="392" class="hex-code">#dc8f94</text>
+
+  <!-- Crimson -->
+  <text x="185" y="320" class="color-name">Crimson</text>
+  <text x="185" y="330" class="color-code">UG-10</text>
+  
+  <!-- Left color swatch -->
+  <rect x="185" y="335" width="40" height="40" fill="#c6a4a7" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="347" class="hex-code">#c6a4a7</text>
+  
+  <!-- Top color swatch -->
+  <rect x="185" y="380" width="40" height="40" fill="#8d4b55" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="392" class="hex-code">#8d4b55</text>
+
+  <!-- Lilac -->
+  <text x="350" y="320" class="color-name">Lilac</text>
+  <text x="350" y="330" class="color-code">UG-92</text>
+  
+  <!-- Left color swatch -->
+  <rect x="350" y="335" width="40" height="40" fill="#dac3c6" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="347" class="hex-code">#dac3c6</text>
+  
+  <!-- Top color swatch -->
+  <rect x="350" y="380" width="40" height="40" fill="#dbb7ca" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="392" class="hex-code">#dbb7ca</text>
+
+  <!-- Regal Purple -->
+  <text x="515" y="320" class="color-name">Regal Purple</text>
+  <text x="515" y="330" class="color-code">UG-87</text>
+  
+  <!-- Left color swatch -->
+  <rect x="515" y="335" width="40" height="40" fill="#d8aeca" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="347" class="hex-code">#d8aeca</text>
+  
+  <!-- Top color swatch -->
+  <rect x="515" y="380" width="40" height="40" fill="#bd74aa" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="392" class="hex-code">#bd74aa</text>
+
+  <!-- Plum -->
+  <text x="680" y="320" class="color-name">Plum</text>
+  <text x="680" y="330" class="color-code">UG-225</text>
+  
+  <!-- Left color swatch -->
+  <rect x="680" y="335" width="40" height="40" fill="#7d535d" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="347" class="hex-code">#7d535d</text>
+  
+  <!-- Top color swatch -->
+  <rect x="680" y="380" width="40" height="40" fill="#4c273c" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="392" class="hex-code">#4c273c</text>
+
+  <!-- Lavender -->
+  <text x="845" y="320" class="color-name">Lavender</text>
+  <text x="845" y="330" class="color-code">UG-226</text>
+  
+  <!-- Left color swatch -->
+  <rect x="845" y="335" width="40" height="40" fill="#c2bbc5" stroke="#ccc" stroke-width="0.5"/>
+  <text x="890" y="347" class="hex-code">#c2bbc5</text>
+  
+  <!-- Top color swatch -->
+  <rect x="845" y="380" width="40" height="40" fill="#a99bb4" stroke="#ccc" stroke-width="0.5"/>
+  <text x="890" y="392" class="hex-code">#a99bb4</text>
+
+  <!-- Wild Violet -->
+  <text x="1010" y="320" class="color-name">Wild Violet</text>
+  <text x="1010" y="330" class="color-code">UG-93</text>
+  
+  <!-- Left color swatch -->
+  <rect x="1010" y="335" width="40" height="40" fill="#c5b6cf" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1055" y="347" class="hex-code">#c5b6cf</text>
+  
+  <!-- Top color swatch -->
+  <rect x="1010" y="380" width="40" height="40" fill="#a781b2" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1055" y="392" class="hex-code">#a781b2</text>
+
+  <!-- Pansy Purple -->
+  <text x="1175" y="320" class="color-name">Pansy Purple</text>
+  <text x="1175" y="330" class="color-code">UG-94</text>
+  
+  <!-- Left color swatch -->
+  <rect x="1175" y="335" width="40" height="40" fill="#ada2c4" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1220" y="347" class="hex-code">#ada2c4</text>
+  
+  <!-- Top color swatch -->
+  <rect x="1175" y="380" width="40" height="40" fill="#755a8d" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1220" y="392" class="hex-code">#755a8d</text>
+
+  <!-- Concord Grape -->
+  <text x="20" y="445" class="color-name">Concord Grape</text>
+  <text x="20" y="455" class="color-code">UG-227</text>
+  
+  <!-- Left color swatch -->
+  <rect x="20" y="460" width="40" height="40" fill="#645b74" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="472" class="hex-code">#645b74</text>
+  
+  <!-- Top color swatch -->
+  <rect x="20" y="505" width="40" height="40" fill="#4c235a" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="517" class="hex-code">#4c235a</text>
+
+  <!-- Baby Blue -->
+  <text x="185" y="445" class="color-name">Baby Blue</text>
+  <text x="185" y="455" class="color-code">UG-3</text>
+  
+  <!-- Left color swatch -->
+  <rect x="185" y="460" width="40" height="40" fill="#c6cedb" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="472" class="hex-code">#c6cedb</text>
+  
+  <!-- Top color swatch -->
+  <rect x="185" y="505" width="40" height="40" fill="#c4ccdb" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="517" class="hex-code">#c4ccdb</text>
+
+  <!-- Wedgewood Blue -->
+  <text x="350" y="445" class="color-name">Wedgewood Blue</text>
+  <text x="350" y="455" class="color-code">UG-72</text>
+  
+  <!-- Left color swatch -->
+  <rect x="350" y="460" width="40" height="40" fill="#b7c3d7" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="472" class="hex-code">#b7c3d7</text>
+  
+  <!-- Top color swatch -->
+  <rect x="350" y="505" width="40" height="40" fill="#a9bdd8" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="517" class="hex-code">#a9bdd8</text>
+
+  <!-- Sea Blue -->
+  <text x="515" y="445" class="color-name">Sea Blue</text>
+  <text x="515" y="455" class="color-code">UG-2</text>
+  
+  <!-- Left color swatch -->
+  <rect x="515" y="460" width="40" height="40" fill="#a9b3cd" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="472" class="hex-code">#a9b3cd</text>
+  
+  <!-- Top color swatch -->
+  <rect x="515" y="505" width="40" height="40" fill="#93a3cc" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="517" class="hex-code">#93a3cc</text>
+
+  <!-- Bright Blue -->
+  <text x="680" y="445" class="color-name">Bright Blue</text>
+  <text x="680" y="455" class="color-code">UG-97</text>
+  
+  <!-- Left color swatch -->
+  <rect x="680" y="460" width="40" height="40" fill="#8a9bbc" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="472" class="hex-code">#8a9bbc</text>
+  
+  <!-- Top color swatch -->
+  <rect x="680" y="505" width="40" height="40" fill="#738cbd" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="517" class="hex-code">#738cbd</text>
+
+  <!-- Kings Blue -->
+  <text x="845" y="445" class="color-name">Kings Blue</text>
+  <text x="845" y="455" class="color-code">UG-1</text>
+  
+  <!-- Left color swatch -->
+  <rect x="845" y="460" width="40" height="40" fill="#50729f" stroke="#ccc" stroke-width="0.5"/>
+  <text x="890" y="472" class="hex-code">#50729f</text>
+  
+  <!-- Top color swatch -->
+  <rect x="845" y="505" width="40" height="40" fill="#06336b" stroke="#ccc" stroke-width="0.5"/>
+  <text x="890" y="517" class="hex-code">#06336b</text>
+
+  <!-- Midnight Blue -->
+  <text x="1010" y="445" class="color-name">Midnight Blue</text>
+  <text x="1010" y="455" class="color-code">UG-228</text>
+  
+  <!-- Left color swatch -->
+  <rect x="1010" y="460" width="40" height="40" fill="#465b78" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1055" y="472" class="hex-code">#465b78</text>
+  
+  <!-- Top color swatch -->
+  <rect x="1010" y="505" width="40" height="40" fill="#101e27" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1055" y="517" class="hex-code">#101e27</text>
+
+  <!-- Electra Blue -->
+  <text x="1175" y="445" class="color-name">Electra Blue</text>
+  <text x="1175" y="455" class="color-code">UG-19</text>
+  
+  <!-- Left color swatch -->
+  <rect x="1175" y="460" width="40" height="40" fill="#90a8b9" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1220" y="472" class="hex-code">#90a8b9</text>
+  
+  <!-- Top color swatch -->
+  <rect x="1175" y="505" width="40" height="40" fill="#76a1bc" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1220" y="517" class="hex-code">#76a1bc</text>
+
+  <!-- Tucson Turquoise -->
+  <text x="20" y="570" class="color-name">Tucson Turquoise</text>
+  <text x="20" y="580" class="color-code">UG-82</text>
+  
+  <!-- Left color swatch -->
+  <rect x="20" y="585" width="40" height="40" fill="#b4c8c6" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="597" class="hex-code">#b4c8c6</text>
+  
+  <!-- Top color swatch -->
+  <rect x="20" y="630" width="40" height="40" fill="#abc9cb" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="642" class="hex-code">#abc9cb</text>
+
+  <!-- Aquamarine -->
+  <text x="185" y="570" class="color-name">Aquamarine</text>
+  <text x="185" y="580" class="color-code">UG-229</text>
+  
+  <!-- Left color swatch -->
+  <rect x="185" y="585" width="40" height="40" fill="#406f84" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="597" class="hex-code">#406f84</text>
+  
+  <!-- Top color swatch -->
+  <rect x="185" y="630" width="40" height="40" fill="#013a4a" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="642" class="hex-code">#013a4a</text>
+
+  <!-- Jade -->
+  <text x="350" y="570" class="color-name">Jade</text>
+  <text x="350" y="580" class="color-code">UG-209</text>
+  
+  <!-- Left color swatch -->
+  <rect x="350" y="585" width="40" height="40" fill="#8aac94" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="597" class="hex-code">#8aac94</text>
+  
+  <!-- Top color swatch -->
+  <rect x="350" y="630" width="40" height="40" fill="#6da988" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="642" class="hex-code">#6da988</text>
+
+  <!-- True Teal -->
+  <text x="515" y="570" class="color-name">True Teal</text>
+  <text x="515" y="580" class="color-code">UG-91</text>
+  
+  <!-- Left color swatch -->
+  <rect x="515" y="585" width="40" height="40" fill="#78a29b" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="597" class="hex-code">#78a29b</text>
+  
+  <!-- Top color swatch -->
+  <rect x="515" y="630" width="40" height="40" fill="#3c6c62" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="642" class="hex-code">#3c6c62</text>
+
+  <!-- Marine Blue -->
+  <text x="680" y="570" class="color-name">Marine Blue</text>
+  <text x="680" y="580" class="color-code">UG-219</text>
+  
+  <!-- Left color swatch -->
+  <rect x="680" y="585" width="40" height="40" fill="#92b5ba" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="597" class="hex-code">#92b5ba</text>
+  
+  <!-- Top color swatch -->
+  <rect x="680" y="630" width="40" height="40" fill="#4997a0" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="642" class="hex-code">#4997a0</text>
+
+  <!-- Blue Grass -->
+  <text x="845" y="570" class="color-name">Blue Grass</text>
+  <text x="845" y="580" class="color-code">UG-230</text>
+  
+  <!-- Left color swatch -->
+  <rect x="845" y="585" width="40" height="40" fill="#446a74" stroke="#ccc" stroke-width="0.5"/>
+  <text x="890" y="597" class="hex-code">#446a74</text>
+  
+  <!-- Top color swatch -->
+  <rect x="845" y="630" width="40" height="40" fill="#01332e" stroke="#ccc" stroke-width="0.5"/>
+  <text x="890" y="642" class="hex-code">#01332e</text>
+
+  <!-- Pear Green -->
+  <text x="1010" y="570" class="color-name">Pear Green</text>
+  <text x="1010" y="580" class="color-code">UG-218</text>
+  
+  <!-- Left color swatch -->
+  <rect x="1010" y="585" width="40" height="40" fill="#d5c268" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1055" y="597" class="hex-code">#d5c268</text>
+  
+  <!-- Top color swatch -->
+  <rect x="1010" y="630" width="40" height="40" fill="#e1c933" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1055" y="642" class="hex-code">#e1c933</text>
+
+  <!-- Lime Green -->
+  <text x="1175" y="570" class="color-name">Lime Green</text>
+  <text x="1175" y="580" class="color-code">UG-231</text>
+  
+  <!-- Left color swatch -->
+  <rect x="1175" y="585" width="40" height="40" fill="#cac961" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1220" y="597" class="hex-code">#cac961</text>
+  
+  <!-- Top color swatch -->
+  <rect x="1175" y="630" width="40" height="40" fill="#b8c501" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1220" y="642" class="hex-code">#b8c501</text>
+
+  <!-- Spring Green -->
+  <text x="20" y="695" class="color-name">Spring Green</text>
+  <text x="20" y="705" class="color-code">UG-22</text>
+  
+  <!-- Left color swatch -->
+  <rect x="20" y="710" width="40" height="40" fill="#a4a545" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="722" class="hex-code">#a4a545</text>
+  
+  <!-- Top color swatch -->
+  <rect x="20" y="755" width="40" height="40" fill="#868906" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="767" class="hex-code">#868906</text>
+
+  <!-- Apple Green -->
+  <text x="185" y="695" class="color-name">Apple Green</text>
+  <text x="185" y="705" class="color-code">UG-68</text>
+  
+  <!-- Left color swatch -->
+  <rect x="185" y="710" width="40" height="40" fill="#d4d8b1" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="722" class="hex-code">#d4d8b1</text>
+  
+  <!-- Top color swatch -->
+  <rect x="185" y="755" width="40" height="40" fill="#cfd882" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="767" class="hex-code">#cfd882</text>
+
+  <!-- Eucalyptus -->
+  <text x="350" y="695" class="color-name">Eucalyptus</text>
+  <text x="350" y="705" class="color-code">UG-233</text>
+  
+  <!-- Left color swatch -->
+  <rect x="350" y="710" width="40" height="40" fill="#bfc3ab" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="722" class="hex-code">#bfc3ab</text>
+  
+  <!-- Top color swatch -->
+  <rect x="350" y="755" width="40" height="40" fill="#b7c498" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="767" class="hex-code">#b7c498</text>
+
+  <!-- Green Mist -->
+  <text x="515" y="695" class="color-name">Green Mist</text>
+  <text x="515" y="705" class="color-code">UG-90</text>
+  
+  <!-- Left color swatch -->
+  <rect x="515" y="710" width="40" height="40" fill="#b5c997" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="722" class="hex-code">#b5c997</text>
+  
+  <!-- Top color swatch -->
+  <rect x="515" y="755" width="40" height="40" fill="#93bb6c" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="767" class="hex-code">#93bb6c</text>
+
+  <!-- Leaf Green -->
+  <text x="680" y="695" class="color-name">Leaf Green</text>
+  <text x="680" y="705" class="color-code">UG-21</text>
+  
+  <!-- Left color swatch -->
+  <rect x="680" y="710" width="40" height="40" fill="#98a66d" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="722" class="hex-code">#98a66d</text>
+  
+  <!-- Top color swatch -->
+  <rect x="680" y="755" width="40" height="40" fill="#52602a" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="767" class="hex-code">#52602a</text>
+
+  <!-- Forest Green -->
+  <text x="845" y="695" class="color-name">Forest Green</text>
+  <text x="845" y="705" class="color-code">UG-210</text>
+  
+  <!-- Left color swatch -->
+  <rect x="845" y="710" width="40" height="40" fill="#34522c" stroke="#ccc" stroke-width="0.5"/>
+  <text x="890" y="722" class="hex-code">#34522c</text>
+  
+  <!-- Top color swatch -->
+  <rect x="845" y="755" width="40" height="40" fill="#40562f" stroke="#ccc" stroke-width="0.5"/>
+  <text x="890" y="767" class="hex-code">#40562f</text>
+
+  <!-- Olive -->
+  <text x="1010" y="695" class="color-name">Olive</text>
+  <text x="1010" y="705" class="color-code">UG-232</text>
+  
+  <!-- Left color swatch -->
+  <rect x="1010" y="710" width="40" height="40" fill="#8e8f69" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1055" y="722" class="hex-code">#8e8f69</text>
+  
+  <!-- Top color swatch -->
+  <rect x="1010" y="755" width="40" height="40" fill="#5e5c25" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1055" y="767" class="hex-code">#5e5c25</text>
+
+  <!-- Sage -->
+  <text x="1175" y="695" class="color-name">Sage</text>
+  <text x="1175" y="705" class="color-code">UG-220</text>
+  
+  <!-- Left color swatch -->
+  <rect x="1175" y="710" width="40" height="40" fill="#c4be9d" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1220" y="722" class="hex-code">#c4be9d</text>
+  
+  <!-- Top color swatch -->
+  <rect x="1175" y="755" width="40" height="40" fill="#b4af6b" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1220" y="767" class="hex-code">#b4af6b</text>
+
+  <!-- Ivory Pearl -->
+  <text x="20" y="820" class="color-name">Ivory Pearl</text>
+  <text x="20" y="830" class="color-code">UG-234</text>
+  
+  <!-- Left color swatch -->
+  <rect x="20" y="835" width="40" height="40" fill="#d2bfa6" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="847" class="hex-code">#d2bfa6</text>
+  
+  <!-- Top color swatch -->
+  <rect x="20" y="880" width="40" height="40" fill="#ccb386" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="892" class="hex-code">#ccb386</text>
+
+  <!-- Cocoa -->
+  <text x="185" y="820" class="color-name">Cocoa</text>
+  <text x="185" y="830" class="color-code">UG-32</text>
+  
+  <!-- Left color swatch -->
+  <rect x="185" y="835" width="40" height="40" fill="#c8bcb2" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="847" class="hex-code">#c8bcb2</text>
+  
+  <!-- Top color swatch -->
+  <rect x="185" y="880" width="40" height="40" fill="#d2bda5" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="892" class="hex-code">#d2bda5</text>
+
+  <!-- Sand -->
+  <text x="350" y="820" class="color-name">Sand</text>
+  <text x="350" y="830" class="color-code">UG-30</text>
+  
+  <!-- Left color swatch -->
+  <rect x="350" y="835" width="40" height="40" fill="#ccb69a" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="847" class="hex-code">#ccb69a</text>
+  
+  <!-- Top color swatch -->
+  <rect x="350" y="880" width="40" height="40" fill="#cfa46c" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="892" class="hex-code">#cfa46c</text>
+
+  <!-- Oatmeal -->
+  <text x="515" y="820" class="color-name">Oatmeal</text>
+  <text x="515" y="830" class="color-code">UG-235</text>
+  
+  <!-- Left color swatch -->
+  <rect x="515" y="835" width="40" height="40" fill="#ceb9a9" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="847" class="hex-code">#ceb9a9</text>
+  
+  <!-- Top color swatch -->
+  <rect x="515" y="880" width="40" height="40" fill="#c0a281" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="892" class="hex-code">#c0a281</text>
+
+  <!-- Spice Brown -->
+  <text x="680" y="820" class="color-name">Spice Brown</text>
+  <text x="680" y="830" class="color-code">UG-57</text>
+  
+  <!-- Left color swatch -->
+  <rect x="680" y="835" width="40" height="40" fill="#d6aa7d" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="847" class="hex-code">#d6aa7d</text>
+  
+  <!-- Top color swatch -->
+  <rect x="680" y="880" width="40" height="40" fill="#dd994a" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="892" class="hex-code">#dd994a</text>
+
+  <!-- Cinnamon -->
+  <text x="845" y="820" class="color-name">Cinnamon</text>
+  <text x="845" y="830" class="color-code">UG-213</text>
+  
+  <!-- Left color swatch -->
+  <rect x="845" y="835" width="40" height="40" fill="#c5886c" stroke="#ccc" stroke-width="0.5"/>
+  <text x="890" y="847" class="hex-code">#c5886c</text>
+  
+  <!-- Top color swatch -->
+  <rect x="845" y="880" width="40" height="40" fill="#bb5123" stroke="#ccc" stroke-width="0.5"/>
+  <text x="890" y="892" class="hex-code">#bb5123</text>
+
+  <!-- Chocolate -->
+  <text x="1010" y="820" class="color-name">Chocolate</text>
+  <text x="1010" y="830" class="color-code">UG-31</text>
+  
+  <!-- Left color swatch -->
+  <rect x="1010" y="835" width="40" height="40" fill="#b57f5b" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1055" y="847" class="hex-code">#b57f5b</text>
+  
+  <!-- Top color swatch -->
+  <rect x="1010" y="880" width="40" height="40" fill="#a05011" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1055" y="892" class="hex-code">#a05011</text>
+
+  <!-- Cement -->
+  <text x="1175" y="820" class="color-name">Cement</text>
+  <text x="1175" y="830" class="color-code">UG-221</text>
+  
+  <!-- Left color swatch -->
+  <rect x="1175" y="835" width="40" height="40" fill="#afa89c" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1220" y="847" class="hex-code">#afa89c</text>
+  
+  <!-- Top color swatch -->
+  <rect x="1175" y="880" width="40" height="40" fill="#a79c87" stroke="#ccc" stroke-width="0.5"/>
+  <text x="1220" y="892" class="hex-code">#a79c87</text>
+
+  <!-- Chestnut Brown -->
+  <text x="20" y="945" class="color-name">Chestnut Brown</text>
+  <text x="20" y="955" class="color-code">UG-34</text>
+  
+  <!-- Left color swatch -->
+  <rect x="20" y="960" width="40" height="40" fill="#7d6354" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="972" class="hex-code">#7d6354</text>
+  
+  <!-- Top color swatch -->
+  <rect x="20" y="1005" width="40" height="40" fill="#5a3a22" stroke="#ccc" stroke-width="0.5"/>
+  <text x="65" y="1017" class="hex-code">#5a3a22</text>
+
+  <!-- Silver Grey -->
+  <text x="185" y="945" class="color-name">Silver Grey</text>
+  <text x="185" y="955" class="color-code">UG-53</text>
+  
+  <!-- Left color swatch -->
+  <rect x="185" y="960" width="40" height="40" fill="#bbbbbb" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="972" class="hex-code">#bbbbbb</text>
+  
+  <!-- Top color swatch -->
+  <rect x="185" y="1005" width="40" height="40" fill="#babab9" stroke="#ccc" stroke-width="0.5"/>
+  <text x="230" y="1017" class="hex-code">#babab9</text>
+
+  <!-- Grey -->
+  <text x="350" y="945" class="color-name">Grey</text>
+  <text x="350" y="955" class="color-code">UG-236</text>
+  
+  <!-- Left color swatch -->
+  <rect x="350" y="960" width="40" height="40" fill="#bebcbf" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="972" class="hex-code">#bebcbf</text>
+  
+  <!-- Top color swatch -->
+  <rect x="350" y="1005" width="40" height="40" fill="#928f90" stroke="#ccc" stroke-width="0.5"/>
+  <text x="395" y="1017" class="hex-code">#928f90</text>
+
+  <!-- Dark Grey -->
+  <text x="515" y="945" class="color-name">Dark Grey</text>
+  <text x="515" y="955" class="color-code">UG-198</text>
+  
+  <!-- Left color swatch -->
+  <rect x="515" y="960" width="40" height="40" fill="#beb9b6" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="972" class="hex-code">#beb9b6</text>
+  
+  <!-- Top color swatch -->
+  <rect x="515" y="1005" width="40" height="40" fill="#928780" stroke="#ccc" stroke-width="0.5"/>
+  <text x="560" y="1017" class="hex-code">#928780</text>
+
+  <!-- Jet Black -->
+  <text x="680" y="945" class="color-name">Jet Black</text>
+  <text x="680" y="955" class="color-code">UG-50</text>
+  
+  <!-- Left color swatch -->
+  <rect x="680" y="960" width="40" height="40" fill="#434447" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="972" class="hex-code">#434447</text>
+  
+  <!-- Top color swatch -->
+  <rect x="680" y="1005" width="40" height="40" fill="#171312" stroke="#ccc" stroke-width="0.5"/>
+  <text x="725" y="1017" class="hex-code">#171312</text>
+</svg>
