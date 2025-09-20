@@ -90,9 +90,14 @@ async function svgToPng(svgContent, width = 800, height = 600) {
     fs.writeFileSync(tempSvgPath, svgContent);
     
     console.log('🚀 Launching Puppeteer browser...');
+    // Set environment variable for Chrome
+    process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = 'true';
+    process.env.PUPPETEER_EXECUTABLE_PATH = '/usr/bin/chromium-browser';
+    
     // Launch Puppeteer browser with Railway-optimized configuration
     browser = await puppeteer.launch({
       headless: true,
+      executablePath: '/usr/bin/chromium-browser',
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -101,10 +106,11 @@ async function svgToPng(svgContent, width = 800, height = 600) {
         '--disable-web-security',
         '--disable-extensions',
         '--disable-plugins',
-        '--disable-images',
-        '--disable-javascript',
         '--single-process',
-        '--no-zygote'
+        '--no-zygote',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding'
       ],
       timeout: 30000
     });

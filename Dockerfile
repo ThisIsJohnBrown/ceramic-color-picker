@@ -1,7 +1,7 @@
 # Use Node.js 18 Alpine for smaller image size
 FROM node:18-alpine
 
-# Install system dependencies for canvas and sharp
+# Install system dependencies for canvas, sharp, and Chrome
 RUN apk add --no-cache \
     cairo-dev \
     jpeg-dev \
@@ -11,7 +11,14 @@ RUN apk add --no-cache \
     pixman-dev \
     pangomm-dev \
     libjpeg-turbo-dev \
-    freetype-dev
+    freetype-dev \
+    chromium \
+    nss \
+    freetype \
+    freetype-dev \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
 
 # Set working directory
 WORKDIR /app
