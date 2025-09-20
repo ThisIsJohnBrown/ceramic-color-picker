@@ -270,21 +270,26 @@ app.command('/ceramic', async ({ command, ack, respond, client }) => {
 expressApp.post('/api/send-to-slack', async (req, res) => {
   try {
     console.log('📥 Received request to /api/send-to-slack');
-    const { svgContent, pattern, bgColor, patternColor, bgColorName, patternColorName, channel } = req.body;
+    const { pngData, pattern, bgColor, patternColor, bgColorName, patternColorName, channel } = req.body;
     
-    console.log('📋 Request data:', { pattern, bgColor, patternColor, bgColorName, patternColorName, channel, hasSvgContent: !!svgContent });
+    console.log('📋 Request data:', { pattern, bgColor, patternColor, bgColorName, patternColorName, channel, hasPngData: !!pngData });
     
-    if (!svgContent || !pattern || !bgColor || !patternColor) {
+    if (!pngData || !pattern || !bgColor || !patternColor) {
       console.log('❌ Missing required parameters');
       return res.status(400).json({ error: 'Missing required parameters' });
     }
     
-    console.log('📝 Received SVG from frontend, length:', svgContent.length);
+    console.log('📝 Received PNG data from frontend, size:', pngData.length, 'characters');
     
-    console.log('🖼️ Converting SVG to PNG...');
-    // Convert SVG to PNG using Puppeteer
-    const pngPath = await svgToPng(svgContent, 800, 600);
+    // Save PNG data directly to file
     const filename = `ceramic-${pattern.replace('.svg', '')}-${Date.now()}.png`;
+    const pngPath = path.join(__dirname, 'uploads', filename);
+    
+    // Convert base64 to buffer and save
+    const pngBuffer = Buffer.from(pngData, 'base64');
+    fs.writeFileSync(pngPath, pngBuffer);
+    
+    console.log('✅ PNG saved to:', pngPath);
     
     console.log('📤 Uploading PNG to Slack:', {
       channel_id: 'C09FUNUELMV',

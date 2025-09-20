@@ -275,6 +275,17 @@
             box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
         }
 
+        .download-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .download-buttons .download-btn {
+            flex: 1;
+            min-width: 120px;
+        }
+
         .slack-btn {
             background: linear-gradient(135deg, #4a154b 0%, #611f69 100%);
             color: white;
@@ -436,7 +447,10 @@
                     <span class="color-name" id="patternColorName">Select a glaze color</span>
                 </div>
                 <div class="color-info-item">
-                    <button class="download-btn" onclick="downloadSVG()">Download</button>
+                    <div class="download-buttons">
+                        <button class="download-btn" onclick="downloadSVG()">Download SVG</button>
+                        <button class="download-btn" onclick="downloadPNG()">Download PNG</button>
+                    </div>
                     <button class="slack-btn" onclick="sendToSlack()">Send to Slack</button>
                 </div>
             </div>
@@ -963,6 +977,106 @@
             }
         }
 
+        async function downloadPNG() {
+            try {
+                const pngBlob = await generatePNGBlob();
+                
+                // Create download link
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(pngBlob);
+                const patternName = currentPattern.replace('.svg', '');
+                const filename = `${currentBgColorName.replace(/[^a-zA-Z0-9]/g, '_')}_${currentPatternColorName.replace(/[^a-zA-Z0-9]/g, '_')}_${patternName}.png`;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                // Clean up
+                URL.revokeObjectURL(a.href);
+            } catch (error) {
+                console.error('Error generating PNG:', error);
+                alert('Error generating PNG: ' + error.message);
+            }
+        }
+
+        // Helper function to generate PNG blob (used by both downloadPNG and sendToSlack)
+        async function generatePNGBlob() {
+            const svgObject = document.getElementById('svgObject');
+            const bgColor = currentBgColor;
+            const patternColor = currentPatternColor;
+
+            return new Promise((resolve, reject) => {
+                function processSVG() {
+                    const svgDoc = svgObject.contentDocument;
+                    if (svgDoc) {
+                        const svgElement = svgDoc.querySelector('svg');
+                        const path = svgDoc.querySelector('#main');
+                        
+                        if (svgElement && path) {
+                            // Create a copy of the SVG
+                            const svgClone = svgElement.cloneNode(true);
+                            const pathClone = svgClone.querySelector('#main');
+                            
+                            // Apply colors
+                            svgClone.style.backgroundColor = bgColor;
+                            if (pathClone) {
+                                pathClone.setAttribute('fill', patternColor);
+                                pathClone.style.fill = patternColor;
+                            }
+                            
+                            // Convert SVG to string
+                            const svgString = new XMLSerializer().serializeToString(svgClone);
+                            
+                            // Create canvas
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            
+                            // Set canvas size
+                            const width = 800;
+                            const height = 600;
+                            canvas.width = width;
+                            canvas.height = height;
+                            
+                            // Create image from SVG
+                            const img = new Image();
+                            const svgBlob = new Blob([svgString], { type: 'image/svg+xml' });
+                            const url = URL.createObjectURL(svgBlob);
+                            
+                            img.onload = function() {
+                                // Draw the image on canvas
+                                ctx.drawImage(img, 0, 0, width, height);
+                                
+                                // Convert canvas to PNG blob
+                                canvas.toBlob(function(blob) {
+                                    URL.revokeObjectURL(url);
+                                    resolve(blob);
+                                }, 'image/png');
+                            };
+                            
+                            img.onerror = function() {
+                                URL.revokeObjectURL(url);
+                                reject(new Error('Failed to load SVG image'));
+                            };
+                            
+                            img.src = url;
+                        } else {
+                            reject(new Error('SVG elements not found'));
+                        }
+                    } else {
+                        reject(new Error('SVG document not found'));
+                    }
+                }
+
+                // Check if SVG is already loaded
+                if (svgObject.contentDocument) {
+                    processSVG();
+                } else {
+                    // Wait for SVG to load
+                    svgObject.addEventListener('load', processSVG);
+                }
+            });
+        }
+
         // Slack bot configuration
         const slackMentionUser = '@thisisjohnbrown';
         const API_BASE_URL = window.location.origin; // Use same origin for API calls
@@ -978,57 +1092,21 @@
             try {
                 console.log('🚀 Starting Slack bot send process...');
                 
-                // Extract SVG using EXACT same logic as downloadSVG
-                const svgObject = document.getElementById('svgObject');
-                const bgColor = currentBgColor;
-                const patternColor = currentPatternColor;
+                // Generate PNG using canvas (same as downloadPNG)
+                const pngBlob = await generatePNGBlob();
                 
-                const svgString = await new Promise((resolve, reject) => {
-                    svgObject.addEventListener('load', function() {
-                        const svgDoc = svgObject.contentDocument;
-                        if (svgDoc) {
-                            const svgElement = svgDoc.querySelector('svg');
-                            
-                            // Find the main element
-                            const path = svgDoc.querySelector('#main');
-                            
-                            if (svgElement && path) {
-                                // Create a copy of the SVG
-                                const svgClone = svgElement.cloneNode(true);
-                                
-                                // Find the corresponding main element in the clone
-                                const pathClone = svgClone.querySelector('#main');
-                                
-                                // Apply colors
-                                svgClone.style.backgroundColor = bgColor;
-                                if (pathClone) {
-                                    // Set both fill attribute and style fill for compatibility
-                                    pathClone.setAttribute('fill', patternColor);
-                                    pathClone.style.fill = patternColor;
-                                }
-                                
-                                // Convert to string
-                                const svgString = new XMLSerializer().serializeToString(svgClone);
-                                resolve(svgString);
-                            } else {
-                                reject(new Error('Could not find SVG element or path'));
-                            }
-                        } else {
-                            reject(new Error('Could not access SVG document'));
-                        }
-                    });
-                    
-                    // If already loaded, trigger immediately
-                    if (svgObject.contentDocument) {
-                        svgObject.dispatchEvent(new Event('load'));
-                    }
+                // Convert blob to base64 for sending
+                const base64 = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.readAsDataURL(pngBlob);
                 });
                 
-                console.log('📝 Extracted SVG from webpage, length:', svgString.length);
+                console.log('📝 Generated PNG from canvas, size:', pngBlob.size, 'bytes');
                 
                 // Prepare the data for the API
                 const requestData = {
-                    svgContent: svgString,
+                    pngData: base64,
                     pattern: currentPattern,
                     bgColor: currentBgColor,
                     patternColor: currentPatternColor,
