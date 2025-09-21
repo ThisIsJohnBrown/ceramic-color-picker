@@ -242,13 +242,51 @@ app.command('/ceramic', async ({ command, ack, respond, client }) => {
     // Upload PNG to Slack
     const patternName = pattern.replace('.svg', '');
     const filename = `${bgColor.replace('#', '')}_${patternColor.replace('#', '')}_${patternName}.png`;
-    const result = await client.files.uploadV2({
+    
+    // First upload the file
+    const fileResult = await client.files.uploadV2({
       channel_id: command.channel_id,
       file: fs.createReadStream(pngPath),
       filename: filename,
-      title: `Ceramic Pattern: ${pattern}`,
-      initial_comment: `🎨 Ceramic pattern generated!\n*Pattern:* ${pattern}\n*Background:* ${bgColor}\n*Pattern Color:* ${patternColor}\n\n🔗 <${shareUrl}|View and edit this design>`
+      title: `Ceramic Pattern: ${pattern}`
     });
+
+    // Then send a message with interactive buttons
+    const messageResult = await client.chat.postMessage({
+      channel: command.channel_id,
+      text: `🎨 Ceramic pattern generated!`,
+      blocks: [
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": `🎨 Ceramic pattern generated!\n*Pattern:* ${pattern}\n*Background:* ${bgColor}\n*Pattern Color:* ${patternColor}\n\n🔗 <${shareUrl}|View and edit this design>`
+          },
+          "accessory": {
+            "type": "image",
+            "image_url": fileResult.file.permalink_public,
+            "alt_text": `Ceramic Pattern: ${pattern}`
+          }
+        },
+        {
+          "type": "actions",
+          "elements": [
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Catalogue"
+              },
+              "style": "primary",
+              "action_id": "catalogue_pattern",
+              "value": fileResult.file.id
+            }
+          ]
+        }
+      ]
+    });
+
+    const result = { file: fileResult.file, message: messageResult };
     
     // Clean up PNG file
     fs.unlinkSync(pngPath);
@@ -264,6 +302,63 @@ app.command('/ceramic', async ({ command, ack, respond, client }) => {
       text: `❌ Error generating pattern: ${error.message}`,
       response_type: 'ephemeral'
     });
+  }
+});
+
+// Handle button clicks
+app.action('catalogue_pattern', async ({ ack, body, client }) => {
+  await ack();
+  
+  try {
+    console.log('📝 Catalogue button clicked by user:', body.user.username);
+    
+    // Get the original message
+    const messageTs = body.message.ts;
+    const channelId = body.channel.id;
+    
+    // Extract the original message content
+    const originalText = body.message.blocks[0].text.text;
+    const originalAccessory = body.message.blocks[0].accessory;
+    
+    // Create updated message with CATALOGUED status
+    let updatedText = originalText;
+    if (originalText.includes('🎨 New ceramic pattern design!')) {
+      updatedText = originalText.replace(
+        '🎨 New ceramic pattern design!',
+        '🎨 New ceramic pattern design! *CATALOGUED*'
+      );
+    } else if (originalText.includes('🎨 Ceramic pattern generated!')) {
+      updatedText = originalText.replace(
+        '🎨 Ceramic pattern generated!',
+        '🎨 Ceramic pattern generated! *CATALOGUED*'
+      );
+    }
+    
+    // Update the message to remove the button and add CATALOGUED text
+    const fallbackText = originalText.includes('🎨 New ceramic pattern design!') 
+      ? '🎨 New ceramic pattern design! CATALOGUED'
+      : '🎨 Ceramic pattern generated! CATALOGUED';
+    
+    await client.chat.update({
+      channel: channelId,
+      ts: messageTs,
+      text: fallbackText,
+      blocks: [
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": updatedText
+          },
+          "accessory": originalAccessory
+        }
+      ]
+    });
+    
+    console.log('✅ Message updated with CATALOGUED status');
+    
+  } catch (error) {
+    console.error('❌ Error handling catalogue button click:', error);
   }
 });
 
@@ -309,13 +404,50 @@ expressApp.post('/api/send-to-slack', async (req, res) => {
     const baseUrl = process.env.BASE_URL || `${protocol}://${host}`;
     const shareUrl = `${baseUrl}?pattern=${encodeURIComponent(pattern)}&bgColor=${encodeURIComponent(bgColor)}&patternColor=${encodeURIComponent(patternColor)}&bgColorName=${encodeURIComponent(bgColorName)}&patternColorName=${encodeURIComponent(patternColorName)}`;
     
-    const result = await slackClient.files.uploadV2({
+    // First upload the file
+    const fileResult = await slackClient.files.uploadV2({
       channel_id: 'C09FUNUELMV',
       file: fs.createReadStream(pngPath),
       filename: filename,
-      title: `Ceramic Pattern: ${pattern}`,
-      initial_comment: `🎨 New ceramic pattern design!\n\n*Pattern:* ${pattern.replace('.svg', '')}\n*Background Color:* ${bgColorName} (${bgColor})\n*Pattern Color:* ${patternColorName} (${patternColor})\n\n🔗 <${shareUrl}|View and edit this design>`
+      title: `Ceramic Pattern: ${pattern}`
     });
+
+    // Then send a message with interactive buttons
+    const messageResult = await slackClient.chat.postMessage({
+      channel: 'C09FUNUELMV',
+      text: `🎨 New ceramic pattern design!`,
+      blocks: [
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": `🎨 New ceramic pattern design!\n\n*Pattern:* ${pattern.replace('.svg', '')}\n*Background Color:* ${bgColorName} (${bgColor})\n*Pattern Color:* ${patternColorName} (${patternColor})\n\n🔗 <${shareUrl}|View and edit this design>`
+          },
+          "accessory": {
+            "type": "image",
+            "image_url": fileResult.file.permalink_public,
+            "alt_text": `Ceramic Pattern: ${pattern}`
+          }
+        },
+        {
+          "type": "actions",
+          "elements": [
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Catalogue"
+              },
+              "style": "primary",
+              "action_id": "catalogue_pattern",
+              "value": fileResult.file.id
+            }
+          ]
+        }
+      ]
+    });
+
+    const result = { file: fileResult.file, message: messageResult };
     
     console.log('✅ Slack upload result:', result);
     

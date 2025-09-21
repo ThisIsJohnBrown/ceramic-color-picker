@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibrating Colors Explorer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e1e2e, #2d2d44);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .presets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .preset {
+            padding: 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .preset:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .preset.active {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+        }
+
+        .preset-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .preset-colors {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .color-swatch {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .preset:hover .color-swatch {
+            transform: scale(1.1);
+        }
+
+        .preset-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .main-display {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .display-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .lines-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .vibrating-line {
+            height: 20px;
+            transition: background-color 0.3s ease;
+            border-radius: 0;
+        }
+
+        .controls {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .control-group {
+            display: inline-block;
+            margin: 0 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        input[type="range"] {
+            width: 150px;
+            margin: 0 10px;
+        }
+
+        .info-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            border-left: 4px solid #4ecdc4;
+        }
+
+        .info-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #4ecdc4;
+        }
+
+        .info-text {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .custom-color-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .custom-color-section h2 {
+            margin-bottom: 20px;
+            color: #4ecdc4;
+            font-size: 1.5rem;
+        }
+
+        .color-picker-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .color-input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-input-group label {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .color-input-group input[type="color"] {
+            width: 80px;
+            height: 80px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .color-input-group input[type="color"]:hover {
+            transform: scale(1.1);
+        }
+
+        .color-picker-description {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-align: center;
+            font-style: italic;
+        }
+
+
+        .presets h3 {
+            margin-bottom: 20px;
+            color: #4ecdc4;
+            font-size: 1.3rem;
+        }
+
+        .tabs-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .tab-navigation {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-button.active {
+            color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.1);
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(45deg, #4ecdc4, #45b7d1);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 25px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content .custom-color-section {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .tab-content .custom-color-section h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vibrating Colors Explorer</h1>
+        
+        <div class="tabs-container">
+            <div class="tab-navigation">
+                <button class="tab-button active" data-tab="color-picker">Color Picker</button>
+                <button class="tab-button" data-tab="presets">Presets</button>
+            </div>
+            
+            <div class="tab-content active" id="color-picker-tab">
+                <div class="custom-color-section">
+                    <h2>Custom Color Picker</h2>
+                    <div class="color-picker-container">
+                        <div class="color-input-group">
+                            <label for="baseColor">Choose a base color:</label>
+                            <input type="color" id="baseColor" value="#ff0000">
+                            <p class="color-picker-description">The complementary color will be calculated automatically</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="presets-tab">
+                <div class="presets">
+                    <h3>Preset Combinations</h3>
+                    <div class="preset active" data-preset="red-cyan">
+                        <div class="preset-name">Red-Cyan Vibration</div>
+                        <div class="preset-colors">
+                            <div class="color-swatch" style="background-color: #ff0000;"></div>
+                            <div class="color-swatch" style="background-color: #00ffff;"></div>
+                        </div>
+                        <div class="preset-description">Classic complementary colors that create strong vibration</div>
+                    </div>
+
+            <div class="preset" data-preset="yellow-purple">
+                <div class="preset-name">Yellow-Purple</div>
+                <div class="preset-colors">
+                    <div class="color-swatch" style="background-color: #ffff00;"></div>
+                    <div class="color-swatch" style="background-color: #800080;"></div>
+                </div>
+                <div class="preset-description">High contrast complementary pair</div>
+            </div>
+
+            <div class="preset" data-preset="green-magenta">
+                <div class="preset-name">Green-Magenta</div>
+                <div class="preset-colors">
+                    <div class="color-swatch" style="background-color: #00ff00;"></div>
+                    <div class="color-swatch" style="background-color: #ff00ff;"></div>
+                </div>
+                <div class="preset-description">Vibrant complementary colors</div>
+            </div>
+
+            <div class="preset" data-preset="blue-orange">
+                <div class="preset-name">Blue-Orange</div>
+                <div class="preset-colors">
+                    <div class="color-swatch" style="background-color: #0066ff;"></div>
+                    <div class="color-swatch" style="background-color: #ff6600;"></div>
+                </div>
+                <div class="preset-description">Warm-cool contrast</div>
+            </div>
+
+            <div class="preset" data-preset="neon-pink-lime">
+                <div class="preset-name">Neon Pink-Lime</div>
+                <div class="preset-colors">
+                    <div class="color-swatch" style="background-color: #ff1493;"></div>
+                    <div class="color-swatch" style="background-color: #32cd32;"></div>
+                </div>
+                <div class="preset-description">Intense neon vibration</div>
+            </div>
+
+            <div class="preset" data-preset="electric-blue-yellow">
+                <div class="preset-name">Electric Blue-Yellow</div>
+                <div class="preset-colors">
+                    <div class="color-swatch" style="background-color: #00bfff;"></div>
+                    <div class="color-swatch" style="background-color: #ffd700;"></div>
+                </div>
+                <div class="preset-description">Electric energy contrast</div>
+            </div>
+
+            <div class="preset" data-preset="purple-lime">
+                <div class="preset-name">Purple-Lime</div>
+                <div class="preset-colors">
+                    <div class="color-swatch" style="background-color: #8a2be2;"></div>
+                    <div class="color-swatch" style="background-color: #ccff00;"></div>
+                </div>
+                <div class="preset-description">Unexpected vibrant pair</div>
+            </div>
+
+                    <div class="preset" data-preset="coral-teal">
+                        <div class="preset-name">Coral-Teal</div>
+                        <div class="preset-colors">
+                            <div class="color-swatch" style="background-color: #ff7f50;"></div>
+                            <div class="color-swatch" style="background-color: #008080;"></div>
+                        </div>
+                        <div class="preset-description">Subtle but effective vibration</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-display">
+            <div class="display-title">Vibrating Lines Display</div>
+            <div class="lines-container" id="linesContainer">
+                <!-- Lines will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="lineHeight">Line Height</label>
+                <input type="range" id="lineHeight" min="10" max="40" value="20">
+            </div>
+            <div class="control-group">
+                <label for="lineSpacing">Line Spacing</label>
+                <input type="range" id="lineSpacing" min="0" max="10" value="2">
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <div class="info-title">About Color Vibration</div>
+            <div class="info-text">
+                Color vibration occurs when two colors with high contrast are placed adjacent to each other, 
+                creating an optical illusion where the colors appear to "vibrate" or shimmer. This effect 
+                is strongest with complementary colors (opposites on the color wheel) and high saturation. 
+                The alternating pattern amplifies the effect, making it more noticeable and intense.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Color presets data
+        const presets = {
+            'red-cyan': ['#ff0000', '#00ffff'],
+            'yellow-purple': ['#ffff00', '#800080'],
+            'green-magenta': ['#00ff00', '#ff00ff'],
+            'blue-orange': ['#0066ff', '#ff6600'],
+            'neon-pink-lime': ['#ff1493', '#32cd32'],
+            'electric-blue-yellow': ['#00bfff', '#ffd700'],
+            'purple-lime': ['#8a2be2', '#ccff00'],
+            'coral-teal': ['#ff7f50', '#008080']
+        };
+
+        let currentPreset = 'red-cyan';
+        let lineHeight = 20;
+        let lineSpacing = 2;
+        let customColors = null;
+
+        // Initialize the display
+        function initializeDisplay() {
+            createLines();
+            setupEventListeners();
+        }
+
+        function createLines() {
+            const container = document.getElementById('linesContainer');
+            container.innerHTML = '';
+            
+            let colors;
+            if (customColors) {
+                colors = customColors;
+            } else {
+                colors = presets[currentPreset];
+            }
+            
+            for (let i = 0; i < 20; i++) {
+                const line = document.createElement('div');
+                line.className = 'vibrating-line';
+                line.style.backgroundColor = colors[i % 2];
+                line.style.height = `${lineHeight}px`;
+                line.style.marginBottom = '0px';
+                container.appendChild(line);
+            }
+        }
+
+        // Color calculation functions
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        function rgbToHex(r, g, b) {
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+
+
+        function calculateComplementary(hex) {
+            const rgb = hexToRgb(hex);
+            return rgbToHex(255 - rgb.r, 255 - rgb.g, 255 - rgb.b);
+        }
+
+
+        function setupEventListeners() {
+            // Tab switching
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.dataset.tab;
+                    
+                    // Update tab buttons
+                    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Update tab content
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                    document.getElementById(`${targetTab}-tab`).classList.add('active');
+                });
+            });
+
+            // Preset selection
+            document.querySelectorAll('.preset').forEach(preset => {
+                preset.addEventListener('click', () => {
+                    document.querySelectorAll('.preset').forEach(p => p.classList.remove('active'));
+                    preset.classList.add('active');
+                    currentPreset = preset.dataset.preset;
+                    customColors = null; // Clear custom colors when using presets
+                    createLines();
+                });
+            });
+
+            // Auto-update when color picker changes
+            document.getElementById('baseColor').addEventListener('input', () => {
+                const baseColor = document.getElementById('baseColor').value;
+                const vibratingColor = calculateComplementary(baseColor);
+                
+                customColors = [baseColor, vibratingColor];
+                
+                // Clear preset selection
+                document.querySelectorAll('.preset').forEach(p => p.classList.remove('active'));
+                
+                createLines();
+            });
+
+            // Line height control
+            document.getElementById('lineHeight').addEventListener('input', (e) => {
+                lineHeight = parseInt(e.target.value);
+                createLines();
+            });
+
+            // Line spacing control
+            document.getElementById('lineSpacing').addEventListener('input', (e) => {
+                lineSpacing = parseInt(e.target.value);
+                createLines();
+            });
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeDisplay);
+    </script>
+</body>
+</html>
