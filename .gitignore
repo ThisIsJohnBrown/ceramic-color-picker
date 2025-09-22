@@ -2,6 +2,9 @@
 work/venv/
 .env
 
+airtable-integration/node_modules/
+amaco/node_modules/
+
 # Node.js
 node_modules/*
 npm-debug.log*

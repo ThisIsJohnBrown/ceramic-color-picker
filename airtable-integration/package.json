@@ -1,0 +1,33 @@
+{
+  "name": "ceramic-colors-airtable-integration",
+  "version": "1.0.0",
+  "description": "Airtable integration for ceramic glazes and underglazes",
+  "main": "setup-airtable.js",
+  "scripts": {
+    "setup": "node setup-airtable.js",
+    "complete": "node complete-setup.js",
+    "final": "node final-setup.js",
+    "test": "node test-setup.js",
+    "test-images": "node working-image-upload.js",
+    "working-upload": "node working-api-upload.js",
+    "fixed-upload": "node fixed-image-upload.js",
+    "direct-upload": "node direct-upload.js",
+    "full-upload": "node full-upload-with-images.js",
+    "amaco-upload": "node upload-amaco-underglazes.js",
+    "upload-images": "node upload-images.js",
+    "bulk-upload": "node bulk-upload-images.js",
+    "install-deps": "npm install"
+  },
+  "dependencies": {
+    "airtable": "^0.12.2"
+  },
+  "keywords": [
+    "airtable",
+    "ceramic",
+    "glaze",
+    "underglaze",
+    "colors"
+  ],
+  "author": "John Brown",
+  "license": "MIT"
+}

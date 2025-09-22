@@ -2,492 +2,574 @@
   "glazes": [
     {
       "id": "SC-16",
+      "brand": "Mayco Fundamentals",
       "name": "Cotton Tail",
       "color": "#dbdcd6",
       "image": "glaze_images/sc_16_cone06.jpg"
     },
     {
       "id": "SC-37",
+      "brand": "Mayco Fundamentals",
       "name": "Ivory Tower",
       "color": "#d6d6bb",
       "image": "glaze_images/sc_37_cone06.jpg"
     },
     {
       "id": "SC-55",
+      "brand": "Mayco Fundamentals",
       "name": "Yella Bout It",
       "color": "#dcd57a",
       "image": "glaze_images/sc_55_cone06.jpg"
     },
     {
       "id": "SC-6",
+      "brand": "Mayco Fundamentals",
       "name": "Sunkissed",
       "color": "#e8cc00",
       "image": "glaze_images/sc_6_cone06.jpg"
     },
     {
       "id": "SC-42",
+      "brand": "Mayco Fundamentals",
       "name": "Butter Me Up",
       "color": "#d7b053",
       "image": "glaze_images/sc_42_cone06.jpg"
     },
     {
       "id": "SC-24",
+      "brand": "Mayco Fundamentals",
       "name": "Dandelion",
       "color": "#e6a300",
       "image": "glaze_images/sc_24_cone06.jpg"
     },
     {
       "id": "SC-97",
+      "brand": "Mayco Fundamentals",
       "name": "Cant-elope",
       "color": "#e37506",
       "image": "glaze_images/sc_97_cone06.jpg"
     },
     {
       "id": "SC-102",
+      "brand": "Mayco Fundamentals",
       "name": "Just Peachy",
       "color": "#f6a173",
       "image": "glaze_images/sc_102_cone06.jpg"
     },
     {
       "id": "SC-23",
+      "brand": "Mayco Fundamentals",
       "name": "Jack O'Lantern",
       "color": "#f28930",
       "image": "glaze_images/sc_23_cone06.jpg"
     },
     {
       "id": "SC-75",
+      "brand": "Mayco Fundamentals",
       "name": "Orange-A-Peel",
       "color": "#ff4c01",
       "image": "glaze_images/sc_75_cone06.jpg"
     },
     {
       "id": "SC-50",
+      "brand": "Mayco Fundamentals",
       "name": "Orange Ya Happy",
       "color": "#dc5c28",
       "image": "glaze_images/sc_50_cone06.jpg"
     },
     {
       "id": "SC-2",
+      "brand": "Mayco Fundamentals",
       "name": "Melon-choly",
       "color": "#e28673",
       "image": "glaze_images/sc_2_cone06.jpg"
     },
     {
       "id": "SC-89",
+      "brand": "Mayco Fundamentals",
       "name": "Cutie Pie Coral",
       "color": "#eb594e",
       "image": "glaze_images/sc_89_cone06.jpg"
     },
     {
       "id": "SC-88",
+      "brand": "Mayco Fundamentals",
       "name": "Tu Tu Tango",
       "color": "#e92f01",
       "image": "glaze_images/sc_88_cone06.jpg"
     },
     {
       "id": "SC-73",
+      "brand": "Mayco Fundamentals",
       "name": "Candy Apple Red",
       "color": "#c41b05",
       "image": "glaze_images/sc_73_cone06.jpg"
     },
     {
       "id": "SC-74",
+      "brand": "Mayco Fundamentals",
       "name": "Hot Tamale",
       "color": "#971f17",
       "image": "glaze_images/sc_74_cone06.jpg"
     },
     {
       "id": "SC-87",
+      "brand": "Mayco Fundamentals",
       "name": "Ruby Slippers",
       "color": "#8c201a",
       "image": "glaze_images/sc_87_cone06.jpg"
     },
     {
       "id": "SC-81",
+      "brand": "Mayco Fundamentals",
       "name": "Cinnamon Stix",
       "color": "#6b2218",
       "image": "glaze_images/sc_81_cone06.jpg"
     },
     {
       "id": "SC-1",
+      "brand": "Mayco Fundamentals",
       "name": "Pink-A-Boo",
       "color": "#dfa49e",
       "image": "glaze_images/sc_1_cone06.jpg"
     },
     {
       "id": "SC-100",
+      "brand": "Mayco Fundamentals",
       "name": "Makin Me Blush",
       "color": "#f2d9d4",
       "image": "glaze_images/sc_100_cone06.jpg"
     },
     {
       "id": "SC-70",
+      "brand": "Mayco Fundamentals",
       "name": "Pink-A-Dot",
       "color": "#cb7b8a",
       "image": "glaze_images/sc_70_cone06.jpg"
     },
     {
       "id": "SC-95",
+      "brand": "Mayco Fundamentals",
       "name": "Pinkie Swear",
       "color": "#ab4f65",
       "image": "glaze_images/sc_95_cone06.jpg"
     },
     {
       "id": "SC-17",
+      "brand": "Mayco Fundamentals",
       "name": "Cheeky Pinky",
       "color": "#b0666b",
       "image": "glaze_images/sc_17_cone06.jpg"
     },
     {
       "id": "SC-18",
+      "brand": "Mayco Fundamentals",
       "name": "Rosey Posey",
       "color": "#9a474c",
       "image": "glaze_images/sc_18_cone06.jpg"
     },
     {
       "id": "SC-3",
+      "brand": "Mayco Fundamentals",
       "name": "Wine About It",
       "color": "#5f2327",
       "image": "glaze_images/sc_3_cone06.jpg"
     },
     {
       "id": "SC-40",
+      "brand": "Mayco Fundamentals",
       "name": "Blueberry Hill",
       "color": "#371625",
       "image": "glaze_images/sc_40_cone06.jpg"
     },
     {
       "id": "SC-13",
+      "brand": "Mayco Fundamentals",
       "name": "Grapel",
       "color": "#61274a",
       "image": "glaze_images/sc_13_cone06.jpg"
     },
     {
       "id": "SC-85",
+      "brand": "Mayco Fundamentals",
       "name": "Orkid",
       "color": "#b68ba7",
       "image": "glaze_images/sc_85_cone06.jpg"
     },
     {
       "id": "SC-103",
+      "brand": "Mayco Fundamentals",
       "name": "Lavendear",
       "color": "#a897bb",
       "image": "glaze_images/sc_103_cone06.jpg"
     },
     {
       "id": "SC-53",
+      "brand": "Mayco Fundamentals",
       "name": "Purple Haze",
       "color": "#64587c",
       "image": "glaze_images/sc_53_cone06.jpg"
     },
     {
       "id": "SC-72",
+      "brand": "Mayco Fundamentals",
       "name": "Grape Jelly",
       "color": "#5d4b68",
       "image": "glaze_images/sc_72_cone06.jpg"
     },
     {
       "id": "SC-71",
+      "brand": "Mayco Fundamentals",
       "name": "Purple-Licious",
       "color": "#473348",
       "image": "glaze_images/sc_71_cone06.jpg"
     },
     {
       "id": "SC-33",
+      "brand": "Mayco Fundamentals",
       "name": "Fruit Of The Vine",
       "color": "#3d2950",
       "image": "glaze_images/sc_33_cone06.jpg"
     },
     {
       "id": "SC-104",
+      "brand": "Mayco Fundamentals",
       "name": "Grape Expectations",
       "color": "#241827",
       "image": "glaze_images/sc_104_cone06.jpg"
     },
     {
       "id": "SC-45",
+      "brand": "Mayco Fundamentals",
       "name": "My Blue Heaven",
       "color": "#a3c7ca",
       "image": "glaze_images/sc_45_cone06.jpg"
     },
     {
       "id": "SC-91",
+      "brand": "Mayco Fundamentals",
       "name": "Seabreeze",
       "color": "#b2c1bd",
       "image": "glaze_images/sc_91_cone06.jpg"
     },
     {
       "id": "SC-65",
+      "brand": "Mayco Fundamentals",
       "name": "Peri-Twinkle",
       "color": "#93a4b5",
       "image": "glaze_images/sc_65_cone06.jpg"
     },
     {
       "id": "SC-30",
+      "brand": "Mayco Fundamentals",
       "name": "Blue Dawn",
       "color": "#7e98b6",
       "image": "glaze_images/sc_30_cone06.jpg"
     },
     {
       "id": "SC-31",
+      "brand": "Mayco Fundamentals",
       "name": "The Blues",
       "color": "#486298",
       "image": "glaze_images/sc_31_cone06.jpg"
     },
     {
       "id": "SC-11",
+      "brand": "Mayco Fundamentals",
       "name": "Blue Yonder",
       "color": "#248db6",
       "image": "glaze_images/sc_11_cone06.jpg"
     },
     {
       "id": "SC-58",
+      "brand": "Mayco Fundamentals",
       "name": "501 Blues",
       "color": "#2d364a",
       "image": "glaze_images/sc_58_cone06.jpg"
     },
     {
       "id": "SC-76",
+      "brand": "Mayco Fundamentals",
       "name": "Cara-bein Blue",
       "color": "#172a61",
       "image": "glaze_images/sc_76_cone06.jpg"
     },
     {
       "id": "SC-12",
+      "brand": "Mayco Fundamentals",
       "name": "Moody Blue",
       "color": "#181338",
       "image": "glaze_images/sc_12_cone06.jpg"
     },
     {
       "id": "SC-96",
+      "brand": "Mayco Fundamentals",
       "name": "Aqu-ward",
       "color": "#96b79a",
       "image": "glaze_images/sc_96_cone06.jpg"
     },
     {
       "id": "SC-101",
+      "brand": "Mayco Fundamentals",
       "name": "Spruce It Up",
       "color": "#85baaf",
       "image": "glaze_images/sc_101_cone06.jpg"
     },
     {
       "id": "SC-9",
+      "brand": "Mayco Fundamentals",
       "name": "Jaded",
       "color": "#2a8c72",
       "image": "glaze_images/sc_9_cone06.jpg"
     },
     {
       "id": "SC-28",
+      "brand": "Mayco Fundamentals",
       "name": "Blue Isle",
       "color": "#2e818c",
       "image": "glaze_images/sc_28_cone06.jpg"
     },
     {
       "id": "SC-10",
+      "brand": "Mayco Fundamentals",
       "name": "Teal Next Time",
       "color": "#024d4a",
       "image": "glaze_images/sc_10_cone06.jpg"
     },
     {
       "id": "SC-29",
+      "brand": "Mayco Fundamentals",
       "name": "Blue Grass",
       "color": "#103d46",
       "image": "glaze_images/sc_29_cone06.jpg"
     },
     {
       "id": "SC-32",
+      "brand": "Mayco Fundamentals",
       "name": "Bluebeard",
       "color": "#0a181d",
       "image": "glaze_images/sc_32_cone06.jpg"
     },
     {
       "id": "SC-93",
+      "brand": "Mayco Fundamentals",
       "name": "Honeydew List",
       "color": "#d7dc99",
       "image": "glaze_images/sc_93_cone06.jpg"
     },
     {
       "id": "SC-43",
+      "brand": "Mayco Fundamentals",
       "name": "Lettuce Alone",
       "color": "#8cae78",
       "image": "glaze_images/sc_43_cone06.jpg"
     },
     {
       "id": "SC-7",
+      "brand": "Mayco Fundamentals",
       "name": "Leapin' Lizard",
       "color": "#4c9457",
       "image": "glaze_images/sc_7_cone06.jpg"
     },
     {
       "id": "SC-26",
+      "brand": "Mayco Fundamentals",
       "name": "Green Thumb",
       "color": "#405e2d",
       "image": "glaze_images/sc_26_cone06.jpg"
     },
     {
       "id": "SC-8",
+      "brand": "Mayco Fundamentals",
       "name": "Just Froggy",
       "color": "#2d5231",
       "image": "glaze_images/sc_8_cone06.jpg"
     },
     {
       "id": "SC-36",
+      "brand": "Mayco Fundamentals",
       "name": "Irish Luck",
       "color": "#264329",
       "image": "glaze_images/sc_36_cone06.jpg"
     },
     {
       "id": "SC-77",
+      "brand": "Mayco Fundamentals",
       "name": "Glo-Worm",
       "color": "#c5c003",
       "image": "glaze_images/sc_77_cone06.jpg"
     },
     {
       "id": "SC-78",
+      "brand": "Mayco Fundamentals",
       "name": "Lime Light",
       "color": "#a0b663",
       "image": "glaze_images/sc_78_cone06.jpg"
     },
     {
       "id": "SC-98",
+      "brand": "Mayco Fundamentals",
       "name": "Slime Time",
       "color": "#accb63",
       "image": "glaze_images/sc_98_cone06.jpg"
     },
     {
       "id": "SC-27",
+      "brand": "Mayco Fundamentals",
       "name": "Sour Apple",
       "color": "#9da82f",
       "image": "glaze_images/sc_27_cone06.jpg"
     },
     {
       "id": "SC-52",
+      "brand": "Mayco Fundamentals",
       "name": "Toad-ily Green",
       "color": "#74732e",
       "image": "glaze_images/sc_52_cone06.jpg"
     },
     {
       "id": "SC-79",
+      "brand": "Mayco Fundamentals",
       "name": "It's Sage",
       "color": "#8a8755",
       "image": "glaze_images/sc_79_cone06.jpg"
     },
     {
       "id": "SC-39",
+      "brand": "Mayco Fundamentals",
       "name": "Army Surplus",
       "color": "#4c5829",
       "image": "glaze_images/sc_39_cone06.jpg"
     },
     {
       "id": "SC-86",
+      "brand": "Mayco Fundamentals",
       "name": "Old Lace",
       "color": "#d6ccb9",
       "image": "glaze_images/sc_86_cone06.jpg"
     },
     {
       "id": "SC-54",
+      "brand": "Mayco Fundamentals",
       "name": "Vanilla Dip",
       "color": "#ccb999",
       "image": "glaze_images/sc_54_cone06.jpg"
     },
     {
       "id": "SC-20",
+      "brand": "Mayco Fundamentals",
       "name": "Cashew Later",
       "color": "#cea380",
       "image": "glaze_images/sc_20_cone06.jpg"
     },
     {
       "id": "SC-46",
+      "brand": "Mayco Fundamentals",
       "name": "Rawhide",
       "color": "#c5a371",
       "image": "glaze_images/sc_46_cone06.jpg"
     },
     {
       "id": "SC-51",
+      "brand": "Mayco Fundamentals",
       "name": "Poo Bear",
       "color": "#c88b2a",
       "image": "glaze_images/sc_51_cone06.jpg"
     },
     {
       "id": "SC-5",
+      "brand": "Mayco Fundamentals",
       "name": "Tiger Tail",
       "color": "#af5f0f",
       "image": "glaze_images/sc_5_cone06.jpg"
     },
     {
       "id": "SC-25",
+      "brand": "Mayco Fundamentals",
       "name": "Crackerjack Brown",
       "color": "#8a3f10",
       "image": "glaze_images/sc_25_cone06.jpg"
     },
     {
       "id": "SC-80",
+      "brand": "Mayco Fundamentals",
       "name": "Basketball",
       "color": "#b5451c",
       "image": "glaze_images/sc_80_cone06.jpg"
     },
     {
       "id": "SC-41",
+      "brand": "Mayco Fundamentals",
       "name": "Brown Cow",
       "color": "#73472f",
       "image": "glaze_images/sc_41_cone06.jpg"
     },
     {
       "id": "SC-48",
+      "brand": "Mayco Fundamentals",
       "name": "Camel Back",
       "color": "#522d19",
       "image": "glaze_images/sc_48_cone06.jpg"
     },
     {
       "id": "SC-14",
+      "brand": "Mayco Fundamentals",
       "name": "Java Bean",
       "color": "#4b1d0c",
       "image": "glaze_images/sc_14_cone06.jpg"
     },
     {
       "id": "SC-34",
+      "brand": "Mayco Fundamentals",
       "name": "Down To Earth",
       "color": "#25170f",
       "image": "glaze_images/sc_34_cone06.jpg"
     },
     {
       "id": "SC-92",
+      "brand": "Mayco Fundamentals",
       "name": "Café Ole",
       "color": "#806347",
       "image": "glaze_images/sc_92_cone06.jpg"
     },
     {
       "id": "SC-90",
+      "brand": "Mayco Fundamentals",
       "name": "Elephant Ears",
       "color": "#948c7b",
       "image": "glaze_images/sc_90_cone06.jpg"
     },
     {
       "id": "SC-83",
+      "brand": "Mayco Fundamentals",
       "name": "Tip Taupe",
       "color": "#a4957c",
       "image": "glaze_images/sc_83_cone06.jpg"
     },
     {
       "id": "SC-60",
+      "brand": "Mayco Fundamentals",
       "name": "Silver Lining",
       "color": "#a2a9a5",
       "image": "glaze_images/sc_60_cone06.jpg"
     },
     {
       "id": "SC-35",
+      "brand": "Mayco Fundamentals",
       "name": "Gray Hare",
       "color": "#767b7a",
       "image": "glaze_images/sc_35_cone06.jpg"
     },
     {
       "id": "SC-99",
+      "brand": "Mayco Fundamentals",
       "name": "Char-ming",
       "color": "#373832",
       "image": "glaze_images/sc_99_cone06.jpg"
     },
     {
       "id": "SC-15",
+      "brand": "Mayco Fundamentals",
       "name": "Tuxedo",
       "color": "#0c0c0c",
       "image": "glaze_images/sc_15_cone06.jpg"
@@ -496,6 +578,7 @@
   "underglazes": [
     {
       "id": "UG-51",
+      "brand": "Mayco Stroke and Coat",
       "name": "China White",
       "left": "#cdc8c4",
       "top": "#dcd8d7",
@@ -503,6 +586,7 @@
     },
     {
       "id": "UG-67",
+      "brand": "Mayco Stroke and Coat",
       "name": "Ivory",
       "left": "#d0c8b6",
       "top": "#e0dbc8",
@@ -510,6 +594,7 @@
     },
     {
       "id": "UG-222",
+      "brand": "Mayco Stroke and Coat",
       "name": "Soft Yellow",
       "left": "#e8d896",
       "top": "#ebd975",
@@ -517,6 +602,7 @@
     },
     {
       "id": "UG-46",
+      "brand": "Mayco Stroke and Coat",
       "name": "Bright Yellow",
       "left": "#cfb847",
       "top": "#e2c608",
@@ -524,6 +610,7 @@
     },
     {
       "id": "UG-203",
+      "brand": "Mayco Stroke and Coat",
       "name": "Squash Yellow",
       "left": "#daa35a",
       "top": "#e7a31e",
@@ -531,6 +618,7 @@
     },
     {
       "id": "UG-58",
+      "brand": "Mayco Stroke and Coat",
       "name": "Harvest Gold",
       "left": "#e29458",
       "top": "#ef9120",
@@ -538,6 +626,7 @@
     },
     {
       "id": "UG-85",
+      "brand": "Mayco Stroke and Coat",
       "name": "Orange Sorbet",
       "left": "#e8ac89",
       "top": "#f89f52",
@@ -545,6 +634,7 @@
     },
     {
       "id": "UG-223",
+      "brand": "Mayco Stroke and Coat",
       "name": "Apricot",
       "left": "#feb25f",
       "top": "#fb9e19",
@@ -552,6 +642,7 @@
     },
     {
       "id": "UG-204",
+      "brand": "Mayco Stroke and Coat",
       "name": "Orange",
       "left": "#fb916a",
       "top": "#fd6d23",
@@ -559,6 +650,7 @@
     },
     {
       "id": "UG-217",
+      "brand": "Mayco Stroke and Coat",
       "name": "Red Coral",
       "left": "#f5836c",
       "top": "#fa5f32",
@@ -566,6 +658,7 @@
     },
     {
       "id": "UG-206",
+      "brand": "Mayco Stroke and Coat",
       "name": "Fire Engine Red",
       "left": "#d16d56",
       "top": "#d23c1b",
@@ -573,6 +666,7 @@
     },
     {
       "id": "UG-207",
+      "brand": "Mayco Stroke and Coat",
       "name": "Flame Red",
       "left": "#cc8074",
       "top": "#c94533",
@@ -580,6 +674,7 @@
     },
     {
       "id": "UG-208",
+      "brand": "Mayco Stroke and Coat",
       "name": "Dragon Red",
       "left": "#c0776c",
       "top": "#b83f31",
@@ -587,6 +682,7 @@
     },
     {
       "id": "UG-215",
+      "brand": "Mayco Stroke and Coat",
       "name": "Blush",
       "left": "#dabfbc",
       "top": "#deb4af",
@@ -594,6 +690,7 @@
     },
     {
       "id": "UG-146",
+      "brand": "Mayco Stroke and Coat",
       "name": "Pink Pink",
       "left": "#c8b0a7",
       "top": "#d5b8b1",
@@ -601,6 +698,7 @@
     },
     {
       "id": "UG-216",
+      "brand": "Mayco Stroke and Coat",
       "name": "Peach",
       "left": "#daa39e",
       "top": "#e68c7b",
@@ -608,6 +706,7 @@
     },
     {
       "id": "UG-224",
+      "brand": "Mayco Stroke and Coat",
       "name": "Rose",
       "left": "#dcacad",
       "top": "#dc8f94",
@@ -615,6 +714,7 @@
     },
     {
       "id": "UG-10",
+      "brand": "Mayco Stroke and Coat",
       "name": "Crimson",
       "left": "#c6a4a7",
       "top": "#8d4b55",
@@ -622,6 +722,7 @@
     },
     {
       "id": "UG-92",
+      "brand": "Mayco Stroke and Coat",
       "name": "Lilac",
       "left": "#dac3c6",
       "top": "#dbb7ca",
@@ -629,6 +730,7 @@
     },
     {
       "id": "UG-87",
+      "brand": "Mayco Stroke and Coat",
       "name": "Regal Purple",
       "left": "#d8aeca",
       "top": "#bd74aa",
@@ -636,6 +738,7 @@
     },
     {
       "id": "UG-225",
+      "brand": "Mayco Stroke and Coat",
       "name": "Plum",
       "left": "#7d535d",
       "top": "#4c273c",
@@ -643,6 +746,7 @@
     },
     {
       "id": "UG-226",
+      "brand": "Mayco Stroke and Coat",
       "name": "Lavender",
       "left": "#c2bbc5",
       "top": "#a99bb4",
@@ -650,6 +754,7 @@
     },
     {
       "id": "UG-93",
+      "brand": "Mayco Stroke and Coat",
       "name": "Wild Violet",
       "left": "#c5b6cf",
       "top": "#a781b2",
@@ -657,6 +762,7 @@
     },
     {
       "id": "UG-94",
+      "brand": "Mayco Stroke and Coat",
       "name": "Pansy Purple",
       "left": "#ada2c4",
       "top": "#755a8d",
@@ -664,6 +770,7 @@
     },
     {
       "id": "UG-227",
+      "brand": "Mayco Stroke and Coat",
       "name": "Concord Grape",
       "left": "#645b74",
       "top": "#4c235a",
@@ -671,6 +778,7 @@
     },
     {
       "id": "UG-3",
+      "brand": "Mayco Stroke and Coat",
       "name": "Baby Blue",
       "left": "#c6cedb",
       "top": "#c4ccdb",
@@ -678,6 +786,7 @@
     },
     {
       "id": "UG-72",
+      "brand": "Mayco Stroke and Coat",
       "name": "Wedgewood Blue",
       "left": "#b7c3d7",
       "top": "#a9bdd8",
@@ -685,6 +794,7 @@
     },
     {
       "id": "UG-2",
+      "brand": "Mayco Stroke and Coat",
       "name": "Sea Blue",
       "left": "#a9b3cd",
       "top": "#93a3cc",
@@ -692,6 +802,7 @@
     },
     {
       "id": "UG-97",
+      "brand": "Mayco Stroke and Coat",
       "name": "Bright Blue",
       "left": "#8a9bbc",
       "top": "#738cbd",
@@ -699,6 +810,7 @@
     },
     {
       "id": "UG-1",
+      "brand": "Mayco Stroke and Coat",
       "name": "Kings Blue",
       "left": "#50729f",
       "top": "#06336b",
@@ -706,6 +818,7 @@
     },
     {
       "id": "UG-228",
+      "brand": "Mayco Stroke and Coat",
       "name": "Midnight Blue",
       "left": "#465b78",
       "top": "#101e27",
@@ -713,6 +826,7 @@
     },
     {
       "id": "UG-19",
+      "brand": "Mayco Stroke and Coat",
       "name": "Electra Blue",
       "left": "#90a8b9",
       "top": "#76a1bc",
@@ -720,6 +834,7 @@
     },
     {
       "id": "UG-82",
+      "brand": "Mayco Stroke and Coat",
       "name": "Tucson Turquoise",
       "left": "#b4c8c6",
       "top": "#abc9cb",
@@ -727,6 +842,7 @@
     },
     {
       "id": "UG-229",
+      "brand": "Mayco Stroke and Coat",
       "name": "Aquamarine",
       "left": "#406f84",
       "top": "#013a4a",
@@ -734,6 +850,7 @@
     },
     {
       "id": "UG-209",
+      "brand": "Mayco Stroke and Coat",
       "name": "Jade",
       "left": "#8aac94",
       "top": "#6da988",
@@ -741,6 +858,7 @@
     },
     {
       "id": "UG-91",
+      "brand": "Mayco Stroke and Coat",
       "name": "True Teal",
       "left": "#78a29b",
       "top": "#3c6c62",
@@ -748,6 +866,7 @@
     },
     {
       "id": "UG-219",
+      "brand": "Mayco Stroke and Coat",
       "name": "Marine Blue",
       "left": "#92b5ba",
       "top": "#4997a0",
@@ -755,6 +874,7 @@
     },
     {
       "id": "UG-230",
+      "brand": "Mayco Stroke and Coat",
       "name": "Blue Grass",
       "left": "#446a74",
       "top": "#01332e",
@@ -762,6 +882,7 @@
     },
     {
       "id": "UG-218",
+      "brand": "Mayco Stroke and Coat",
       "name": "Pear Green",
       "left": "#d5c268",
       "top": "#e1c933",
@@ -769,6 +890,7 @@
     },
     {
       "id": "UG-231",
+      "brand": "Mayco Stroke and Coat",
       "name": "Lime Green",
       "left": "#cac961",
       "top": "#b8c501",
@@ -776,6 +898,7 @@
     },
     {
       "id": "UG-22",
+      "brand": "Mayco Stroke and Coat",
       "name": "Spring Green",
       "left": "#a4a545",
       "top": "#868906",
@@ -783,6 +906,7 @@
     },
     {
       "id": "UG-68",
+      "brand": "Mayco Stroke and Coat",
       "name": "Apple Green",
       "left": "#d4d8b1",
       "top": "#cfd882",
@@ -790,6 +914,7 @@
     },
     {
       "id": "UG-233",
+      "brand": "Mayco Stroke and Coat",
       "name": "Eucalyptus",
       "left": "#bfc3ab",
       "top": "#b7c498",
@@ -797,6 +922,7 @@
     },
     {
       "id": "UG-90",
+      "brand": "Mayco Stroke and Coat",
       "name": "Green Mist",
       "left": "#b5c997",
       "top": "#93bb6c",
@@ -804,6 +930,7 @@
     },
     {
       "id": "UG-21",
+      "brand": "Mayco Stroke and Coat",
       "name": "Leaf Green",
       "left": "#98a66d",
       "top": "#52602a",
@@ -811,6 +938,7 @@
     },
     {
       "id": "UG-210",
+      "brand": "Mayco Stroke and Coat",
       "name": "Forest Green",
       "left": "#34522c",
       "top": "#40562f",
@@ -818,6 +946,7 @@
     },
     {
       "id": "UG-232",
+      "brand": "Mayco Stroke and Coat",
       "name": "Olive",
       "left": "#8e8f69",
       "top": "#5e5c25",
@@ -825,6 +954,7 @@
     },
     {
       "id": "UG-220",
+      "brand": "Mayco Stroke and Coat",
       "name": "Sage",
       "left": "#c4be9d",
       "top": "#b4af6b",
@@ -832,6 +962,7 @@
     },
     {
       "id": "UG-234",
+      "brand": "Mayco Stroke and Coat",
       "name": "Ivory Pearl",
       "left": "#d2bfa6",
       "top": "#ccb386",
@@ -839,6 +970,7 @@
     },
     {
       "id": "UG-32",
+      "brand": "Mayco Stroke and Coat",
       "name": "Cocoa",
       "left": "#c8bcb2",
       "top": "#d2bda5",
@@ -846,6 +978,7 @@
     },
     {
       "id": "UG-30",
+      "brand": "Mayco Stroke and Coat",
       "name": "Sand",
       "left": "#ccb69a",
       "top": "#cfa46c",
@@ -853,6 +986,7 @@
     },
     {
       "id": "UG-235",
+      "brand": "Mayco Stroke and Coat",
       "name": "Oatmeal",
       "left": "#ceb9a9",
       "top": "#c0a281",
@@ -860,6 +994,7 @@
     },
     {
       "id": "UG-57",
+      "brand": "Mayco Stroke and Coat",
       "name": "Spice Brown",
       "left": "#d6aa7d",
       "top": "#dd994a",
@@ -867,6 +1002,7 @@
     },
     {
       "id": "UG-213",
+      "brand": "Mayco Stroke and Coat",
       "name": "Cinnamon",
       "left": "#c5886c",
       "top": "#bb5123",
@@ -874,6 +1010,7 @@
     },
     {
       "id": "UG-31",
+      "brand": "Mayco Stroke and Coat",
       "name": "Chocolate",
       "left": "#b57f5b",
       "top": "#a05011",
@@ -881,6 +1018,7 @@
     },
     {
       "id": "UG-221",
+      "brand": "Mayco Stroke and Coat",
       "name": "Cement",
       "left": "#afa89c",
       "top": "#a79c87",
@@ -888,6 +1026,7 @@
     },
     {
       "id": "UG-34",
+      "brand": "Mayco Stroke and Coat",
       "name": "Chestnut Brown",
       "left": "#7d6354",
       "top": "#5a3a22",
@@ -895,6 +1034,7 @@
     },
     {
       "id": "UG-53",
+      "brand": "Mayco Stroke and Coat",
       "name": "Silver Grey",
       "left": "#bbbbbb",
       "top": "#babab9",
@@ -902,6 +1042,7 @@
     },
     {
       "id": "UG-236",
+      "brand": "Mayco Stroke and Coat",
       "name": "Grey",
       "left": "#bebcbf",
       "top": "#928f90",
@@ -909,6 +1050,7 @@
     },
     {
       "id": "UG-198",
+      "brand": "Mayco Stroke and Coat",
       "name": "Dark Grey",
       "left": "#beb9b6",
       "top": "#928780",
@@ -916,10 +1058,371 @@
     },
     {
       "id": "UG-50",
+      "brand": "Mayco Stroke and Coat",
       "name": "Jet Black",
       "left": "#434447",
       "top": "#171312",
       "image": "underglaze_images/ug-50_cone06.jpg"
+    },
+    {
+      "id": "V-301",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Ivory Beige",
+      "left": "#f5ecdb",
+      "top": "#f3d2a9",
+      "image": "amaco/swatches/V-301-Ivory-Beige-Underglaze.png"
+    },
+    {
+      "id": "V-303",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Terra Cotta Underglazes",
+      "left": "#df896d",
+      "top": "#85502c",
+      "image": "amaco/swatches/V-303-Terra-Cotta-Underglazes.png"
+    },
+    {
+      "id": "V-304",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Straw",
+      "left": "#f9dc96",
+      "top": "#f1b147",
+      "image": "amaco/swatches/V-304-Straw-Underglaze.png"
+    },
+    {
+      "id": "V-308",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Yellow",
+      "left": "#fef79f",
+      "top": "#fff466",
+      "image": "amaco/swatches/V-308-Yellow-Underglaze.png"
+    },
+    {
+      "id": "V-309",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Deep Yellow",
+      "left": "#fed271",
+      "top": "#feb825",
+      "image": "amaco/swatches/V-309-Deep-Yellow-Underglaze.png"
+    },
+    {
+      "id": "V-313",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Red Brown",
+      "left": "#a1604e",
+      "top": "#73311f",
+      "image": "amaco/swatches/V-313-Red-Brown-Underglaze.png"
+    },
+    {
+      "id": "V-314",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Chocolate Brown",
+      "left": "#7c6357",
+      "top": "#3f2e27",
+      "image": "amaco/swatches/V-314-Chocolate-Brown-Underglaze.png"
+    },
+    {
+      "id": "V-315",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Peach",
+      "left": "#fec9b4",
+      "top": "#e69a7a",
+      "image": "amaco/swatches/V-315-Peach-Underglaze.png"
+    },
+    {
+      "id": "V-318",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Rose",
+      "left": "#f5c7ca",
+      "top": "#a34e5e",
+      "image": "amaco/swatches/V-318-Rose-Underglaze.png"
+    },
+    {
+      "id": "V-320",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Lavender",
+      "left": "#c2b6d6",
+      "top": "#ae96c8",
+      "image": "amaco/swatches/V-320-Lavender-Underglaze.png"
+    },
+    {
+      "id": "V-321",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Lilac",
+      "left": "#eed4e7",
+      "top": "#d69dc6",
+      "image": "amaco/swatches/V-321-Lilac-Underglaze.png"
+    },
+    {
+      "id": "V-322",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Purple",
+      "left": "#a7b8d1",
+      "top": "#394590",
+      "image": "amaco/swatches/V-322-Purple-Underglaze.png"
+    },
+    {
+      "id": "V-323",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Salmon",
+      "left": "#fedbcc",
+      "top": "#d7846e",
+      "image": "amaco/swatches/V-323-Salmon-Underglaze.png"
+    },
+    {
+      "id": "V-325",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Baby Blue",
+      "left": "#d6ecfd",
+      "top": "#81b0fb",
+      "image": "amaco/swatches/V-325-Baby-Blue-Underglaze.png"
+    },
+    {
+      "id": "V-326",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Medium Blue",
+      "left": "#8abbfe",
+      "top": "#2759d4",
+      "image": "amaco/swatches/V-326-Medium-Blue-Underglaze.png"
+    },
+    {
+      "id": "V-327",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Turquoise Blue",
+      "left": "#89ccd4",
+      "top": "#309bb2",
+      "image": "amaco/swatches/V-327-Turquoise-Blue-Underglaze.png"
+    },
+    {
+      "id": "V-328",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Iceberg Blue",
+      "left": "#eff7fa",
+      "top": "#c7dae4",
+      "image": "amaco/swatches/V-328-Iceberg-Blue-Underglaze.png"
+    },
+    {
+      "id": "V-332",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Teal Blue",
+      "left": "#589bbd",
+      "top": "#213940",
+      "image": "amaco/swatches/V-332-Teal-Blue-Underglaze.png"
+    },
+    {
+      "id": "V-333",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Avocado",
+      "left": "#c2c787",
+      "top": "#667432",
+      "image": "amaco/swatches/V-333-Avocado-Underglaze.png"
+    },
+    {
+      "id": "V-336",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Royal Blue",
+      "left": "#7391ac",
+      "top": "#131622",
+      "image": "amaco/swatches/V-336-Royal-Blue-Underglaze.png"
+    },
+    {
+      "id": "V-341",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Blue Green",
+      "left": "#539e91",
+      "top": "#1b4e3b",
+      "image": "amaco/swatches/V-341-Blue-Green-Underglaze.png"
+    },
+    {
+      "id": "V-343",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Chartreuse",
+      "left": "#ecf486",
+      "top": "#d3f048",
+      "image": "amaco/swatches/V-343-Chartreuse-Underglaze.png"
+    },
+    {
+      "id": "V-345",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Light Green",
+      "left": "#ceebad",
+      "top": "#73c559",
+      "image": "amaco/swatches/V-345-Light-Green-Underglaze.png"
+    },
+    {
+      "id": "V-350",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Orange",
+      "left": "#fee19c",
+      "top": "#f5c956",
+      "image": "amaco/swatches/V-350-Orange-Underglaze.png"
+    },
+    {
+      "id": "V-353",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Dark Green",
+      "left": "#73a661",
+      "top": "#4c7634",
+      "image": "amaco/swatches/V-353-Dark-Green-Underglaze.png"
+    },
+    {
+      "id": "V-356",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Pearl Gray",
+      "left": "#e3ece9",
+      "top": "#b6c9c5",
+      "image": "amaco/swatches/V-356-Pearl-Gray-Underglaze.png"
+    },
+    {
+      "id": "V-360",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "White",
+      "left": "#f1f0ec",
+      "top": "#ebe6e0",
+      "image": "amaco/swatches/V-360-White-Underglaze.png"
+    },
+    {
+      "id": "V-361",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Jet Black",
+      "left": "#43443f",
+      "top": "#14140f",
+      "image": "amaco/swatches/V-361-Jet-Black-Underglaze.png"
+    },
+    {
+      "id": "V-366",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Teddy Bear Brown",
+      "left": "#d89653",
+      "top": "#b16c33",
+      "image": "amaco/swatches/V-366-Teddy-Bear-Brown.png"
+    },
+    {
+      "id": "V-370",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Velour Black",
+      "left": "#484946",
+      "top": "#0f130e",
+      "image": "amaco/swatches/V-370-Velour-Black-Underglaze.png"
+    },
+    {
+      "id": "V-375",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Maroon",
+      "left": "#bd797c",
+      "top": "#6d2e32",
+      "image": "amaco/swatches/V-375-Maroon-Underglaze.png"
+    },
+    {
+      "id": "V-376",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Hunter Green",
+      "left": "#75b492",
+      "top": "#35593b",
+      "image": "amaco/swatches/V-376-Hunter-Green-Underglaze.png"
+    },
+    {
+      "id": "V-380",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Violet",
+      "left": "#dbb1d6",
+      "top": "#a763a3",
+      "image": "amaco/swatches/V-380-Violet-Underglaze.png"
+    },
+    {
+      "id": "V-381",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Amethyst",
+      "left": "#ccafd5",
+      "top": "#472b80",
+      "image": "amaco/swatches/V-381-Amethyst-Underglaze.png"
+    },
+    {
+      "id": "V-382",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Red",
+      "left": "#ea8676",
+      "top": "#bd5242",
+      "image": "amaco/swatches/V-382-Red-Underglaze.png"
+    },
+    {
+      "id": "V-383",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Light Red",
+      "left": "#ea8676",
+      "top": "#bd5243",
+      "image": "amaco/swatches/V-383-Light-Red-Underglaze.png"
+    },
+    {
+      "id": "V-384",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Real Orange",
+      "left": "#febe9a",
+      "top": "#fe8c4c",
+      "image": "amaco/swatches/V-384-Real-Orange-Underglaze.png"
+    },
+    {
+      "id": "V-385",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Cinnamon",
+      "left": "#bb6047",
+      "top": "#8b4235",
+      "image": "amaco/swatches/V-385-Cinnamon-Underglaze.png"
+    },
+    {
+      "id": "V-386",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Electric Blue",
+      "left": "#2b63e8",
+      "top": "#0b1741",
+      "image": "amaco/swatches/V-386-Electric-Blue-Underglaze.png"
+    },
+    {
+      "id": "V-387",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Bright Red",
+      "left": "#fd7463",
+      "top": "#c61607",
+      "image": "amaco/swatches/V-387-Bright-Red-Underglaze.png"
+    },
+    {
+      "id": "V-388",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Radiant Red",
+      "left": "#fc7861",
+      "top": "#f62a03",
+      "image": "amaco/swatches/V-388-Radiant-Red-Underglaze.png"
+    },
+    {
+      "id": "V-389",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Flame Orange",
+      "left": "#fea676",
+      "top": "#fe6b20",
+      "image": "amaco/swatches/V-389-Flame-Orange-Underglaze.png"
+    },
+    {
+      "id": "V-390",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Bright Orange",
+      "left": "#fec137",
+      "top": "#ff9f16",
+      "image": "amaco/swatches/V-390-Bright-Orange-Underglaze.png"
+    },
+    {
+      "id": "V-391",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Intense Yellow",
+      "left": "#fdf434",
+      "top": "#f9e401",
+      "image": "amaco/swatches/V-391-Intense-Yellow-Underglaze.png"
+    },
+    {
+      "id": "V-392",
+      "brand": "Amaco Velvet Underglaze",
+      "name": "Blood Orange",
+      "left": "#fc8e74",
+      "top": "#fc4b11",
+      "image": "amaco/swatches/V-392-Blood-Orange-Underglaze.png"
     }
   ]
 }
