@@ -2,6 +2,8 @@
 work/venv/
 .env
 
+airtable-integration/credentials.js
+
 airtable-integration/node_modules/
 amaco/node_modules/
 
