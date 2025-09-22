@@ -405,46 +405,116 @@ expressApp.post('/api/send-to-slack', async (req, res) => {
     const shareUrl = `${baseUrl}?pattern=${encodeURIComponent(pattern)}&bgColor=${encodeURIComponent(bgColor)}&patternColor=${encodeURIComponent(patternColor)}&bgColorName=${encodeURIComponent(bgColorName)}&patternColorName=${encodeURIComponent(patternColorName)}`;
     
     // First upload the file
-    const fileResult = await slackClient.files.uploadV2({
-      channel_id: 'C09FUNUELMV',
-      file: fs.createReadStream(pngPath),
-      filename: filename,
-      title: `Ceramic Pattern: ${pattern}`
-    });
+    let fileResult;
+    try {
+      fileResult = await slackClient.files.uploadV2({
+        channel_id: 'C09FUNUELMV',
+        file: fs.createReadStream(pngPath),
+        filename: filename,
+        title: `Ceramic Pattern: ${pattern}`
+      });
+
+      console.log('📤 Slack file upload result:', JSON.stringify(fileResult, null, 2));
+      console.log('📤 File result type:', typeof fileResult);
+      console.log('📤 File result keys:', fileResult ? Object.keys(fileResult) : 'null');
+      
+      if (fileResult && fileResult.file) {
+        console.log('📤 File object keys:', Object.keys(fileResult.file));
+      }
+
+    } catch (uploadError) {
+      console.error('❌ Slack file upload failed:', uploadError);
+      console.error('❌ Upload error details:', {
+        message: uploadError.message,
+        code: uploadError.code,
+        data: uploadError.data,
+        status: uploadError.status
+      });
+      throw new Error(`File upload failed: ${uploadError.message}`);
+    }
+
+    // Check if file upload was successful and has the expected structure
+    if (!fileResult || !fileResult.file) {
+      console.error('❌ File upload response structure issue:', {
+        hasFileResult: !!fileResult,
+        fileResultType: typeof fileResult,
+        fileResultKeys: fileResult ? Object.keys(fileResult) : 'null',
+        hasFile: fileResult && !!fileResult.file,
+        fileKeys: fileResult && fileResult.file ? Object.keys(fileResult.file) : 'null'
+      });
+      throw new Error('File upload failed - no file object in response');
+    }
+
+    // Get the public URL for the image - try different possible structures
+    let imageUrl = null;
+    let fileId = null;
+    
+    try {
+      if (fileResult.file.permalink_public) {
+        imageUrl = fileResult.file.permalink_public;
+      } else if (fileResult.file.url_private) {
+        imageUrl = fileResult.file.url_private;
+      } else if (fileResult.file.permalink) {
+        imageUrl = fileResult.file.permalink;
+      } else {
+        console.warn('⚠️ No public URL found in file result:', fileResult.file);
+        // Continue without image in the message
+      }
+      
+      fileId = fileResult.file.id;
+      console.log('🖼️ Using image URL:', imageUrl);
+      console.log('📁 File ID:', fileId);
+      
+    } catch (urlError) {
+      console.error('❌ Error accessing file properties:', urlError);
+      console.error('❌ File result structure:', fileResult);
+      // Continue without image and file ID
+    }
+
+    // Build the message blocks
+    const messageBlocks = [
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": `🎨 New ceramic pattern design!\n\n*Pattern:* ${pattern.replace('.svg', '')}\n*Background Color:* ${bgColorName} (${bgColor})\n*Pattern Color:* ${patternColorName} (${patternColor})\n\n🔗 <${shareUrl}|View and edit this design>`
+        }
+      }
+    ];
+
+    // Add image accessory if we have a URL
+    if (imageUrl) {
+      messageBlocks[0].accessory = {
+        "type": "image",
+        "image_url": imageUrl,
+        "alt_text": `Ceramic Pattern: ${pattern}`
+      };
+    }
+
+    // Add action buttons only if we have a file ID
+    if (fileId) {
+      messageBlocks.push({
+        "type": "actions",
+        "elements": [
+          {
+            "type": "button",
+            "text": {
+              "type": "plain_text",
+              "text": "Catalogue"
+            },
+            "style": "primary",
+            "action_id": "catalogue_pattern",
+            "value": fileId
+          }
+        ]
+      });
+    }
 
     // Then send a message with interactive buttons
     const messageResult = await slackClient.chat.postMessage({
       channel: 'C09FUNUELMV',
       text: `🎨 New ceramic pattern design!`,
-      blocks: [
-        {
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": `🎨 New ceramic pattern design!\n\n*Pattern:* ${pattern.replace('.svg', '')}\n*Background Color:* ${bgColorName} (${bgColor})\n*Pattern Color:* ${patternColorName} (${patternColor})\n\n🔗 <${shareUrl}|View and edit this design>`
-          },
-          "accessory": {
-            "type": "image",
-            "image_url": fileResult.file.permalink_public,
-            "alt_text": `Ceramic Pattern: ${pattern}`
-          }
-        },
-        {
-          "type": "actions",
-          "elements": [
-            {
-              "type": "button",
-              "text": {
-                "type": "plain_text",
-                "text": "Catalogue"
-              },
-              "style": "primary",
-              "action_id": "catalogue_pattern",
-              "value": fileResult.file.id
-            }
-          ]
-        }
-      ]
+      blocks: messageBlocks
     });
 
     const result = { file: fileResult.file, message: messageResult };
