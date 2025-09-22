@@ -398,6 +398,22 @@ expressApp.post('/api/send-to-slack', async (req, res) => {
     // Create a new Slack client for this request
     const slackClient = new WebClient(process.env.SLACK_BOT_TOKEN);
     
+    // Test Slack connection and permissions
+    try {
+      console.log('🔍 Testing Slack connection...');
+      const authTest = await slackClient.auth.test();
+      console.log('✅ Slack auth test successful:', {
+        ok: authTest.ok,
+        url: authTest.url,
+        team: authTest.team,
+        user: authTest.user,
+        bot_id: authTest.bot_id
+      });
+    } catch (authError) {
+      console.error('❌ Slack auth test failed:', authError);
+      throw new Error(`Slack authentication failed: ${authError.message}`);
+    }
+    
     // Generate shareable URL using the request origin
     const protocol = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
     const host = req.headers['x-forwarded-host'] || req.headers.host;
@@ -407,6 +423,27 @@ expressApp.post('/api/send-to-slack', async (req, res) => {
     // First upload the file
     let fileResult;
     try {
+      console.log('📤 Starting file upload to Slack...');
+      console.log('📤 File details:', {
+        path: pngPath,
+        filename: filename,
+        exists: fs.existsSync(pngPath),
+        size: fs.existsSync(pngPath) ? fs.statSync(pngPath).size : 'N/A',
+        channel: 'C09FUNUELMV'
+      });
+
+      // Check if file exists and is readable
+      if (!fs.existsSync(pngPath)) {
+        throw new Error(`File does not exist: ${pngPath}`);
+      }
+
+      const fileStats = fs.statSync(pngPath);
+      if (fileStats.size === 0) {
+        throw new Error(`File is empty: ${pngPath}`);
+      }
+
+      console.log('📤 File is valid, proceeding with upload...');
+
       fileResult = await slackClient.files.uploadV2({
         channel_id: 'C09FUNUELMV',
         file: fs.createReadStream(pngPath),
@@ -420,6 +457,9 @@ expressApp.post('/api/send-to-slack', async (req, res) => {
       
       if (fileResult && fileResult.file) {
         console.log('📤 File object keys:', Object.keys(fileResult.file));
+      } else {
+        console.log('⚠️ No file object in response, checking for alternative structure...');
+        console.log('📤 Full response structure:', fileResult);
       }
 
     } catch (uploadError) {
@@ -428,8 +468,15 @@ expressApp.post('/api/send-to-slack', async (req, res) => {
         message: uploadError.message,
         code: uploadError.code,
         data: uploadError.data,
-        status: uploadError.status
+        status: uploadError.status,
+        stack: uploadError.stack
       });
+      
+      // Try to get more details about the error
+      if (uploadError.data) {
+        console.error('❌ Error data:', JSON.stringify(uploadError.data, null, 2));
+      }
+      
       throw new Error(`File upload failed: ${uploadError.message}`);
     }
 
@@ -442,7 +489,52 @@ expressApp.post('/api/send-to-slack', async (req, res) => {
         hasFile: fileResult && !!fileResult.file,
         fileKeys: fileResult && fileResult.file ? Object.keys(fileResult.file) : 'null'
       });
-      throw new Error('File upload failed - no file object in response');
+      
+      // Try alternative upload method
+      console.log('🔄 Trying alternative upload method...');
+      try {
+        const alternativeResult = await slackClient.files.upload({
+          channels: 'C09FUNUELMV',
+          file: fs.createReadStream(pngPath),
+          filename: filename,
+          title: `Ceramic Pattern: ${pattern}`
+        });
+        
+        console.log('📤 Alternative upload result:', JSON.stringify(alternativeResult, null, 2));
+        
+        if (alternativeResult && alternativeResult.file) {
+          console.log('✅ Alternative upload successful');
+          fileResult = alternativeResult;
+        } else {
+          throw new Error('Alternative upload also failed');
+        }
+      } catch (altError) {
+        console.error('❌ Alternative upload also failed:', altError);
+        
+        // Send message without file as final fallback
+        console.log('🔄 Sending message without file as fallback...');
+        try {
+          const fallbackMessage = await slackClient.chat.postMessage({
+            channel: 'C09FUNUELMV',
+            text: `🎨 New ceramic pattern design!\n\n*Pattern:* ${pattern.replace('.svg', '')}\n*Background Color:* ${bgColorName} (${bgColor})\n*Pattern Color:* ${patternColorName} (${patternColor})\n\n🔗 <${shareUrl}|View and edit this design>\n\n⚠️ Image upload failed, but you can view the design at the link above.`
+          });
+          
+          console.log('✅ Fallback message sent successfully');
+          
+          // Clean up PNG file
+          fs.unlinkSync(pngPath);
+          
+          return res.json({ 
+            success: true, 
+            message: 'Pattern sent to Slack successfully (without image due to upload failure)!',
+            fallback: true
+          });
+          
+        } catch (fallbackError) {
+          console.error('❌ Even fallback message failed:', fallbackError);
+          throw new Error('File upload failed - no file object in response and alternative method failed');
+        }
+      }
     }
 
     // Get the public URL for the image - try different possible structures
