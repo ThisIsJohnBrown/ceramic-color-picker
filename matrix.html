@@ -307,7 +307,7 @@
             font-weight: 600;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
             opacity: 0;
-            transition: opacity 0.2s ease;
+            transition: all 0.3s ease;
             pointer-events: none;
             z-index: 2;
             background: rgba(0, 0, 0, 0.6);
@@ -327,6 +327,22 @@
 
         .pattern-cell:hover .hover-text {
             opacity: 1;
+        }
+
+        /* Left side hover effect (zoom) */
+        .pattern-cell:hover .hover-text.left {
+            color: #000;
+            background: rgba(255, 255, 255, 0.9);
+            text-shadow: none;
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        /* Right side hover effect (hide/show) */
+        .pattern-cell:hover .hover-text.right {
+            color: #000;
+            background: rgba(255, 255, 255, 0.9);
+            text-shadow: none;
+            transform: translateX(-50%) scale(1.1);
         }
 
         .pattern-svg.disabled .hover-text {
