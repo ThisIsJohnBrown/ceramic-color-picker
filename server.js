@@ -1109,19 +1109,50 @@ expressApp.post('/api/import-csv', async (req, res) => {
         });
     }
     
-    // Save the toggle states
-    const toggleStatesData = {
-        disabledCells: Array.from(toggleStates),
+    // Save the toggle states to database
+    const disabledCellsArray = Array.from(toggleStates);
+    
+    if (db) {
+      // Use database
+      const client = await db.connect();
+      try {
+        // Clear existing states
+        await client.query('DELETE FROM toggle_states');
+        
+        // Insert new states
+        if (disabledCellsArray.length > 0) {
+          const values = disabledCellsArray.map(cellKey => `('${cellKey}', true)`).join(',');
+          await client.query(`INSERT INTO toggle_states (cell_key, is_disabled) VALUES ${values}`);
+        }
+        
+        console.log('💾 Toggle states saved to database via CSV import:', {
+          count: disabledCellsArray.length,
+          timestamp: new Date().toISOString()
+        });
+        
+      } finally {
+        client.release();
+      }
+    } else {
+      // Fallback to file-based storage
+      const toggleStatesData = {
+        disabledCells: disabledCellsArray,
         lastUpdated: new Date().toISOString(),
         source: 'CSV import via API',
         totalCombinations: (colorsData.underglazes?.length || 0) * (colorsData.glazes?.length || 0),
         enabledCombinations: ((colorsData.underglazes?.length || 0) * (colorsData.glazes?.length || 0)) - toggleStates.size,
         disabledCombinations: toggleStates.size,
         notFoundCombinations: Array.from(notFoundCombinations)
-    };
-    
-    const toggleStatesPath = path.join(__dirname, 'toggle-states.json');
-    fs.writeFileSync(toggleStatesPath, JSON.stringify(toggleStatesData, null, 2));
+      };
+      
+      const toggleStatesPath = path.join(__dirname, 'toggle-states.json');
+      fs.writeFileSync(toggleStatesPath, JSON.stringify(toggleStatesData, null, 2));
+      
+      console.log('💾 Toggle states saved to file via CSV import:', {
+        count: disabledCellsArray.length,
+        timestamp: toggleStatesData.lastUpdated
+      });
+    }
     
     console.log('✅ CSV import completed successfully');
     
@@ -1129,9 +1160,9 @@ expressApp.post('/api/import-csv', async (req, res) => {
       success: true,
       message: 'CSV import completed successfully',
       summary: {
-        totalCombinations: toggleStatesData.totalCombinations,
-        enabledCombinations: toggleStatesData.enabledCombinations,
-        disabledCombinations: toggleStatesData.disabledCombinations,
+        totalCombinations: (colorsData.underglazes?.length || 0) * (colorsData.glazes?.length || 0),
+        enabledCombinations: ((colorsData.underglazes?.length || 0) * (colorsData.glazes?.length || 0)) - toggleStates.size,
+        disabledCombinations: toggleStates.size,
         notFoundCombinations: notFoundCombinations.size
       }
     });
