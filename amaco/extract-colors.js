@@ -132,3 +132,5 @@ async function extractColorAt(imagePath, x, y) {
 
 // Run the color extractor
 extractColorsFromSwatches();
+
+

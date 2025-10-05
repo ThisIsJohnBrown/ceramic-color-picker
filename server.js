@@ -7,6 +7,7 @@ const path = require('path');
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 const sharp = require('sharp');
+const { Pool } = require('pg');
 require('dotenv').config();
 
 // Initialize Slack app
@@ -45,6 +46,48 @@ try {
   colorsData = JSON.parse(fs.readFileSync('colors.json', 'utf8'));
 } catch (error) {
   console.error('Error loading colors.json:', error);
+}
+
+// Initialize PostgreSQL database
+let db = null;
+async function initializeDatabase() {
+  try {
+    // Use Railway's DATABASE_URL or fallback to local connection
+    const connectionString = process.env.DATABASE_URL || 'postgresql://localhost:5432/ceramic_colors';
+    
+    db = new Pool({
+      connectionString: connectionString,
+      ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
+    });
+
+    // Test connection
+    const client = await db.connect();
+    console.log('📊 Connected to PostgreSQL database');
+    
+    // Create toggle_states table if it doesn't exist
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS toggle_states (
+        id SERIAL PRIMARY KEY,
+        cell_key VARCHAR(255) UNIQUE NOT NULL,
+        is_disabled BOOLEAN NOT NULL DEFAULT false,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    
+    // Create index for faster lookups
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_cell_key ON toggle_states(cell_key)
+    `);
+    
+    console.log('✅ Database table and index created successfully');
+    client.release();
+    
+  } catch (error) {
+    console.error('❌ Database connection failed:', error);
+    console.log('⚠️ Toggle states will not be persistent. Using file-based fallback.');
+    db = null;
+  }
 }
 
 
@@ -664,6 +707,133 @@ expressApp.get('/api/colors', (req, res) => {
   }
 });
 
+// API endpoint to save toggle states
+expressApp.post('/api/save-toggle-states', async (req, res) => {
+  try {
+    const { disabledCells } = req.body;
+    
+    if (!Array.isArray(disabledCells)) {
+      return res.status(400).json({ error: 'disabledCells must be an array' });
+    }
+    
+    if (db) {
+      // Use database
+      const client = await db.connect();
+      try {
+        // Clear existing states
+        await client.query('DELETE FROM toggle_states');
+        
+        // Insert new states
+        if (disabledCells.length > 0) {
+          const values = disabledCells.map(cellKey => `('${cellKey}', true)`).join(',');
+          await client.query(`INSERT INTO toggle_states (cell_key, is_disabled) VALUES ${values}`);
+        }
+        
+        console.log('💾 Toggle states saved to database:', {
+          count: disabledCells.length,
+          timestamp: new Date().toISOString()
+        });
+        
+        res.json({ 
+          success: true, 
+          message: 'Toggle states saved successfully',
+          count: disabledCells.length
+        });
+        
+      } finally {
+        client.release();
+      }
+    } else {
+      // Fallback to file-based storage
+      const statesPath = path.join(__dirname, 'toggle-states.json');
+      const statesData = {
+        disabledCells,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      fs.writeFileSync(statesPath, JSON.stringify(statesData, null, 2));
+      
+      console.log('💾 Toggle states saved to file (database unavailable):', {
+        count: disabledCells.length,
+        timestamp: statesData.lastUpdated
+      });
+      
+      res.json({ 
+        success: true, 
+        message: 'Toggle states saved successfully (file fallback)',
+        count: disabledCells.length
+      });
+    }
+    
+  } catch (error) {
+    console.error('Error saving toggle states:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to save toggle states' 
+    });
+  }
+});
+
+// API endpoint to load toggle states
+expressApp.get('/api/load-toggle-states', async (req, res) => {
+  try {
+    if (db) {
+      // Use database
+      const client = await db.connect();
+      try {
+        const result = await client.query('SELECT cell_key FROM toggle_states WHERE is_disabled = true');
+        const disabledCells = result.rows.map(row => row.cell_key);
+        
+        console.log('📂 Toggle states loaded from database:', {
+          count: disabledCells.length
+        });
+        
+        res.json({ 
+          success: true, 
+          disabledCells: disabledCells,
+          source: 'database'
+        });
+        
+      } finally {
+        client.release();
+      }
+    } else {
+      // Fallback to file-based storage
+      const statesPath = path.join(__dirname, 'toggle-states.json');
+      
+      if (!fs.existsSync(statesPath)) {
+        return res.json({ 
+          success: true, 
+          disabledCells: [],
+          message: 'No saved states found',
+          source: 'file'
+        });
+      }
+      
+      const statesData = JSON.parse(fs.readFileSync(statesPath, 'utf8'));
+      
+      console.log('📂 Toggle states loaded from file:', {
+        count: statesData.disabledCells.length,
+        lastUpdated: statesData.lastUpdated
+      });
+      
+      res.json({ 
+        success: true, 
+        disabledCells: statesData.disabledCells || [],
+        lastUpdated: statesData.lastUpdated,
+        source: 'file'
+      });
+    }
+    
+  } catch (error) {
+    console.error('Error loading toggle states:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to load toggle states' 
+    });
+  }
+});
+
 // Health check endpoint
 expressApp.get('/api/health', (req, res) => {
   res.json({ 
@@ -690,7 +860,10 @@ expressApp.use((error, req, res, next) => {
 // Start the server
 (async () => {
   try {
-    // Start Slack app first
+    // Initialize database first
+    await initializeDatabase();
+    
+    // Start Slack app
     await app.start();
     console.log('⚡️ Slack bot is running!');
     

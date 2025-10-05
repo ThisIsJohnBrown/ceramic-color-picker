@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ceramic Color Matrix - Underglaze & Glaze Combinations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #495057;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+        .matrix-container {
+            padding: 20px;
+            overflow-x: auto;
+            overflow-y: auto;
+            position: relative;
+            max-height: 80vh;
+        }
+
+        .matrix-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            min-width: 1200px;
+            position: relative;
+        }
+
+        .matrix-table th,
+        .matrix-table td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .matrix-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        /* Override for glaze headers specifically */
+        .matrix-table th.glaze-header {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 15 !important;
+            background: #f8f9fa !important;
+        }
+
+        /* Override for glaze headers to ensure they stick */
+        .matrix-table .glaze-header {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 15 !important;
+        }
+
+        /* Ensure the header row itself is sticky */
+        .matrix-table thead tr {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 10 !important;
+        }
+
+        .matrix-table thead tr th {
+            position: sticky !important;
+            top: 0 !important;
+            background: #f8f9fa !important;
+        }
+
+        /* Specific rule for glaze headers in thead */
+        .matrix-table thead tr th.glaze-header {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 15 !important;
+            background: #f8f9fa !important;
+        }
+
+        /* Force all th elements in thead to be sticky */
+        .matrix-table thead th {
+            position: -webkit-sticky !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 10 !important;
+            background: #f8f9fa !important;
+        }
+
+        /* Ensure the entire thead is sticky */
+        .matrix-table thead {
+            position: -webkit-sticky !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 10 !important;
+        }
+
+        .underglaze-header {
+            background: #e9ecef !important;
+            position: sticky;
+            left: 0;
+            z-index: 20;
+            min-width: 80px;
+            max-width: 80px;
+            width: 80px;
+            text-align: center;
+        }
+
+        .glaze-header {
+            background: #f8f9fa !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 15 !important;
+            min-width: 120px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-bottom: 2px solid #dee2e6;
+            vertical-align: top;
+        }
+
+        /* Ensure the table header row sticks */
+        thead {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 10 !important;
+        }
+
+        thead th {
+            position: sticky !important;
+            top: 0 !important;
+            background: #f8f9fa !important;
+        }
+
+        /* Force thead to be sticky */
+        #tableHead {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 10 !important;
+            background: #f8f9fa !important;
+        }
+
+        #tableHead th {
+            position: sticky !important;
+            top: 0 !important;
+            background: #f8f9fa !important;
+        }
+
+        .underglaze-row {
+            background: #f8f9fa;
+        }
+
+        .underglaze-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 5px;
+            width: 100%;
+        }
+
+        .underglaze-image {
+            width: 25px;
+            height: 25px;
+            border-radius: 4px;
+            object-fit: cover;
+            border: 1px solid #dee2e6;
+        }
+
+        .underglaze-details {
+            flex: 1;
+        }
+
+        .underglaze-name {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.7rem;
+            text-align: center;
+            line-height: 1.1;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+
+        .underglaze-count {
+            background: #007bff;
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 4px;
+            border-radius: 8px;
+            margin-top: 2px;
+            font-weight: 600;
+        }
+
+        .glaze-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 5px;
+            min-width: 120px;
+        }
+
+        .glaze-image {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid #dee2e6;
+        }
+
+        .glaze-name {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.8rem;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .glaze-id {
+            color: #6c757d;
+            font-size: 0.7rem;
+        }
+
+        .glaze-count {
+            background: #28a745;
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 4px;
+            border-radius: 8px;
+            margin-top: 2px;
+            font-weight: 600;
+        }
+
+        .pattern-cell {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .pattern-cell:hover {
+            transform: scale(1.1);
+            z-index: 5;
+        }
+
+        .pattern-cell.disabled {
+            opacity: 0.2;
+            cursor: pointer;
+        }
+
+        .pattern-cell.disabled:hover {
+            transform: scale(1.1);
+            z-index: 5;
+        }
+
+        .pattern-svg.disabled {
+            opacity: 0.2;
+            cursor: pointer;
+        }
+
+        .pattern-svg.disabled:hover {
+            transform: scale(1.1);
+            z-index: 5;
+        }
+
+
+        .pattern-svg {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 80px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .matrix-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .controls {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .controls-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .controls-content {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .toggle-filters-btn {
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-filters-btn:hover {
+            background: #0056b3;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .filter-input {
+            padding: 8px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .stats {
+            margin-left: auto;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .load-more-btn {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .load-more-btn:hover {
+            background: #0056b3;
+        }
+
+        /* Lightbox styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox-content {
+            background: white;
+            border-radius: 15px;
+            padding: 10px;
+            width: 95vw;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+            z-index: 1001;
+        }
+
+        .lightbox-close:hover {
+            color: #000;
+        }
+
+        .lightbox-svg {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 0;
+            width: 100%;
+        }
+
+        .lightbox-svg > div {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 0;
+        }
+
+        .lightbox-svg svg {
+            width: 100%;
+            height: 100%;
+            max-width: none;
+            max-height: none;
+        }
+
+        .lightbox-info {
+            margin-top: 10px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+
+        .lightbox-colors {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 5px;
+        }
+
+        .color-info {
+            text-align: center;
+        }
+
+        .color-swatch {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 0 auto 5px;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .color-label {
+            font-weight: 600;
+            color: #555;
+            font-size: 0.8rem;
+        }
+
+        .color-name {
+            color: #777;
+            font-size: 0.7rem;
+            margin-top: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .matrix-container {
+                padding: 10px;
+            }
+            
+            .pattern-cell {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .underglaze-info {
+                min-width: 150px;
+            }
+            
+            .glaze-info {
+                min-width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Ceramic Color Matrix</h1>
+        </div>
+        
+        <div class="controls">
+            <div class="controls-header">
+                <button id="toggleFilters" class="toggle-filters-btn">🔧 Filters</button>
+                <div class="stats" id="stats">
+                    Loading...
+                </div>
+            </div>
+            <div class="controls-content" id="controlsContent" style="display: none;">
+                <div class="control-group">
+                    <label class="control-label" for="underglazeFilter">Filter Underglazes:</label>
+                    <input type="text" id="underglazeFilter" class="filter-input" placeholder="Search underglazes...">
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="glazeFilter">Filter Glazes:</label>
+                    <input type="text" id="glazeFilter" class="filter-input" placeholder="Search glazes...">
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="maxCombinations">Max Combinations:</label>
+                    <select id="maxCombinations" class="filter-input">
+                        <option value="100">100 (Fast)</option>
+                        <option value="500" selected>500 (Medium)</option>
+                        <option value="1000">1000 (Slow)</option>
+                        <option value="all">All (Very Slow)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <button id="loadMoreBtn" class="load-more-btn" style="display: none;">Load More Combinations</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="matrix-container">
+            <div class="matrix-loading" id="matrixLoading">
+                <div class="spinner"></div>
+                <span>Loading color combinations...</span>
+            </div>
+            <table class="matrix-table" id="matrixTable" style="display: none;">
+                <thead id="tableHead">
+                    <!-- Headers will be populated by JavaScript -->
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Rows will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" id="lightboxClose">&times;</button>
+            <div id="lightboxSvg"></div>
+            <div class="lightbox-info">
+                <div class="lightbox-colors">
+                    <div class="color-info">
+                        <div class="color-swatch" id="underglazeSwatch"></div>
+                        <div class="color-label">Underglaze</div>
+                        <div class="color-name" id="underglazeName"></div>
+                    </div>
+                    <div class="color-info">
+                        <div class="color-swatch" id="glazeSwatch"></div>
+                        <div class="color-label">Glaze</div>
+                        <div class="color-name" id="glazeName"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let colorsData = null;
+        let filteredUnderglazes = [];
+        let filteredGlazes = [];
+        let svgCache = new Map(); // Cache for modified SVGs
+        let currentMaxCombinations = 500;
+        let loadedCombinations = 0;
+        let disabledCells = new Set(); // Track disabled cells by underglaze-glaze combination
+
+        // Load colors data
+        async function loadColorsData() {
+            try {
+                const response = await fetch('colors.json');
+                colorsData = await response.json();
+                filteredUnderglazes = colorsData.underglazes || [];
+                filteredGlazes = colorsData.glazes || [];
+                updateStats();
+                await buildMatrix();
+            } catch (error) {
+                console.error('Error loading colors data:', error);
+                document.getElementById('stats').textContent = 'Error loading data';
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalCombinations = filteredUnderglazes.length * filteredGlazes.length;
+            document.getElementById('stats').textContent = 
+                `${filteredUnderglazes.length} underglazes × ${filteredGlazes.length} glazes = ${totalCombinations} combinations`;
+        }
+
+        // Build the matrix table
+        async function buildMatrix() {
+            const tableHead = document.getElementById('tableHead');
+            const tableBody = document.getElementById('tableBody');
+            const matrixLoading = document.getElementById('matrixLoading');
+            const matrixTable = document.getElementById('matrixTable');
+            
+            // Show loading indicator
+            matrixLoading.style.display = 'flex';
+            matrixTable.style.display = 'none';
+            
+            // Clear existing content
+            tableHead.innerHTML = '';
+            tableBody.innerHTML = '';
+
+            // Limit combinations for performance
+            const maxCombinations = currentMaxCombinations;
+            const totalCombinations = filteredUnderglazes.length * filteredGlazes.length;
+            const shouldLimit = maxCombinations !== 'all' && totalCombinations > maxCombinations;
+            
+            let limitedUnderglazes = filteredUnderglazes;
+            let limitedGlazes = filteredGlazes;
+            
+            if (shouldLimit) {
+                // Calculate how many underglazes and glazes we can show
+                const maxPerSide = Math.floor(Math.sqrt(maxCombinations));
+                limitedUnderglazes = filteredUnderglazes.slice(0, maxPerSide);
+                limitedGlazes = filteredGlazes.slice(0, maxPerSide);
+                
+                // Show load more button if there are more combinations
+                const loadMoreBtn = document.getElementById('loadMoreBtn');
+                if (totalCombinations > maxCombinations) {
+                    loadMoreBtn.style.display = 'block';
+                    loadMoreBtn.onclick = () => {
+                        currentMaxCombinations = Math.min(currentMaxCombinations * 2, totalCombinations);
+                        buildMatrix();
+                    };
+                } else {
+                    loadMoreBtn.style.display = 'none';
+                }
+            } else {
+                const loadMoreBtn = document.getElementById('loadMoreBtn');
+                loadMoreBtn.style.display = 'none';
+            }
+
+            // Create header row
+            const headerRow = document.createElement('tr');
+            
+            // Empty cell for the corner
+            const cornerCell = document.createElement('th');
+            cornerCell.className = 'underglaze-header';
+            cornerCell.innerHTML = 'UG ↓<br/>Glaze →';
+            headerRow.appendChild(cornerCell);
+
+            // Add glaze headers
+            limitedGlazes.forEach(glaze => {
+                const glazeHeader = document.createElement('th');
+                glazeHeader.className = 'glaze-header';
+                
+                const glazeInfo = document.createElement('div');
+                glazeInfo.className = 'glaze-info';
+                
+                const glazeImage = document.createElement('img');
+                glazeImage.src = glaze.image;
+                glazeImage.alt = glaze.name;
+                glazeImage.className = 'glaze-image';
+                glazeImage.onerror = () => {
+                    glazeImage.style.display = 'none';
+                };
+                
+                const glazeName = document.createElement('div');
+                glazeName.className = 'glaze-name';
+                glazeName.textContent = glaze.name;
+                
+                const glazeCount = document.createElement('div');
+                glazeCount.className = 'glaze-count';
+                glazeCount.id = `glaze-count-${glaze.id}`;
+                glazeCount.textContent = '0';
+                
+                glazeInfo.appendChild(glazeImage);
+                glazeInfo.appendChild(glazeName);
+                glazeInfo.appendChild(glazeCount);
+                glazeHeader.appendChild(glazeInfo);
+                headerRow.appendChild(glazeHeader);
+            });
+
+            tableHead.appendChild(headerRow);
+
+            // Create underglaze rows
+            for (const underglaze of limitedUnderglazes) {
+                const row = document.createElement('tr');
+                row.className = 'underglaze-row';
+
+                // Underglaze info cell
+                const underglazeCell = document.createElement('td');
+                underglazeCell.className = 'underglaze-header';
+                
+                const underglazeInfo = document.createElement('div');
+                underglazeInfo.className = 'underglaze-info';
+                
+                const underglazeImage = document.createElement('img');
+                underglazeImage.src = underglaze.image;
+                underglazeImage.alt = underglaze.name;
+                underglazeImage.className = 'underglaze-image';
+                underglazeImage.onerror = () => {
+                    underglazeImage.style.display = 'none';
+                };
+                
+                const underglazeName = document.createElement('div');
+                underglazeName.className = 'underglaze-name';
+                underglazeName.textContent = underglaze.name;
+                
+                const underglazeCount = document.createElement('div');
+                underglazeCount.className = 'underglaze-count';
+                underglazeCount.id = `underglaze-count-${underglaze.id}`;
+                underglazeCount.textContent = '0';
+                
+                underglazeInfo.appendChild(underglazeImage);
+                underglazeInfo.appendChild(underglazeName);
+                underglazeInfo.appendChild(underglazeCount);
+                underglazeCell.appendChild(underglazeInfo);
+                row.appendChild(underglazeCell);
+
+                // Pattern cells for each glaze
+                for (const glaze of limitedGlazes) {
+                    const patternCell = document.createElement('td');
+                    patternCell.className = 'pattern-cell';
+                    
+                    // Create the pattern with underglaze as background and glaze as pattern color
+                    const patternDiv = await createPatternCell(underglaze, glaze);
+                    patternCell.appendChild(patternDiv);
+                    row.appendChild(patternCell);
+                }
+
+                tableBody.appendChild(row);
+            }
+            
+            // Update stats
+            const stats = document.getElementById('stats');
+            const actualCombinations = limitedUnderglazes.length * limitedGlazes.length;
+            stats.textContent = `Showing ${actualCombinations} of ${totalCombinations} combinations`;
+            
+            // Hide loading indicator and show table
+            matrixLoading.style.display = 'none';
+            matrixTable.style.display = 'table';
+            
+            // Load saved toggle states
+            await loadToggleStates();
+            
+            // Apply loaded states to existing cells
+            applyToggleStates();
+            
+            // Initialize counts
+            updateCounts();
+        }
+
+        // Create a pattern cell with the SVG pattern
+        async function createPatternCell(underglaze, glaze) {
+            const patternDiv = document.createElement('div');
+            patternDiv.className = 'pattern-svg';
+            
+            // Create a unique key for this cell combination
+            const cellKey = `${underglaze.id}-${glaze.id}`;
+            
+            // Store the cell key on the element for later reference
+            patternDiv._cellKey = cellKey;
+            
+            // Check if this cell is disabled
+            const isDisabled = disabledCells.has(cellKey);
+            if (isDisabled) {
+                patternDiv.classList.add('disabled');
+            }
+            
+            // Make the cell clickable
+            patternDiv.style.cursor = 'pointer';
+            patternDiv.addEventListener('click', (e) => {
+                const rect = patternDiv.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const cellWidth = rect.width;
+                
+                // Determine if click is on left or right side
+                const isLeftSide = clickX < cellWidth / 2;
+                
+                if (isLeftSide) {
+                    // Left side click - show lightbox
+                    showLightbox(underglaze, glaze);
+                } else {
+                    // Right side click - toggle disabled state
+                    toggleCellState(patternDiv, cellKey, underglaze, glaze);
+                }
+            });
+            
+            try {
+                const underglazeColor = underglaze.left || underglaze.color || '#ffffff';
+                const glazeColor = glaze.color || '#000000';
+                
+                // Create cache key
+                const cacheKey = `${glazeColor}`;
+                
+                // Check if we have this glaze color cached
+                let modifiedSvgUrl;
+                if (svgCache.has(cacheKey)) {
+                    modifiedSvgUrl = svgCache.get(cacheKey);
+                } else {
+                    // Load the SVG content only once
+                    const svgResponse = await fetch('patterns/smallTest.svg');
+                    const svgText = await svgResponse.text();
+                    
+                    // Create a modified SVG with the glaze color
+                    const modifiedSvg = svgText.replace('fill:white;', `fill:${glazeColor};`);
+                    const modifiedSvgBlob = new Blob([modifiedSvg], { type: 'image/svg+xml' });
+                    modifiedSvgUrl = URL.createObjectURL(modifiedSvgBlob);
+                    
+                    // Cache the URL
+                    svgCache.set(cacheKey, modifiedSvgUrl);
+                }
+                
+                // Apply the pattern
+                patternDiv.style.backgroundColor = underglazeColor;
+                patternDiv.style.backgroundImage = `url(${modifiedSvgUrl})`;
+                patternDiv.style.backgroundSize = 'cover';
+                patternDiv.style.backgroundRepeat = 'no-repeat';
+                patternDiv.style.backgroundPosition = 'center';
+                
+                // Store URL for cleanup
+                patternDiv._modifiedSvgUrl = modifiedSvgUrl;
+                
+            } catch (error) {
+                console.error('Error loading SVG pattern:', error);
+                // Fallback to simple colored div
+                patternDiv.style.backgroundColor = underglaze.left || underglaze.color || '#ffffff';
+                patternDiv.style.border = `2px solid ${glaze.color || '#000000'}`;
+            }
+            
+            return patternDiv;
+        }
+
+        // Toggle cell disabled state
+        function toggleCellState(patternDiv, cellKey, underglaze, glaze) {
+            const isCurrentlyDisabled = disabledCells.has(cellKey);
+            
+            if (isCurrentlyDisabled) {
+                // Enable the cell
+                disabledCells.delete(cellKey);
+                patternDiv.classList.remove('disabled');
+            } else {
+                // Disable the cell
+                disabledCells.add(cellKey);
+                patternDiv.classList.add('disabled');
+            }
+            
+            // Update counts after toggling
+            updateCounts();
+            
+            // Save states to server
+            saveToggleStates();
+        }
+
+        // Update count displays for underglazes and glazes
+        function updateCounts() {
+            // Update underglaze counts (rows)
+            filteredUnderglazes.forEach(underglaze => {
+                const underglazeCount = document.getElementById(`underglaze-count-${underglaze.id}`);
+                if (underglazeCount) {
+                    let enabledCount = 0;
+                    filteredGlazes.forEach(glaze => {
+                        const cellKey = `${underglaze.id}-${glaze.id}`;
+                        if (!disabledCells.has(cellKey)) {
+                            enabledCount++;
+                        }
+                    });
+                    underglazeCount.textContent = enabledCount;
+                }
+            });
+
+            // Update glaze counts (columns)
+            filteredGlazes.forEach(glaze => {
+                const glazeCount = document.getElementById(`glaze-count-${glaze.id}`);
+                if (glazeCount) {
+                    let enabledCount = 0;
+                    filteredUnderglazes.forEach(underglaze => {
+                        const cellKey = `${underglaze.id}-${glaze.id}`;
+                        if (!disabledCells.has(cellKey)) {
+                            enabledCount++;
+                        }
+                    });
+                    glazeCount.textContent = enabledCount;
+                }
+            });
+        }
+
+        // Save toggle states to server
+        async function saveToggleStates() {
+            try {
+                const disabledCellsArray = Array.from(disabledCells);
+                const response = await fetch('/api/save-toggle-states', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        disabledCells: disabledCellsArray
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    console.log('💾 Toggle states saved successfully:', result.count, 'disabled cells');
+                } else {
+                    console.error('❌ Failed to save toggle states:', result.error);
+                }
+            } catch (error) {
+                console.error('❌ Error saving toggle states:', error);
+            }
+        }
+
+        // Load toggle states from server
+        async function loadToggleStates() {
+            try {
+                const response = await fetch('/api/load-toggle-states');
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Clear current disabled cells and add loaded ones
+                    disabledCells.clear();
+                    result.disabledCells.forEach(cellKey => {
+                        disabledCells.add(cellKey);
+                    });
+                    
+                    console.log('📂 Toggle states loaded:', result.disabledCells.length, 'disabled cells');
+                    if (result.lastUpdated) {
+                        console.log('📅 Last updated:', result.lastUpdated);
+                    }
+                    
+                    return true;
+                } else {
+                    console.error('❌ Failed to load toggle states:', result.error);
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Error loading toggle states:', error);
+                return false;
+            }
+        }
+
+        // Apply loaded toggle states to existing cells
+        function applyToggleStates() {
+            // Find all pattern cells and apply disabled state
+            const patternCells = document.querySelectorAll('.pattern-svg');
+            patternCells.forEach(cell => {
+                // Extract cell key from the cell's data or reconstruct it
+                // We need to find the underglaze and glaze IDs from the cell's context
+                const cellKey = cell._cellKey; // We'll set this when creating cells
+                if (cellKey && disabledCells.has(cellKey)) {
+                    cell.classList.add('disabled');
+                }
+            });
+        }
+
+        // Filter functions
+        async function filterUnderglazes(searchTerm) {
+            if (!colorsData) return;
+            
+            filteredUnderglazes = colorsData.underglazes.filter(underglaze => 
+                underglaze.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                underglaze.id.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            
+            updateStats();
+            await buildMatrix();
+        }
+
+        async function filterGlazes(searchTerm) {
+            if (!colorsData) return;
+            
+            filteredGlazes = colorsData.glazes.filter(glaze => 
+                glaze.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                glaze.id.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            
+            updateStats();
+            await buildMatrix();
+        }
+
+        // Toggle filters functionality
+        document.getElementById('toggleFilters').addEventListener('click', () => {
+            const controlsContent = document.getElementById('controlsContent');
+            const toggleBtn = document.getElementById('toggleFilters');
+            
+            if (controlsContent.style.display === 'none') {
+                controlsContent.style.display = 'flex';
+                toggleBtn.textContent = '🔧 Hide Filters';
+            } else {
+                controlsContent.style.display = 'none';
+                toggleBtn.textContent = '🔧 Filters';
+            }
+        });
+
+        // Event listeners
+        document.getElementById('underglazeFilter').addEventListener('input', (e) => {
+            filterUnderglazes(e.target.value);
+        });
+
+        document.getElementById('glazeFilter').addEventListener('input', (e) => {
+            filterGlazes(e.target.value);
+        });
+
+        document.getElementById('maxCombinations').addEventListener('change', (e) => {
+            currentMaxCombinations = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
+            buildMatrix();
+        });
+
+        // Lightbox functions
+        async function showLightbox(underglaze, glaze) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxSvg = document.getElementById('lightboxSvg');
+            const underglazeSwatch = document.getElementById('underglazeSwatch');
+            const glazeSwatch = document.getElementById('glazeSwatch');
+            const underglazeName = document.getElementById('underglazeName');
+            const glazeName = document.getElementById('glazeName');
+
+            try {
+                // Load the metaAndLines.svg for the lightbox
+                const svgResponse = await fetch('patterns/metaAndLines.svg');
+                const svgText = await svgResponse.text();
+                
+                const underglazeColor = underglaze.left || underglaze.color || '#ffffff';
+                const glazeColor = glaze.color || '#000000';
+                
+                // Create a modified SVG with the glaze color
+                const modifiedSvg = svgText.replace('fill:white;', `fill:${glazeColor};`);
+                
+                // Create a container div with the background color and SVG
+                const svgContainer = document.createElement('div');
+                svgContainer.style.backgroundColor = underglazeColor;
+                
+                svgContainer.style.borderRadius = '10px';
+                svgContainer.style.width = '100%';
+                svgContainer.style.height = '100%';
+                svgContainer.style.display = 'flex';
+                svgContainer.style.justifyContent = 'center';
+                svgContainer.style.alignItems = 'center';
+                svgContainer.style.minHeight = '0';
+                svgContainer.innerHTML = modifiedSvg;
+                
+                // Clear and populate the lightbox
+                lightboxSvg.innerHTML = '';
+                lightboxSvg.appendChild(svgContainer);
+                
+                // Update the color info
+                underglazeSwatch.style.backgroundColor = underglazeColor;
+                glazeSwatch.style.backgroundColor = glazeColor;
+                underglazeName.textContent = underglaze.name;
+                glazeName.textContent = glaze.name;
+                
+                // Show the lightbox
+                lightbox.style.display = 'flex';
+                
+            } catch (error) {
+                console.error('Error loading lightbox SVG:', error);
+                // Fallback content
+                lightboxSvg.innerHTML = '<div style="padding: 40px; text-align: center; color: #666;">Error loading pattern</div>';
+                lightbox.style.display = 'flex';
+            }
+        }
+
+        function hideLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.style.display = 'none';
+        }
+
+        // Lightbox event listeners
+        document.getElementById('lightboxClose').addEventListener('click', hideLightbox);
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target.id === 'lightbox') {
+                hideLightbox();
+            }
+        });
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                hideLightbox();
+            }
+        });
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadColorsData);
+    </script>
+</body>
+</html>

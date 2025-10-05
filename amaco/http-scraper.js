@@ -199,3 +199,5 @@ async function scrapeAmacoUnderglazes() {
 
 // Run the scraper
 scrapeAmacoUnderglazes().catch(console.error);
+
+
