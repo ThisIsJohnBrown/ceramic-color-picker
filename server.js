@@ -6,9 +6,18 @@ const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
 const puppeteer = require('puppeteer');
-const sharp = require('sharp');
 const { Pool } = require('pg');
 require('dotenv').config();
+
+// Try to load Sharp, but don't fail if it's not available
+let sharp = null;
+try {
+  sharp = require('sharp');
+  console.log('✅ Sharp loaded successfully');
+} catch (error) {
+  console.warn('⚠️ Sharp not available:', error.message);
+  console.log('🔄 Image processing will use Puppeteer fallback only');
+}
 
 // Initialize Slack app
 const app = new App({
@@ -102,6 +111,10 @@ async function initializeDatabase() {
 
 // Fallback function to convert SVG to PNG using Sharp (simpler, more reliable)
 async function svgToPngSharp(svgContent, width = 800, height = 600) {
+  if (!sharp) {
+    throw new Error('Sharp is not available');
+  }
+  
   const outputPngPath = path.join(__dirname, 'uploads', `output_${Date.now()}.png`);
   
   try {
@@ -247,12 +260,17 @@ async function svgToPng(svgContent, width = 800, height = 600) {
       }
     }
     
-    // Try Sharp fallback
-    try {
-      return await svgToPngSharp(svgContent, width, height);
-    } catch (sharpError) {
-      console.error('❌ Both Puppeteer and Sharp failed:', sharpError);
-      throw new Error(`SVG conversion failed: ${error.message}. Fallback also failed: ${sharpError.message}`);
+    // Try Sharp fallback if available
+    if (sharp) {
+      try {
+        return await svgToPngSharp(svgContent, width, height);
+      } catch (sharpError) {
+        console.error('❌ Both Puppeteer and Sharp failed:', sharpError);
+        throw new Error(`SVG conversion failed: ${error.message}. Fallback also failed: ${sharpError.message}`);
+      }
+    } else {
+      console.error('❌ Puppeteer failed and Sharp is not available');
+      throw new Error(`SVG conversion failed: ${error.message}. No fallback available.`);
     }
   } finally {
     if (browser) {
