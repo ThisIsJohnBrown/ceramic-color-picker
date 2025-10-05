@@ -861,6 +861,130 @@ expressApp.get('/api/load-toggle-states', async (req, res) => {
   }
 });
 
+// API endpoint to send matrix data to Slack
+expressApp.post('/api/send-matrix-to-slack', async (req, res) => {
+  try {
+    const { disabledCells, totalCombinations, enabledCombinations, disabledCombinations, timestamp, underglazeCount, glazeCount, channel, underglazes, glazes } = req.body;
+    
+    console.log('📥 Received matrix data for Slack:', {
+      disabledCells: disabledCells?.length || 0,
+      totalCombinations,
+      enabledCombinations,
+      disabledCombinations,
+      underglazeCount,
+      glazeCount,
+      channel
+    });
+    
+    if (!disabledCells || !Array.isArray(disabledCells)) {
+      return res.status(400).json({ error: 'disabledCells must be an array' });
+    }
+    
+    // Create a new Slack client for this request
+    const slackClient = new WebClient(process.env.SLACK_BOT_TOKEN);
+    
+    // Generate CSV data
+    const csvData = generateMatrixCSV(underglazes || [], glazes || [], disabledCells);
+    
+    // Save CSV to file
+    const csvFilename = `matrix-toggle-states-${Date.now()}.csv`;
+    const csvPath = path.join(__dirname, 'uploads', csvFilename);
+    
+    // Ensure uploads directory exists
+    if (!fs.existsSync('uploads')) {
+      fs.mkdirSync('uploads');
+    }
+    
+    fs.writeFileSync(csvPath, csvData);
+    console.log('📄 CSV file created:', csvPath);
+    
+    // Create a summary message
+    const message = `🎨 Ceramic Color Matrix Update!\n\n` +
+      `📊 *Matrix Statistics:*\n` +
+      `• Total Combinations: ${totalCombinations}\n` +
+      `• Enabled: ${enabledCombinations}\n` +
+      `• Disabled: ${disabledCombinations}\n` +
+      `• Underglazes: ${underglazeCount}\n` +
+      `• Glazes: ${glazeCount}\n\n` +
+      `🕒 *Last Updated:* ${new Date(timestamp).toLocaleString()}\n\n` +
+      `📋 *CSV Export:* Complete toggle states exported to CSV file`;
+    
+    // Upload CSV file to Slack using the newer uploadV2 method
+    const fileResult = await slackClient.files.uploadV2({
+      channel_id: 'C09FUNUELMV', // Use channel ID instead of name
+      file: fs.createReadStream(csvPath),
+      filename: csvFilename,
+      title: `Ceramic Matrix Toggle States - ${new Date().toLocaleDateString()}`
+    });
+    
+    // Send the message separately
+    const messageResult = await slackClient.chat.postMessage({
+      channel: channel || '#color-requests',
+      text: message,
+      blocks: [
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": message
+          }
+        }
+      ]
+    });
+    
+    // Clean up CSV file
+    fs.unlinkSync(csvPath);
+    
+    console.log('✅ Matrix data and CSV sent to Slack successfully');
+    
+    res.json({ 
+      success: true, 
+      message: 'Matrix data and CSV sent to Slack successfully!',
+      file: fileResult.file,
+      message: messageResult
+    });
+    
+  } catch (error) {
+    console.error('Error sending matrix data to Slack:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
+});
+
+// Helper function to generate CSV data
+function generateMatrixCSV(underglazes, glazes, disabledCells) {
+  const disabledSet = new Set(disabledCells);
+  
+  // CSV header
+  let csv = 'Underglaze ID,Underglaze Name,Underglaze Color,Pattern ID,Pattern Name,Pattern Color,Cell Key,Is Disabled,Status,Type\n';
+  
+  // Generate rows for underglaze × glaze combinations
+  for (const underglaze of underglazes) {
+    for (const glaze of glazes) {
+      const cellKey = `${underglaze.id}-${glaze.id}`;
+      const isDisabled = disabledSet.has(cellKey);
+      const status = isDisabled ? 'Disabled' : 'Enabled';
+      
+      csv += `"${underglaze.id}","${underglaze.name}","${underglaze.left || underglaze.color}","${glaze.id}","${glaze.name}","${glaze.color}","${cellKey}","${isDisabled}","${status}","UG×Glaze"\n`;
+    }
+  }
+  
+  // Generate rows for underglaze × underglaze combinations
+  for (const underglaze of underglazes) {
+    for (const underglazePattern of underglazes) {
+      const cellKey = `${underglaze.id}-${underglazePattern.id}`;
+      const isDisabled = disabledSet.has(cellKey);
+      const status = isDisabled ? 'Disabled' : 'Enabled';
+      
+      csv += `"${underglaze.id}","${underglaze.name}","${underglaze.left || underglaze.color}","${underglazePattern.id}","${underglazePattern.name}","${underglazePattern.left || underglazePattern.color}","${cellKey}","${isDisabled}","${status}","UG×UG"\n`;
+    }
+  }
+  
+  return csv;
+}
+
 // Health check endpoint
 expressApp.get('/api/health', (req, res) => {
   res.json({ 

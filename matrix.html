@@ -13,19 +13,19 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #000000;
+            background: white;
             min-height: 100vh;
-            padding: 20px;
+            padding: 0;
             margin: 0;
         }
 
         .container {
-            max-width: 100%;
-            margin: 0 auto;
+            width: 100%;
+            height: 100vh;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .header {
@@ -51,7 +51,8 @@
             overflow-x: auto;
             overflow-y: auto;
             position: relative;
-            max-height: 80vh;
+            flex: 1;
+            height: 100%;
         }
 
         .matrix-table {
@@ -279,8 +280,47 @@
             z-index: 5;
         }
 
+        .pattern-cell .hover-text {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .pattern-cell .hover-text.left {
+            left: 25%;
+            transform: translateX(-50%);
+        }
+
+        .pattern-cell .hover-text.right {
+            left: 75%;
+            transform: translateX(-50%);
+        }
+
+        .pattern-cell:hover .hover-text {
+            opacity: 1;
+        }
+
+        .pattern-svg.disabled .hover-text {
+            opacity: 0;
+        }
+
+        .pattern-svg.disabled:hover .hover-text {
+            opacity: 1;
+        }
+
         .pattern-cell.disabled {
-            opacity: 0.2;
             cursor: pointer;
         }
 
@@ -297,6 +337,10 @@
         .pattern-svg.disabled:hover {
             transform: scale(1.1);
             z-index: 5;
+        }
+
+        .pattern-svg.disabled .hover-text {
+            opacity: 0;
         }
 
 
@@ -412,6 +456,36 @@
 
         .load-more-btn:hover {
             background: #0056b3;
+        }
+
+        .reset-toggles-btn {
+            padding: 8px 16px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .reset-toggles-btn:hover {
+            background: #c82333;
+        }
+
+        .send-to-slack-btn {
+            padding: 8px 16px;
+            background: #4a154b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .send-to-slack-btn:hover {
+            background: #3a0f3a;
         }
 
         /* Lightbox styles */
@@ -545,9 +619,6 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Ceramic Color Matrix</h1>
-        </div>
         
         <div class="controls">
             <div class="controls-header">
@@ -566,16 +637,10 @@
                     <input type="text" id="glazeFilter" class="filter-input" placeholder="Search glazes...">
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="maxCombinations">Max Combinations:</label>
-                    <select id="maxCombinations" class="filter-input">
-                        <option value="100">100 (Fast)</option>
-                        <option value="500" selected>500 (Medium)</option>
-                        <option value="1000">1000 (Slow)</option>
-                        <option value="all">All (Very Slow)</option>
-                    </select>
+                    <button id="resetTogglesBtn" class="reset-toggles-btn">Reset All Toggles</button>
                 </div>
                 <div class="control-group">
-                    <button id="loadMoreBtn" class="load-more-btn" style="display: none;">Load More Combinations</button>
+                    <button id="sendToSlackBtn" class="send-to-slack-btn">Send to Slack</button>
                 </div>
             </div>
         </div>
@@ -623,8 +688,6 @@
         let filteredUnderglazes = [];
         let filteredGlazes = [];
         let svgCache = new Map(); // Cache for modified SVGs
-        let currentMaxCombinations = 500;
-        let loadedCombinations = 0;
         let disabledCells = new Set(); // Track disabled cells by underglaze-glaze combination
 
         // Load colors data
@@ -664,35 +727,9 @@
             tableHead.innerHTML = '';
             tableBody.innerHTML = '';
 
-            // Limit combinations for performance
-            const maxCombinations = currentMaxCombinations;
-            const totalCombinations = filteredUnderglazes.length * filteredGlazes.length;
-            const shouldLimit = maxCombinations !== 'all' && totalCombinations > maxCombinations;
-            
-            let limitedUnderglazes = filteredUnderglazes;
-            let limitedGlazes = filteredGlazes;
-            
-            if (shouldLimit) {
-                // Calculate how many underglazes and glazes we can show
-                const maxPerSide = Math.floor(Math.sqrt(maxCombinations));
-                limitedUnderglazes = filteredUnderglazes.slice(0, maxPerSide);
-                limitedGlazes = filteredGlazes.slice(0, maxPerSide);
-                
-                // Show load more button if there are more combinations
-                const loadMoreBtn = document.getElementById('loadMoreBtn');
-                if (totalCombinations > maxCombinations) {
-                    loadMoreBtn.style.display = 'block';
-                    loadMoreBtn.onclick = () => {
-                        currentMaxCombinations = Math.min(currentMaxCombinations * 2, totalCombinations);
-                        buildMatrix();
-                    };
-                } else {
-                    loadMoreBtn.style.display = 'none';
-                }
-            } else {
-                const loadMoreBtn = document.getElementById('loadMoreBtn');
-                loadMoreBtn.style.display = 'none';
-            }
+            // Always load all combinations
+            const limitedUnderglazes = filteredUnderglazes;
+            const limitedGlazes = filteredGlazes;
 
             // Create header row
             const headerRow = document.createElement('tr');
@@ -700,7 +737,7 @@
             // Empty cell for the corner
             const cornerCell = document.createElement('th');
             cornerCell.className = 'underglaze-header';
-            cornerCell.innerHTML = 'UG ↓<br/>Glaze →';
+            cornerCell.innerHTML = 'UG ↓<br/>Glaze/UG →';
             headerRow.appendChild(cornerCell);
 
             // Add glaze headers
@@ -733,6 +770,38 @@
                 glazeInfo.appendChild(glazeCount);
                 glazeHeader.appendChild(glazeInfo);
                 headerRow.appendChild(glazeHeader);
+            });
+
+            // Add underglaze headers (for underglaze × underglaze combinations)
+            limitedUnderglazes.forEach(underglaze => {
+                const underglazeHeader = document.createElement('th');
+                underglazeHeader.className = 'glaze-header';
+                
+                const underglazeInfo = document.createElement('div');
+                underglazeInfo.className = 'glaze-info';
+                
+                const underglazeImage = document.createElement('img');
+                underglazeImage.src = underglaze.image;
+                underglazeImage.alt = underglaze.name;
+                underglazeImage.className = 'glaze-image';
+                underglazeImage.onerror = () => {
+                    underglazeImage.style.display = 'none';
+                };
+                
+                const underglazeName = document.createElement('div');
+                underglazeName.className = 'glaze-name';
+                underglazeName.textContent = underglaze.name;
+                
+                const underglazeCount = document.createElement('div');
+                underglazeCount.className = 'glaze-count';
+                underglazeCount.id = `underglaze-column-count-${underglaze.id}`;
+                underglazeCount.textContent = '0';
+                
+                underglazeInfo.appendChild(underglazeImage);
+                underglazeInfo.appendChild(underglazeName);
+                underglazeInfo.appendChild(underglazeCount);
+                underglazeHeader.appendChild(underglazeInfo);
+                headerRow.appendChild(underglazeHeader);
             });
 
             tableHead.appendChild(headerRow);
@@ -783,13 +852,26 @@
                     row.appendChild(patternCell);
                 }
 
+                // Pattern cells for each underglaze (underglaze × underglaze combinations)
+                for (const underglazePattern of limitedUnderglazes) {
+                    const patternCell = document.createElement('td');
+                    patternCell.className = 'pattern-cell';
+                    
+                    // Create the pattern with underglaze as background and underglaze as pattern color
+                    const patternDiv = await createPatternCell(underglaze, underglazePattern);
+                    patternCell.appendChild(patternDiv);
+                    row.appendChild(patternCell);
+                }
+
                 tableBody.appendChild(row);
             }
             
             // Update stats
             const stats = document.getElementById('stats');
-            const actualCombinations = limitedUnderglazes.length * limitedGlazes.length;
-            stats.textContent = `Showing ${actualCombinations} of ${totalCombinations} combinations`;
+            const glazeCombinations = limitedUnderglazes.length * limitedGlazes.length;
+            const underglazeCombinations = limitedUnderglazes.length * limitedUnderglazes.length;
+            const totalCombinations = glazeCombinations + underglazeCombinations;
+            stats.textContent = `Showing ${totalCombinations} combinations (${glazeCombinations} UG×Glaze + ${underglazeCombinations} UG×UG)`;
             
             // Hide loading indicator and show table
             matrixLoading.style.display = 'none';
@@ -822,6 +904,17 @@
                 patternDiv.classList.add('disabled');
             }
             
+            // Add hover text elements
+            const leftHoverText = document.createElement('div');
+            leftHoverText.className = 'hover-text left';
+            leftHoverText.textContent = 'zoom';
+            patternDiv.appendChild(leftHoverText);
+            
+            const rightHoverText = document.createElement('div');
+            rightHoverText.className = 'hover-text right';
+            rightHoverText.textContent = isDisabled ? 'show' : 'hide';
+            patternDiv.appendChild(rightHoverText);
+            
             // Make the cell clickable
             patternDiv.style.cursor = 'pointer';
             patternDiv.addEventListener('click', (e) => {
@@ -843,7 +936,8 @@
             
             try {
                 const underglazeColor = underglaze.left || underglaze.color || '#ffffff';
-                const glazeColor = glaze.color || '#000000';
+                // Check if this is an underglaze being used as pattern color (has 'left' property)
+                const glazeColor = glaze.left || glaze.color || '#000000';
                 
                 // Create cache key
                 const cacheKey = `${glazeColor}`;
@@ -900,6 +994,13 @@
                 patternDiv.classList.add('disabled');
             }
             
+            // Update hover text based on new state
+            const rightHoverText = patternDiv.querySelector('.hover-text.right');
+            if (rightHoverText) {
+                const isNowDisabled = disabledCells.has(cellKey);
+                rightHoverText.textContent = isNowDisabled ? 'show' : 'hide';
+            }
+            
             // Update counts after toggling
             updateCounts();
             
@@ -914,8 +1015,16 @@
                 const underglazeCount = document.getElementById(`underglaze-count-${underglaze.id}`);
                 if (underglazeCount) {
                     let enabledCount = 0;
+                    // Count glaze combinations
                     filteredGlazes.forEach(glaze => {
                         const cellKey = `${underglaze.id}-${glaze.id}`;
+                        if (!disabledCells.has(cellKey)) {
+                            enabledCount++;
+                        }
+                    });
+                    // Count underglaze combinations
+                    filteredUnderglazes.forEach(underglazePattern => {
+                        const cellKey = `${underglaze.id}-${underglazePattern.id}`;
                         if (!disabledCells.has(cellKey)) {
                             enabledCount++;
                         }
@@ -936,6 +1045,21 @@
                         }
                     });
                     glazeCount.textContent = enabledCount;
+                }
+            });
+
+            // Update underglaze counts (columns for underglaze × underglaze)
+            filteredUnderglazes.forEach(underglaze => {
+                const underglazeCount = document.getElementById(`underglaze-column-count-${underglaze.id}`);
+                if (underglazeCount) {
+                    let enabledCount = 0;
+                    filteredUnderglazes.forEach(underglazeRow => {
+                        const cellKey = `${underglazeRow.id}-${underglaze.id}`;
+                        if (!disabledCells.has(cellKey)) {
+                            enabledCount++;
+                        }
+                    });
+                    underglazeCount.textContent = enabledCount;
                 }
             });
         }
@@ -1004,8 +1128,107 @@
                 const cellKey = cell._cellKey; // We'll set this when creating cells
                 if (cellKey && disabledCells.has(cellKey)) {
                     cell.classList.add('disabled');
+                    
+                    // Update hover text for disabled cells
+                    const rightHoverText = cell.querySelector('.hover-text.right');
+                    if (rightHoverText) {
+                        rightHoverText.textContent = 'show';
+                    }
                 }
             });
+        }
+
+        // Reset all toggled off cells (enable all cells)
+        function resetAllToggles() {
+            // Clear all disabled cells
+            disabledCells.clear();
+            
+            // Remove disabled class from all pattern cells and update hover text
+            const patternCells = document.querySelectorAll('.pattern-svg');
+            patternCells.forEach(cell => {
+                cell.classList.remove('disabled');
+                
+                // Update hover text to show "hide" since all cells are now enabled
+                const rightHoverText = cell.querySelector('.hover-text.right');
+                if (rightHoverText) {
+                    rightHoverText.textContent = 'hide';
+                }
+            });
+            
+            // Update counts
+            updateCounts();
+            
+            // Save the reset state to server
+            saveToggleStates();
+            
+            console.log('🔄 All toggles reset - all cells are now enabled');
+        }
+
+        // Send toggle states to Slack
+        async function sendToSlack() {
+            // Show loading state
+            const slackBtn = document.getElementById('sendToSlackBtn');
+            const originalText = slackBtn.textContent;
+            slackBtn.textContent = 'Sending...';
+            slackBtn.disabled = true;
+
+            try {
+                console.log('🚀 Starting Slack send process for matrix data...');
+                
+                // Create a summary of the toggle states
+                const toggleData = {
+                    disabledCells: Array.from(disabledCells),
+                    totalCombinations: filteredUnderglazes.length * filteredGlazes.length,
+                    enabledCombinations: (filteredUnderglazes.length * filteredGlazes.length) - disabledCells.size,
+                    disabledCombinations: disabledCells.size,
+                    timestamp: new Date().toISOString(),
+                    underglazeCount: filteredUnderglazes.length,
+                    glazeCount: filteredGlazes.length,
+                    underglazes: filteredUnderglazes,
+                    glazes: filteredGlazes,
+                    channel: '#color-requests' // Default channel
+                };
+
+                console.log('📝 Sending matrix data to Slack API');
+                
+                // Send to server endpoint for matrix data
+                const response = await fetch('/api/send-matrix-to-slack', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(toggleData)
+                });
+
+                console.log('📡 Response status:', response.status);
+                console.log('📡 Response headers:', response.headers);
+                
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await response.text();
+                    console.error('❌ Non-JSON response received:', text.substring(0, 200));
+                    throw new Error('Server returned non-JSON response. Check if server is running.');
+                }
+
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    console.log('✅ Matrix data sent to Slack successfully');
+                    // Success - no alert needed
+                } else {
+                    console.error('❌ Failed to send to Slack:', result.error);
+                    throw new Error(result.error || 'Failed to send to Slack');
+                }
+
+            } catch (error) {
+                console.error('💥 Error sending to Slack:', error);
+                alert('Error sending to Slack: ' + error.message);
+            } finally {
+                // Reset button state
+                slackBtn.textContent = originalText;
+                slackBtn.disabled = false;
+            }
         }
 
         // Filter functions
@@ -1056,10 +1279,14 @@
             filterGlazes(e.target.value);
         });
 
-        document.getElementById('maxCombinations').addEventListener('change', (e) => {
-            currentMaxCombinations = e.target.value === 'all' ? 'all' : parseInt(e.target.value);
-            buildMatrix();
+        document.getElementById('resetTogglesBtn').addEventListener('click', () => {
+            resetAllToggles();
         });
+
+        document.getElementById('sendToSlackBtn').addEventListener('click', () => {
+            sendToSlack();
+        });
+
 
         // Lightbox functions
         async function showLightbox(underglaze, glaze) {
@@ -1076,7 +1303,8 @@
                 const svgText = await svgResponse.text();
                 
                 const underglazeColor = underglaze.left || underglaze.color || '#ffffff';
-                const glazeColor = glaze.color || '#000000';
+                // Check if this is an underglaze being used as pattern color (has 'left' property)
+                const glazeColor = glaze.left || glaze.color || '#000000';
                 
                 // Create a modified SVG with the glaze color
                 const modifiedSvg = svgText.replace('fill:white;', `fill:${glazeColor};`);
