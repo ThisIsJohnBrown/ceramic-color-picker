@@ -487,20 +487,6 @@
             background: #0056b3;
         }
 
-        .reset-toggles-btn {
-            padding: 8px 16px;
-            background: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .reset-toggles-btn:hover {
-            background: #c82333;
-        }
 
         .send-to-slack-btn {
             padding: 8px 16px;
@@ -664,9 +650,6 @@
                 <div class="control-group">
                     <label class="control-label" for="glazeFilter">Filter Glazes:</label>
                     <input type="text" id="glazeFilter" class="filter-input" placeholder="Search glazes...">
-                </div>
-                <div class="control-group">
-                    <button id="resetTogglesBtn" class="reset-toggles-btn">Reset All Toggles</button>
                 </div>
                 <div class="control-group">
                     <button id="sendToSlackBtn" class="send-to-slack-btn">Send to Slack</button>
@@ -1316,9 +1299,6 @@
             filterGlazes(e.target.value);
         });
 
-        document.getElementById('resetTogglesBtn').addEventListener('click', () => {
-            resetAllToggles();
-        });
 
         document.getElementById('sendToSlackBtn').addEventListener('click', () => {
             sendToSlack();
