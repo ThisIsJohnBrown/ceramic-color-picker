@@ -55,13 +55,22 @@ async function initializeDatabase() {
     // Use Railway's DATABASE_URL or fallback to local connection
     const connectionString = process.env.DATABASE_URL || 'postgresql://localhost:5432/ceramic_colors';
     
+    console.log('🔗 Attempting database connection...');
+    console.log('📊 DATABASE_URL present:', !!process.env.DATABASE_URL);
+    
     db = new Pool({
       connectionString: connectionString,
       ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
     });
 
-    // Test connection
-    const client = await db.connect();
+    // Test connection with timeout
+    const client = await Promise.race([
+      db.connect(),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database connection timeout')), 10000)
+      )
+    ]);
+    
     console.log('📊 Connected to PostgreSQL database');
     
     // Create toggle_states table if it doesn't exist
@@ -84,7 +93,7 @@ async function initializeDatabase() {
     client.release();
     
   } catch (error) {
-    console.error('❌ Database connection failed:', error);
+    console.error('❌ Database connection failed:', error.message);
     console.log('⚠️ Toggle states will not be persistent. Using file-based fallback.');
     db = null;
   }
@@ -860,12 +869,24 @@ expressApp.use((error, req, res, next) => {
 // Start the server
 (async () => {
   try {
+    console.log('🚀 Starting server...');
+    console.log('🔧 Environment variables:');
+    console.log('  - SLACK_BOT_TOKEN:', !!process.env.SLACK_BOT_TOKEN);
+    console.log('  - SLACK_SIGNING_SECRET:', !!process.env.SLACK_SIGNING_SECRET);
+    console.log('  - SLACK_APP_TOKEN:', !!process.env.SLACK_APP_TOKEN);
+    console.log('  - DATABASE_URL:', !!process.env.DATABASE_URL);
+    
     // Initialize database first
     await initializeDatabase();
     
     // Start Slack app
-    await app.start();
-    console.log('⚡️ Slack bot is running!');
+    try {
+      await app.start();
+      console.log('⚡️ Slack bot is running!');
+    } catch (slackError) {
+      console.error('❌ Slack app failed to start:', slackError.message);
+      console.log('⚠️ Slack features will not be available');
+    }
     
     // Wait a moment to ensure Slack app is fully initialized
     await new Promise(resolve => setTimeout(resolve, 1000));
