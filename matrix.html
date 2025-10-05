@@ -218,13 +218,30 @@
         }
 
         .underglaze-count {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-top: 2px;
+        }
+
+        .count-glazes {
             background: #007bff;
             color: white;
-            font-size: 0.6rem;
-            padding: 2px 4px;
-            border-radius: 8px;
-            margin-top: 2px;
+            font-size: 0.5rem;
+            padding: 1px 3px;
+            border-radius: 6px;
             font-weight: 600;
+            text-align: center;
+        }
+
+        .count-underglazes {
+            background: #28a745;
+            color: white;
+            font-size: 0.5rem;
+            padding: 1px 3px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-align: center;
         }
 
         .glaze-info {
@@ -833,7 +850,7 @@
                 const underglazeCount = document.createElement('div');
                 underglazeCount.className = 'underglaze-count';
                 underglazeCount.id = `underglaze-count-${underglaze.id}`;
-                underglazeCount.textContent = '0';
+                underglazeCount.innerHTML = '<div class="count-glazes">0</div><div class="count-underglazes">0</div>';
                 
                 underglazeInfo.appendChild(underglazeImage);
                 underglazeInfo.appendChild(underglazeName);
@@ -1012,24 +1029,32 @@
         function updateCounts() {
             // Update underglaze counts (rows)
             filteredUnderglazes.forEach(underglaze => {
-                const underglazeCount = document.getElementById(`underglaze-count-${underglaze.id}`);
-                if (underglazeCount) {
-                    let enabledCount = 0;
+                const underglazeCountElement = document.getElementById(`underglaze-count-${underglaze.id}`);
+                if (underglazeCountElement) {
+                    let glazeCount = 0;
+                    let underglazeCount = 0;
+                    
                     // Count glaze combinations
                     filteredGlazes.forEach(glaze => {
                         const cellKey = `${underglaze.id}-${glaze.id}`;
                         if (!disabledCells.has(cellKey)) {
-                            enabledCount++;
+                            glazeCount++;
                         }
                     });
+                    
                     // Count underglaze combinations
                     filteredUnderglazes.forEach(underglazePattern => {
                         const cellKey = `${underglaze.id}-${underglazePattern.id}`;
                         if (!disabledCells.has(cellKey)) {
-                            enabledCount++;
+                            underglazeCount++;
                         }
                     });
-                    underglazeCount.textContent = enabledCount;
+                    
+                    // Update the separate count elements
+                    const glazeCountEl = underglazeCountElement.querySelector('.count-glazes');
+                    const underglazeCountEl = underglazeCountElement.querySelector('.count-underglazes');
+                    if (glazeCountEl) glazeCountEl.textContent = glazeCount;
+                    if (underglazeCountEl) underglazeCountEl.textContent = underglazeCount;
                 }
             });
 
