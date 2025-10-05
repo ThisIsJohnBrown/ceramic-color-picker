@@ -994,6 +994,157 @@ expressApp.get('/api/health', (req, res) => {
   });
 });
 
+// CSV import endpoint
+expressApp.post('/api/import-csv', async (req, res) => {
+  try {
+    console.log('🔄 Starting CSV import process...');
+    
+    // Read the CSV file
+    const csvPath = path.join(__dirname, 'matrix data import.csv');
+    if (!fs.existsSync(csvPath)) {
+      return res.status(404).json({ error: 'CSV file not found' });
+    }
+    
+    const csvContent = fs.readFileSync(csvPath, 'utf8');
+    
+    // Parse CSV content
+    const lines = csvContent.trim().split('\n');
+    const headers = lines[0].split(',');
+    
+    // Extract glaze names (skip first empty column)
+    const glazeNames = headers.slice(1);
+    
+    // Find the index of "True Teal" to limit the columns
+    const trueTealIndex = glazeNames.findIndex(name => name.trim() === 'True Teal');
+    const limitedGlazeNames = trueTealIndex !== -1 ? glazeNames.slice(0, trueTealIndex + 1) : glazeNames;
+    
+    console.log('Found glazes up to True Teal:', limitedGlazeNames.length);
+    
+    // Parse underglaze data
+    const underglazeData = [];
+    for (let i = 1; i < lines.length; i++) {
+        const row = lines[i].split(',');
+        const underglazeName = row[0].trim();
+        
+        if (underglazeName) {
+            const combinations = [];
+            // Only process columns up to True Teal
+            for (let j = 1; j <= limitedGlazeNames.length; j++) {
+                if (row[j] && row[j].trim() === '1') {
+                    combinations.push(limitedGlazeNames[j - 1]);
+                }
+            }
+            
+            underglazeData.push({
+                name: underglazeName,
+                combinations: combinations
+            });
+        }
+    }
+    
+    console.log(`Parsed ${underglazeData.length} underglazes`);
+    
+    // Load colors.json
+    const colorsPath = path.join(__dirname, 'colors.json');
+    const colorsData = JSON.parse(fs.readFileSync(colorsPath, 'utf8'));
+    
+    // Create mapping from names to IDs
+    const underglazeNameToId = {};
+    const glazeNameToId = {};
+    
+    if (colorsData.underglazes) {
+        colorsData.underglazes.forEach(ug => {
+            underglazeNameToId[ug.name] = ug.id;
+        });
+    }
+    
+    if (colorsData.glazes) {
+        colorsData.glazes.forEach(glaze => {
+            glazeNameToId[glaze.name] = glaze.id;
+        });
+    }
+    
+    // Create the toggle states
+    const toggleStates = new Set();
+    const enabledCombinations = new Set();
+    const notFoundCombinations = new Set();
+    
+    // Process CSV data: glaze names in rows, underglaze names in columns
+    underglazeData.forEach(csvRow => {
+        const glazeId = glazeNameToId[csvRow.name];
+        if (glazeId) {
+            csvRow.combinations.forEach(underglazeName => {
+                const underglazeId = underglazeNameToId[underglazeName];
+                if (underglazeId) {
+                    const combinationKey = `${underglazeId}-${glazeId}`;
+                    enabledCombinations.add(combinationKey);
+                } else {
+                    notFoundCombinations.add(`${csvRow.name} + ${underglazeName}`);
+                }
+            });
+        }
+    });
+    
+    // For combinations NOT in the CSV (or marked as 0), we need to add them to disabled set
+    // BUT only if both glaze and underglaze exist in BOTH colors.json AND the CSV
+    if (colorsData.underglazes && colorsData.glazes) {
+        colorsData.underglazes.forEach(underglaze => {
+            colorsData.glazes.forEach(glaze => {
+                const cellKey = `${underglaze.id}-${glaze.id}`;
+                
+                // Check if this combination was marked as "1" in CSV
+                const csvGlaze = underglazeData.find(g => g.name === glaze.name);
+                const isEnabled = csvGlaze && csvGlaze.combinations.includes(underglaze.name);
+                
+                // Only disable if:
+                // 1. Both colors exist in the CSV (glaze in CSV rows, underglaze in CSV columns)
+                // 2. The combination is NOT marked as "1" in CSV
+                const glazeExistsInCsv = underglazeData.some(g => g.name === glaze.name);
+                const underglazeExistsInCsv = limitedGlazeNames.includes(underglaze.name);
+                
+                if (glazeExistsInCsv && underglazeExistsInCsv && !isEnabled) {
+                    toggleStates.add(cellKey);
+                }
+            });
+        });
+    }
+    
+    // Save the toggle states
+    const toggleStatesData = {
+        disabledCells: Array.from(toggleStates),
+        lastUpdated: new Date().toISOString(),
+        source: 'CSV import via API',
+        totalCombinations: (colorsData.underglazes?.length || 0) * (colorsData.glazes?.length || 0),
+        enabledCombinations: ((colorsData.underglazes?.length || 0) * (colorsData.glazes?.length || 0)) - toggleStates.size,
+        disabledCombinations: toggleStates.size,
+        notFoundCombinations: Array.from(notFoundCombinations)
+    };
+    
+    const toggleStatesPath = path.join(__dirname, 'toggle-states.json');
+    fs.writeFileSync(toggleStatesPath, JSON.stringify(toggleStatesData, null, 2));
+    
+    console.log('✅ CSV import completed successfully');
+    
+    res.json({
+      success: true,
+      message: 'CSV import completed successfully',
+      summary: {
+        totalCombinations: toggleStatesData.totalCombinations,
+        enabledCombinations: toggleStatesData.enabledCombinations,
+        disabledCombinations: toggleStatesData.disabledCombinations,
+        notFoundCombinations: notFoundCombinations.size
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ CSV import error:', error);
+    res.status(500).json({ 
+      error: 'CSV import failed', 
+      message: error.message 
+    });
+  }
+});
+
 // Serve the main HTML file
 expressApp.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
@@ -1042,6 +1193,7 @@ expressApp.use((error, req, res, next) => {
       console.log(`   GET  /api/patterns - Get available patterns`);
       console.log(`   GET  /api/colors - Get colors data`);
       console.log(`   GET  /api/health - Health check`);
+      console.log(`   POST /api/import-csv - Import CSV data to toggle states`);
       console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
     });
     

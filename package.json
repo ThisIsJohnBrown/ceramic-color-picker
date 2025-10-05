@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "postinstall": "npm rebuild sharp"
+    "postinstall": "npm rebuild sharp",
+    "import-csv": "node csv-to-matrix-reimport.js"
   },
   "dependencies": {
     "@slack/bolt": "^3.17.1",
