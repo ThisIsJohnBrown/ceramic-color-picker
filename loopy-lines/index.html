@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Grid Drawing - Loopy Lines</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .container {
+            background: white;
+            /* border-radius: 16px; */
+            /* box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); */
+            overflow: visible;
+            max-width: none;
+            width: 100%;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        .grid-container {
+            position: relative;
+            background: #f8f9fa;
+            /* border: 3px solid #e0e0e0; */
+            /* border-radius: 12px; */
+            overflow: visible;
+            /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); */
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .grid {
+            display: grid;
+            gap: 2px;
+            padding: 2px;
+        }
+
+        .grid-square {
+            /* background: white; */
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #999;
+            user-select: none;
+        }
+
+        .grid-square:hover {
+            /* background: #f0f4ff; */
+            border-color: red;
+        }
+
+        .grid-container.no-hover .grid-square:hover {
+            /* background: white; */
+            border-color: #e0e0e0;
+        }
+
+        .grid-square.visited {
+            /* background: #e3f2fd; */
+            border-color: #2196f3;
+        }
+
+        .grid-square.current {
+            /* background: #667eea; */
+            border-color: #5a6fd8;
+            color: white;
+            font-weight: bold;
+        }
+
+        .grid-square.start {
+            /* background: #4caf50; */
+            border-color: #45a049;
+            color: white;
+            font-weight: bold;
+        }
+
+        .grid-container.hide-boxes .grid-square {
+            border: none;
+        }
+
+        .grid-container.hide-boxes .grid-square:hover {
+            border: none;
+        }
+
+        .background-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .line-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .line-path {
+            stroke: #667eea;
+            stroke-width: 4;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .grid-settings {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .grid-settings label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .grid-settings input {
+            width: 60px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .grid-settings input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .btn.secondary {
+            background: #6c757d;
+        }
+
+        .btn.secondary:hover {
+            background: #5a6268;
+        }
+
+        .instructions {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            max-width: 600px;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .coordinates {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            font-size: 0.7rem;
+            color: #999;
+        }
+
+        .coordinates.hidden {
+            display: none;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Interactive Grid Drawing</h1>
+            <p>Click and drag through squares to draw continuous lines</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="grid-settings">
+                <label>
+                    Columns:
+                    <input type="number" id="colsInput" min="1" max="50" value="17">
+                </label>
+                <label>
+                    Rows:
+                    <input type="number" id="rowsInput" min="1" max="50" value="6">
+                </label>
+                <button class="btn secondary" id="updateGridBtn">Update Grid</button>
+                <label style="margin-left: 15px;">
+                    <input type="checkbox" id="showCoordinatesToggle" checked>
+                    Show Coordinates
+                </label>
+                <label style="margin-left: 15px;">
+                    <input type="checkbox" id="showBoxesToggle" checked>
+                    Show Boxes
+                </label>
+            </div>
+            
+            <div class="grid-container">
+                <svg class="background-svg" id="backgroundSvg"></svg>
+                <svg class="line-svg" id="lineSvg"></svg>
+                <div class="grid" id="grid">
+                    <!-- Grid squares will be generated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn" id="clearBtn">Clear Lines</button>
+                <button class="btn secondary" id="undoBtn">Undo Last</button>
+                <button class="btn secondary hidden" id="randomLineBtn">Random Line</button>
+                <button class="btn secondary hidden" id="complexLineBtn">Complex Line</button>
+                <button class="btn secondary hidden" id="saveBtn">Save Pattern</button>
+                <button class="btn secondary" id="exportSvgBtn">Export SVG</button>
+            </div>
+            
+            <div class="instructions">
+                <strong>How to draw:</strong> Click and drag through grid squares to create continuous lines. 
+                The line will connect the centers of visited squares and automatically create 90-degree bends when you change direction.
+                <br><strong>Backtracking:</strong> Drag back to any previous square in your current path to remove squares from that point forward.
+            </div>
+            
+            <div class="status" id="status">
+                Click and drag to start drawing
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class GridDrawingApp {
+            constructor() {
+                this.grid = document.getElementById('grid');
+                this.backgroundSvg = document.getElementById('backgroundSvg');
+                this.lineSvg = document.getElementById('lineSvg');
+                this.clearBtn = document.getElementById('clearBtn');
+                this.undoBtn = document.getElementById('undoBtn');
+                this.randomLineBtn = document.getElementById('randomLineBtn');
+                this.complexLineBtn = document.getElementById('complexLineBtn');
+                this.saveBtn = document.getElementById('saveBtn');
+                this.exportSvgBtn = document.getElementById('exportSvgBtn');
+                this.status = document.getElementById('status');
+                this.colsInput = document.getElementById('colsInput');
+                this.rowsInput = document.getElementById('rowsInput');
+                this.updateGridBtn = document.getElementById('updateGridBtn');
+                this.showCoordinatesToggle = document.getElementById('showCoordinatesToggle');
+                this.showBoxesToggle = document.getElementById('showBoxesToggle');
+                this.gridContainer = this.grid.parentElement;
+                
+                // Load grid dimensions from localStorage or use defaults
+                this.cols = parseInt(localStorage.getItem('gridCols') || '17', 10);
+                this.rows = parseInt(localStorage.getItem('gridRows') || '6', 10);
+                
+                // Load coordinates visibility preference from localStorage (default: true/show)
+                this.showCoordinates = localStorage.getItem('showCoordinates') !== 'false';
+                
+                // Load boxes visibility preference from localStorage (default: true/show)
+                this.showBoxes = localStorage.getItem('showBoxes') !== 'false';
+                
+                // Update input fields with loaded values
+                this.colsInput.value = this.cols;
+                this.rowsInput.value = this.rows;
+                this.showCoordinatesToggle.checked = this.showCoordinates;
+                this.showBoxesToggle.checked = this.showBoxes;
+                
+                this.isDrawing = false;
+                this.currentPath = [];
+                this.allPaths = [];
+                this.history = [];
+                this.isBacktracking = false;
+                this.hasDragged = false;
+                this.usedStartPositions = new Set(); // Track used starting positions
+                
+                this.init();
+            }
+            
+            init() {
+                this.createGrid();
+                this.drawBackground(); // Initialize background
+                this.setupEventListeners();
+                this.updateCoordinatesVisibility(); // Apply initial coordinates visibility
+                this.updateBoxesVisibility(); // Apply initial boxes visibility
+                this.updateStatus('Click and drag to start drawing');
+            }
+            
+            createGrid() {
+                // Clear existing grid
+                this.grid.innerHTML = '';
+                
+                // Update grid CSS properties
+                const squareSize = 50;
+                const gap = 2;
+                const width = this.cols * squareSize;
+                const height = this.rows * squareSize;
+                
+                this.grid.style.gridTemplateColumns = `repeat(${this.cols}, 1fr)`;
+                this.grid.style.gridTemplateRows = `repeat(${this.rows}, 1fr)`;
+                this.grid.style.width = `${width}px`;
+                this.grid.style.height = `${height}px`;
+                
+                // Create grid squares
+                for (let row = 0; row < this.rows; row++) {
+                    for (let col = 0; col < this.cols; col++) {
+                        const square = document.createElement('div');
+                        square.className = 'grid-square';
+                        square.dataset.row = row;
+                        square.dataset.col = col;
+                        const coordDiv = document.createElement('div');
+                        coordDiv.className = 'coordinates';
+                        coordDiv.textContent = `${col + 1},${row + 1}`;
+                        square.appendChild(coordDiv);
+                        this.grid.appendChild(square);
+                    }
+                }
+                
+                // Apply coordinates visibility setting
+                this.updateCoordinatesVisibility();
+            }
+            
+            updateCoordinatesVisibility() {
+                const coordinates = this.grid.querySelectorAll('.coordinates');
+                coordinates.forEach(coord => {
+                    if (this.showCoordinates) {
+                        coord.classList.remove('hidden');
+                    } else {
+                        coord.classList.add('hidden');
+                    }
+                });
+            }
+            
+            toggleCoordinates() {
+                this.showCoordinates = this.showCoordinatesToggle.checked;
+                localStorage.setItem('showCoordinates', this.showCoordinates.toString());
+                this.updateCoordinatesVisibility();
+            }
+            
+            updateBoxesVisibility() {
+                if (this.showBoxes) {
+                    this.gridContainer.classList.remove('hide-boxes');
+                } else {
+                    this.gridContainer.classList.add('hide-boxes');
+                }
+            }
+            
+            toggleBoxes() {
+                this.showBoxes = this.showBoxesToggle.checked;
+                localStorage.setItem('showBoxes', this.showBoxes.toString());
+                this.updateBoxesVisibility();
+            }
+            
+            updateGridDimensions() {
+                const newCols = parseInt(this.colsInput.value, 10);
+                const newRows = parseInt(this.rowsInput.value, 10);
+                
+                if (isNaN(newCols) || newCols < 1 || newCols > 50) {
+                    this.updateStatus('Invalid number of columns (must be 1-50)');
+                    this.colsInput.value = this.cols;
+                    return;
+                }
+                
+                if (isNaN(newRows) || newRows < 1 || newRows > 50) {
+                    this.updateStatus('Invalid number of rows (must be 1-50)');
+                    this.rowsInput.value = this.rows;
+                    return;
+                }
+                
+                // Clear all paths when changing grid size
+                this.allPaths = [];
+                this.currentPath = [];
+                this.history = [];
+                this.usedStartPositions.clear();
+                
+                // Update dimensions
+                this.cols = newCols;
+                this.rows = newRows;
+                
+                // Save to localStorage
+                localStorage.setItem('gridCols', this.cols.toString());
+                localStorage.setItem('gridRows', this.rows.toString());
+                
+                // Recreate grid
+                this.createGrid();
+                this.drawBackground();
+                this.updateGridVisuals();
+                this.drawLines();
+                this.updateBoxesVisibility(); // Maintain boxes visibility setting
+                this.updateStatus(`Grid updated to ${this.cols}x${this.rows}`);
+            }
+            
+            setupEventListeners() {
+                // Grid mouse events
+                this.grid.addEventListener('mousedown', (e) => {
+                    if (e.target.classList.contains('grid-square')) {
+                        this.hasDragged = false;
+                        this.startDrawing(e);
+                    }
+                });
+                
+                this.grid.addEventListener('mousemove', (e) => {
+                    if (this.isDrawing && e.target.classList.contains('grid-square')) {
+                        this.hasDragged = true;
+                        this.continueDrawing(e);
+                    }
+                });
+                
+                this.grid.addEventListener('mouseup', (e) => {
+                    if (this.isDrawing && !this.hasDragged) {
+                        // Single click without drag - create single square path
+                        const square = e.target;
+                        const row = parseInt(square.dataset.row);
+                        const col = parseInt(square.dataset.col);
+                        const isShiftClick = e.shiftKey;
+                        this.createSingleSquarePath(row, col, isShiftClick);
+                    }
+                    this.stopDrawing();
+                });
+                
+                
+                this.grid.addEventListener('mouseleave', () => {
+                    this.stopDrawing();
+                });
+                
+                // Control buttons
+                this.clearBtn.addEventListener('click', () => {
+                    this.clearAll();
+                });
+                
+                this.undoBtn.addEventListener('click', () => {
+                    this.undoLastPath();
+                });
+                
+                this.randomLineBtn.addEventListener('click', () => {
+                    this.generateRandomLine();
+                });
+                
+                this.complexLineBtn.addEventListener('click', () => {
+                    this.generateComplexLine();
+                });
+                
+                this.saveBtn.addEventListener('click', () => {
+                    this.savePattern();
+                });
+                
+                this.exportSvgBtn.addEventListener('click', () => {
+                    this.exportSvg();
+                });
+                
+                // Grid dimension controls
+                this.updateGridBtn.addEventListener('click', () => {
+                    this.updateGridDimensions();
+                });
+                
+                // Allow Enter key to update grid
+                this.colsInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.updateGridDimensions();
+                    }
+                });
+                
+                this.rowsInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.updateGridDimensions();
+                    }
+                });
+                
+                // Coordinates toggle
+                this.showCoordinatesToggle.addEventListener('change', () => {
+                    this.toggleCoordinates();
+                });
+                
+                // Boxes toggle
+                this.showBoxesToggle.addEventListener('change', () => {
+                    this.toggleBoxes();
+                });
+            }
+            
+            startDrawing(e) {
+                this.isDrawing = true;
+                this.currentPath = [];
+                
+                const square = e.target;
+                const row = parseInt(square.dataset.row);
+                const col = parseInt(square.dataset.col);
+                
+                this.addToPath(row, col);
+                this.updateStatus(`Started drawing at (${col + 1}, ${row + 1})`);
+            }
+            
+            continueDrawing(e) {
+                if (!this.isDrawing) return;
+                
+                const square = e.target;
+                const row = parseInt(square.dataset.row);
+                const col = parseInt(square.dataset.col);
+                
+                const lastPoint = this.currentPath[this.currentPath.length - 1];
+                if (!lastPoint || lastPoint.row !== row || lastPoint.col !== col) {
+                    // Check if we're backtracking to the immediate previous square
+                    const secondLastPoint = this.currentPath[this.currentPath.length - 2];
+                    
+                    if (secondLastPoint && secondLastPoint.row === row && secondLastPoint.col === col) {
+                        // Backtracking: remove only the last square
+                        this.isBacktracking = true;
+                        this.grid.parentElement.classList.add('no-hover');
+                        this.currentPath.pop(); // Remove only the last point
+                        this.updateGridVisuals();
+                        this.drawLines();
+                        this.updateStatus(`Backtracked to (${col + 1}, ${row + 1})`);
+                    } else {
+                        // Adding a new square (allow crossing over existing path)
+                        this.isBacktracking = false;
+                        this.grid.parentElement.classList.remove('no-hover');
+                        this.addToPath(row, col);
+                    }
+                }
+            }
+            
+            stopDrawing() {
+                console.log('=== STOP DRAWING ===');
+                console.log('isDrawing:', this.isDrawing);
+                console.log('currentPath length:', this.currentPath.length);
+                console.log('currentPath:', this.currentPath);
+                
+                if (this.isDrawing && this.currentPath.length > 1) {
+                    // Save the current path to history
+                    this.history.push([...this.currentPath]);
+                    this.allPaths.push([...this.currentPath]);
+                    console.log('Added path to allPaths. New allPaths length:', this.allPaths.length);
+                    this.updateStatus(`Finished drawing path with ${this.currentPath.length} points`);
+                }
+                
+                this.isDrawing = false;
+                this.isBacktracking = false;
+                this.grid.parentElement.classList.remove('no-hover');
+                this.currentPath = [];
+                this.updateGridVisuals();
+                this.drawLines(); // ADD THIS LINE!
+                console.log('=== END STOP DRAWING ===');
+            }
+            
+            addToPath(row, col) {
+                this.currentPath.push({ row, col });
+                this.updateGridVisuals();
+                this.drawLines();
+                this.updateStatus(`Added (${col + 1}, ${row + 1}) to path`);
+            }
+            
+            createSingleSquarePath(row, col, isHorizontal = false) {
+                // Create a line the full size of the square
+                const squareSize = 50;
+                const gap = 2;
+                const actualSquareSize = squareSize - gap;
+                const centerX = col * squareSize + actualSquareSize / 2;
+                const centerY = row * squareSize + actualSquareSize / 2;
+                
+                // Create a line the full size of the square
+                const halfSize = actualSquareSize / 2;
+                let singleSquarePath;
+                
+                if (isHorizontal) {
+                    // Horizontal line (left to right)
+                    singleSquarePath = [
+                        { row, col, x: centerX - halfSize, y: centerY },
+                        { row, col, x: centerX + halfSize, y: centerY }
+                    ];
+                } else {
+                    // Vertical line (top to bottom)
+                    singleSquarePath = [
+                        { row, col, x: centerX, y: centerY - halfSize },
+                        { row, col, x: centerX, y: centerY + halfSize }
+                    ];
+                }
+                
+                // Add to completed paths
+                this.allPaths.push(singleSquarePath);
+                this.history.push(singleSquarePath);
+                
+                // Update visuals
+                this.updateGridVisuals();
+                this.drawLines();
+                const orientation = isHorizontal ? 'horizontal' : 'vertical';
+                this.updateStatus(`Created ${orientation} single square at (${col + 1}, ${row + 1})`);
+            }
+            
+            updateGridVisuals() {
+                // Clear all visual states
+                const squares = this.grid.querySelectorAll('.grid-square');
+                squares.forEach(square => {
+                    square.classList.remove('visited', 'current', 'start');
+                });
+                
+                // Mark all visited squares
+                this.allPaths.forEach(path => {
+                    path.forEach(point => {
+                        const square = this.grid.querySelector(`[data-row="${point.row}"][data-col="${point.col}"]`);
+                        if (square) {
+                            square.classList.add('visited');
+                        }
+                    });
+                });
+                
+                // Mark current path
+                if (this.currentPath.length > 0) {
+                    this.currentPath.forEach((point, index) => {
+                        const square = this.grid.querySelector(`[data-row="${point.row}"][data-col="${point.col}"]`);
+                        if (square) {
+                            if (index === 0) {
+                                square.classList.add('start');
+                            } else {
+                                square.classList.add('current');
+                            }
+                        }
+                    });
+                }
+            }
+            
+            drawLines() {
+                console.log('=== DRAW LINES CALLED ===');
+                console.log('allPaths length:', this.allPaths.length);
+                console.log('currentPath length:', this.currentPath.length);
+                
+                // Clear existing lines
+                this.lineSvg.innerHTML = '';
+                
+                // Draw all completed paths (with curves)
+                this.allPaths.forEach((path, index) => {
+                    if (path.length > 1) {
+                        console.log(`Drawing completed path ${index}:`, path);
+                        this.drawPath(path, false);
+                    }
+                });
+                
+                // Draw current path (with sharp corners during drawing)
+                if (this.currentPath.length > 1) {
+                    console.log('Drawing current path:', this.currentPath);
+                    this.drawPathSimple(this.currentPath, true);
+                }
+                
+                console.log('=== END DRAW LINES ===');
+            }
+            
+            drawBackground() {
+                // Create vertical stripes background
+                const stripeWidth = 6.25; // Middle stroke width from layered paths
+                const squareSize = 50;
+                const svgWidth = this.cols * squareSize; // SVG width
+                const svgHeight = this.rows * squareSize; // SVG height
+                
+                // Clear background SVG
+                this.backgroundSvg.innerHTML = '';
+                
+                // Set background SVG dimensions
+                this.backgroundSvg.setAttribute('width', svgWidth);
+                this.backgroundSvg.setAttribute('height', svgHeight);
+                this.backgroundSvg.setAttribute('viewBox', `0 0 ${svgWidth} ${svgHeight}`);
+                
+                // Create white background
+                const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                background.setAttribute('x', '0');
+                background.setAttribute('y', '0');
+                background.setAttribute('width', svgWidth);
+                background.setAttribute('height', svgHeight);
+                background.setAttribute('fill', 'white');
+                this.backgroundSvg.appendChild(background);
+                
+                // Create black vertical stripes (skip first 3 and last 3)
+                const skipFirst = 3;
+                const skipLast = 3;
+                const stripeSpacing = stripeWidth * 2;
+                const startX = skipFirst * stripeSpacing;
+                const endX = svgWidth - (skipLast * stripeSpacing);
+                
+                for (let x = startX; x < endX; x += stripeSpacing) {
+                    const stripe = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    stripe.setAttribute('x', x+(stripeWidth/2) - 1);
+                    stripe.setAttribute('y', '0');
+                    stripe.setAttribute('width', stripeWidth);
+                    stripe.setAttribute('height', svgHeight);
+                    stripe.setAttribute('fill', 'black');
+                    this.backgroundSvg.appendChild(stripe);
+                }
+            }
+            
+            drawPath(path, isCurrent) {
+                console.log('drawPath called with:', { path, isCurrent });
+                const d = this.createPathData(path);
+                console.log('Generated path data:', d);
+                this.drawPathWithData(d, isCurrent);
+            }
+            
+            drawPathSimple(path, isCurrent) {
+                console.log('drawPathSimple called with:', { path, isCurrent });
+                // Draw simple straight lines without curves for current path
+                const squareSize = 50;
+                const gap = 2;
+                const actualSquareSize = squareSize - gap;
+                
+                const points = path.map(point => ({
+                    x: point.col * squareSize + actualSquareSize / 2,
+                    y: point.row * squareSize + actualSquareSize / 2
+                }));
+                
+                let d = `M ${points[0].x} ${points[0].y}`;
+                for (let i = 1; i < points.length; i++) {
+                    d += ` L ${points[i].x} ${points[i].y}`;
+                }
+                
+                console.log('Simple path data:', d);
+                this.drawPathWithData(d, isCurrent);
+            }
+            
+            drawPathWithData(d, isCurrent) {
+                // Define layered stroke styles (from outer to inner)
+                const strokeLayers = [
+                    { stroke: 'black', strokeWidth: '43.75px' },
+                    { stroke: 'white', strokeWidth: '31.25px' },
+                    { stroke: 'black', strokeWidth: '18.75px' },
+                    { stroke: 'white', strokeWidth: '6.25px', strokeMiterlimit: '1.5' }
+                ];
+                
+                // Create layered copies
+                strokeLayers.forEach(layer => {
+                    const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    pathElement.setAttribute('d', d);
+                    pathElement.setAttribute('class', 'line-path');
+                    
+                    // Apply layer styles
+                    pathElement.style.fill = 'none';
+                    pathElement.style.fillRule = 'nonzero';
+                    pathElement.style.stroke = layer.stroke;
+                    pathElement.style.strokeWidth = layer.strokeWidth;
+                    pathElement.style.strokeLinecap = 'butt'; // Flat ends instead of rounded
+                    if (layer.strokeMiterlimit) {
+                        pathElement.style.strokeMiterlimit = layer.strokeMiterlimit;
+                    }
+                    
+                    // Override for current path (drawing in progress)
+                    if (isCurrent) {
+                        pathElement.style.stroke = '#ff6b6b';
+                        pathElement.style.strokeWidth = '5px';
+                    }
+                    
+                    this.lineSvg.appendChild(pathElement);
+                });
+            }
+            
+            createPathData(path) {
+                if (path.length < 2) return '';
+                
+                const squareSize = 50; // Approximate square size in pixels
+                const gap = 2; // Gap between squares
+                const actualSquareSize = squareSize - gap;
+                
+                // Convert path points to pixel coordinates
+                const points = path.map(point => ({
+                    x: point.x !== undefined ? point.x : point.col * squareSize + actualSquareSize / 2,
+                    y: point.y !== undefined ? point.y : point.row * squareSize + actualSquareSize / 2
+                }));
+                
+                // First pass: identify all corners
+                const corners = [];
+                for (let i = 1; i < points.length - 1; i++) {
+                    const prevPoint = points[i - 1];
+                    const currentPoint = points[i];
+                    const nextPoint = points[i + 1];
+                    
+                    if (this.is90DegreeCorner(prevPoint, currentPoint, nextPoint)) {
+                        corners.push(i); // Mark this point as a corner
+                        console.log('Found corner at index:', i);
+                    }
+                }
+                
+                console.log('All corners found:', corners);
+                
+                // Second pass: build the path
+                let d = `M ${points[0].x} ${points[0].y}`;
+                let i = 1;
+                
+                while (i < points.length) {
+                    if (corners.includes(i)) {
+                        // This is a corner - create curve
+                        const prevPoint = points[i - 1];
+                        const currentPoint = points[i];
+                        const nextPoint = points[i + 1];
+                        
+                        // Check if this is a consecutive corner (next point is also a corner)
+                        const isConsecutive = corners.includes(i + 1);
+                        const radius = 25;
+
+                        console.log('Creating curved corner at:', i, currentPoint, 'isConsecutive:', isConsecutive);
+                        const curveData = this.createCurvedCorner(prevPoint, currentPoint, nextPoint, radius);
+                        d += ` L ${curveData.start.x} ${curveData.start.y}`;
+                        d += ` C ${curveData.control1.x} ${curveData.control1.y} ${curveData.control2.x} ${curveData.control2.y} ${curveData.end.x} ${curveData.end.y}`;
+                        // Calculate direction to next point
+                        const dx = nextPoint.x - currentPoint.x;
+                        const dy = nextPoint.y - currentPoint.y;
+                        
+                        // Stop 15 pixels short in the opposite direction
+                        
+                        const shortX = nextPoint.x - (dx > 0 ? radius : dx < 0 ? -radius : 0);
+                        const shortY = nextPoint.y - (dy > 0 ? radius : dy < 0 ? -radius : 0);
+                        
+                        d += ` L ${shortX} ${shortY}`;
+                        i++; // Only skip one point, not two
+                    } else {
+                        console.log('Creating straight line at:', i, points[i]);
+                        // Regular straight line
+                        d += ` L ${points[i].x} ${points[i].y}`;
+                        i++;
+                    }
+                }
+                
+                return d;
+            }
+            
+            is90DegreeCorner(prev, current, next) {
+                // Simple 90-degree corner detection
+                const dx1 = current.x - prev.x;
+                const dy1 = current.y - prev.y;
+                const dx2 = next.x - current.x;
+                const dy2 = next.y - current.y;
+                
+                // Check if one segment is vertical and the other is horizontal
+                const isVertical = Math.abs(dx1) < 5 && Math.abs(dy1) > 5;
+                const isHorizontal = Math.abs(dy1) < 5 && Math.abs(dx1) > 5;
+                const nextIsVertical = Math.abs(dx2) < 5 && Math.abs(dy2) > 5;
+                const nextIsHorizontal = Math.abs(dy2) < 5 && Math.abs(dx2) > 5;
+                
+                // 90-degree turn: vertical to horizontal or horizontal to vertical
+                return (isVertical && nextIsHorizontal) || (isHorizontal && nextIsVertical);
+            }
+            
+            createCurvedCorner(prev, current, next, radius) {
+                // Simple curved corner with fixed radius
+                
+                // Determine turn direction
+                const dx1 = current.x - prev.x;
+                const dy1 = current.y - prev.y;
+                const dx2 = next.x - current.x;
+                const dy2 = next.y - current.y;
+                
+                let start, control1, control2, end;
+                
+                if (Math.abs(dx1) > Math.abs(dy1)) {
+                    // First segment is horizontal
+                    if (dx1 > 0) {
+                        // Moving right
+                        start = { x: current.x - radius, y: current.y };
+                        if (dy2 > 0) {
+                            // Right then down
+                            control1 = { x: current.x, y: current.y };
+                            control2 = { x: current.x, y: current.y + radius };
+                            end = { x: current.x, y: current.y + radius };
+                        } else {
+                            // Right then up
+                            control1 = { x: current.x, y: current.y };
+                            control2 = { x: current.x, y: current.y - radius };
+                            end = { x: current.x, y: current.y - radius };
+                        }
+                    } else {
+                        // Moving left
+                        start = { x: current.x + radius, y: current.y };
+                        if (dy2 > 0) {
+                            // Left then down
+                            control1 = { x: current.x, y: current.y };
+                            control2 = { x: current.x, y: current.y + radius };
+                            end = { x: current.x, y: current.y + radius };
+                        } else {
+                            // Left then up
+                            control1 = { x: current.x, y: current.y };
+                            control2 = { x: current.x, y: current.y - radius };
+                            end = { x: current.x, y: current.y - radius };
+                        }
+                    }
+                } else {
+                    // First segment is vertical
+                    if (dy1 > 0) {
+                        // Moving down
+                        start = { x: current.x, y: current.y - radius };
+                        if (dx2 > 0) {
+                            // Down then right
+                            control1 = { x: current.x, y: current.y };
+                            control2 = { x: current.x + radius, y: current.y };
+                            end = { x: current.x + radius, y: current.y };
+                        } else {
+                            // Down then left
+                            control1 = { x: current.x, y: current.y };
+                            control2 = { x: current.x - radius, y: current.y };
+                            end = { x: current.x - radius, y: current.y };
+                        }
+                    } else {
+                        // Moving up
+                        start = { x: current.x, y: current.y + radius };
+                        if (dx2 > 0) {
+                            // Up then right
+                            control1 = { x: current.x, y: current.y };
+                            control2 = { x: current.x + radius, y: current.y };
+                            end = { x: current.x + radius, y: current.y };
+                        } else {
+                            // Up then left
+                            control1 = { x: current.x, y: current.y };
+                            control2 = { x: current.x - radius, y: current.y };
+                            end = { x: current.x - radius, y: current.y };
+                        }
+                    }
+                }
+                
+                return { start, control1, control2, end };
+            }
+            
+            clearAll() {
+                this.allPaths = [];
+                this.currentPath = [];
+                this.history = [];
+                this.usedStartPositions.clear(); // Reset used starting positions
+                this.updateGridVisuals();
+                this.drawLines();
+                this.updateStatus('Cleared all lines');
+            }
+            
+            undoLastPath() {
+                if (this.history.length > 0) {
+                    const removedPath = this.history.pop();
+                    this.allPaths = [...this.history];
+                    
+                    // Remove the starting position from used set
+                    if (removedPath && removedPath.length > 0) {
+                        const startPos = `0,${removedPath[0].col}`;
+                        this.usedStartPositions.delete(startPos);
+                    }
+                    
+                    this.updateGridVisuals();
+                    this.drawLines();
+                    this.updateStatus(`Undid last path. ${this.allPaths.length} paths remaining`);
+                } else {
+                    this.updateStatus('No paths to undo');
+                }
+            }
+            
+            savePattern() {
+                const patternData = {
+                    paths: this.allPaths,
+                    timestamp: new Date().toISOString(),
+                    gridSize: { rows: this.rows, cols: this.cols }
+                };
+                
+                console.log('Pattern data:', patternData);
+                
+                // Create downloadable JSON file
+                const dataStr = JSON.stringify(patternData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `grid-pattern-${Date.now()}.json`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+                this.updateStatus(`Saved pattern with ${this.allPaths.length} paths`);
+            }
+            
+            exportSvg() {
+                if (this.allPaths.length === 0) {
+                    this.updateStatus('No paths to export');
+                    return;
+                }
+
+                // Create a new SVG element with proper dimensions
+                const squareSize = 50;
+                const svgWidth = this.cols * squareSize;
+                const svgHeight = this.rows * squareSize;
+                const aspectRatio = svgWidth / svgHeight;
+                const exportWidth = 250.23;
+                const exportHeight = exportWidth / aspectRatio;
+                
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('width', exportWidth.toString());
+                svg.setAttribute('height', exportHeight.toString());
+                svg.setAttribute('viewBox', `0 0 ${svgWidth} ${svgHeight}`);
+                svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+
+                // Add background from background SVG
+                const backgroundElements = this.backgroundSvg.querySelectorAll('*');
+                backgroundElements.forEach(element => {
+                    const clonedElement = element.cloneNode(true);
+                    svg.appendChild(clonedElement);
+                });
+
+                
+                // Add all the paths to the SVG with layered strokes
+                this.allPaths.forEach(path => {
+                    if (path.length > 1) {
+                        const d = this.createPathData(path);
+                        
+                        // Define layered stroke styles (from outer to inner)
+                        const strokeLayers = [
+                            { stroke: 'black', strokeWidth: '43.75px' },
+                            { stroke: 'white', strokeWidth: '31.25px' },
+                            { stroke: 'black', strokeWidth: '18.75px' },
+                            { stroke: 'white', strokeWidth: '6.25px', strokeMiterlimit: '1.5' }
+                        ];
+                        
+                        // Create layered copies
+                        strokeLayers.forEach(layer => {
+                            const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                            pathElement.setAttribute('d', d);
+                            pathElement.setAttribute('fill', 'none');
+                            pathElement.setAttribute('fill-rule', 'nonzero');
+                            pathElement.setAttribute('stroke', layer.stroke);
+                            pathElement.setAttribute('stroke-width', layer.strokeWidth);
+                            if (layer.strokeMiterlimit) {
+                                pathElement.setAttribute('stroke-miterlimit', layer.strokeMiterlimit);
+                            }
+                            
+                            svg.appendChild(pathElement);
+                        });
+                    }
+                });
+                
+                // Convert SVG to string
+                const svgString = new XMLSerializer().serializeToString(svg);
+                
+                // Create and download the SVG file
+                const blob = new Blob([svgString], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `loopy-lines-${Date.now()}.svg`;
+                link.click();
+                
+                URL.revokeObjectURL(url);
+                this.updateStatus(`Exported SVG with ${this.allPaths.length} paths`);
+            }
+            
+            isRestrictedArea(row, col) {
+                // Check if the position is in a restricted area
+                // First or second square in first column (col 0)
+                if (col === 0 && (row === 0 || row === 1)) return true;
+                
+                // First or second square in last column
+                if (col === this.cols - 1 && (row === 0 || row === 1)) return true;
+                
+                // Bottom two squares in first column (col 0)
+                if (col === 0 && (row === this.rows - 2 || row === this.rows - 1)) return true;
+                
+                // Bottom two squares in last column
+                if (col === this.cols - 1 && (row === this.rows - 2 || row === this.rows - 1)) return true;
+                
+                return false;
+            }
+            
+            getAvailableStartPositions() {
+                // Get all available starting positions (top row, not used, not restricted)
+                const available = [];
+                for (let col = 0; col < this.cols; col++) {
+                    const position = `0,${col}`;
+                    if (!this.usedStartPositions.has(position) && !this.isRestrictedArea(0, col)) {
+                        available.push(col);
+                    }
+                }
+                return available;
+            }
+            
+            generateRandomLine() {
+                // Check if there are available starting positions
+                const availableStarts = this.getAvailableStartPositions();
+                if (availableStarts.length === 0) {
+                    this.updateStatus('No available starting positions remaining');
+                    return;
+                }
+                
+                // Generate a random line that starts on top row, goes down, turns, goes forward, turns, ends on bottom row
+                const path = [];
+                
+                // Start on a random available column in the top row (row 0)
+                const startCol = availableStarts[Math.floor(Math.random() * availableStarts.length)];
+                path.push({ row: 0, col: startCol });
+                
+                // Mark this starting position as used
+                this.usedStartPositions.add(`0,${startCol}`);
+                
+                // Go down a random number of squares (1 to 4 squares down)
+                const downSteps = Math.floor(Math.random() * 4) + 1;
+                for (let i = 1; i <= downSteps; i++) {
+                    path.push({ row: i, col: startCol });
+                }
+                
+                // Turn left or right
+                const turnDirection = Math.random() < 0.5 ? -1 : 1; // -1 for left, 1 for right
+                const currentRow = downSteps;
+                const currentCol = startCol;
+                
+                // Go forward a random amount (1 to 6 squares), stopping at restricted areas or boundaries
+                let maxForwardSteps = 6;
+                if (turnDirection === 1) {
+                    // Going right - limit by right edge
+                    maxForwardSteps = Math.min(6, this.cols - 1 - currentCol);
+                } else {
+                    // Going left - limit by left edge
+                    maxForwardSteps = Math.min(6, currentCol);
+                }
+                
+                const forwardSteps = Math.floor(Math.random() * maxForwardSteps) + 1;
+                let actualForwardSteps = 0;
+                
+                for (let i = 1; i <= forwardSteps; i++) {
+                    const newCol = currentCol + (turnDirection * i);
+                    if (newCol >= 0 && newCol < this.cols && !this.isRestrictedArea(currentRow, newCol)) {
+                        path.push({ row: currentRow, col: newCol });
+                        actualForwardSteps = i;
+                    } else {
+                        // Hit a restricted area or boundary, stop here
+                        break;
+                    }
+                }
+                
+                // Turn the other way and go to bottom row
+                const finalCol = currentCol + (turnDirection * actualForwardSteps);
+                const finalRow = this.rows - 1; // Bottom row
+                
+                // Go down to bottom row, stopping at restricted areas
+                for (let i = currentRow + 1; i <= finalRow && i < this.rows; i++) {
+                    if (!this.isRestrictedArea(i, finalCol)) {
+                        path.push({ row: i, col: finalCol });
+                    } else {
+                        // Hit a restricted area, stop here
+                        break;
+                    }
+                }
+                
+                // Add the generated path to allPaths and history
+                this.allPaths.push([...path]);
+                this.history.push([...path]);
+                
+                // Update visuals
+                this.updateGridVisuals();
+                this.drawLines();
+                this.updateStatus(`Generated random line with ${path.length} points`);
+            }
+            
+            generateComplexLine() {
+                // Check if there are available starting positions
+                const availableStarts = this.getAvailableStartPositions();
+                if (availableStarts.length === 0) {
+                    this.updateStatus('No available starting positions remaining');
+                    return;
+                }
+                
+                // Generate a complex line with 3 consecutive turns at same position (U-shape)
+                const path = [];
+                
+                // Start on a random available column in the top row (row 0)
+                const startCol = availableStarts[Math.floor(Math.random() * availableStarts.length)];
+                path.push({ row: 0, col: startCol });
+                
+                // Mark this starting position as used
+                this.usedStartPositions.add(`0,${startCol}`);
+                
+                // Go down a random number of squares (2 to 4 squares down)
+                const downSteps = Math.floor(Math.random() * 3) + 2; // 2-4 squares
+                for (let i = 1; i <= downSteps; i++) {
+                    path.push({ row: i, col: startCol });
+                }
+                
+                // Now at the turn position (e.g., 8,3)
+                const turnRow = downSteps;
+                const turnCol = startCol;
+                
+                // First turn: go right or left (1-3 squares)
+                const firstDirection = Math.random() < 0.5 ? 1 : -1; // 1 for right, -1 for left
+                let maxFirstSteps = Math.min(3, firstDirection === 1 ? this.cols - 1 - turnCol : turnCol);
+                const firstSteps = Math.floor(Math.random() * maxFirstSteps) + 1;
+                let actualFirstSteps = 0;
+                
+                for (let i = 1; i <= firstSteps; i++) {
+                    const newCol = turnCol + (firstDirection * i);
+                    if (newCol >= 0 && newCol < this.cols && !this.isRestrictedArea(turnRow, newCol)) {
+                        path.push({ row: turnRow, col: newCol });
+                        actualFirstSteps = i;
+                    } else {
+                        break;
+                    }
+                }
+                
+                // Second turn: go down (1-2 squares)
+                const secondRow = turnRow;
+                const secondCol = turnCol + (firstDirection * actualFirstSteps);
+                let maxSecondSteps = Math.min(2, this.rows - 1 - secondRow);
+                const secondSteps = Math.floor(Math.random() * maxSecondSteps) + 1;
+                let actualSecondSteps = 0;
+                
+                for (let i = 1; i <= secondSteps; i++) {
+                    const newRow = secondRow + i;
+                    if (newRow < this.rows && !this.isRestrictedArea(newRow, secondCol)) {
+                        path.push({ row: newRow, col: secondCol });
+                        actualSecondSteps = i;
+                    } else {
+                        break;
+                    }
+                }
+                
+                // Third turn: go back (opposite of first direction, 1-3 squares)
+                const thirdDirection = -firstDirection;
+                const thirdRow = secondRow + actualSecondSteps;
+                const thirdCol = secondCol;
+                let maxThirdSteps = Math.min(3, thirdDirection === 1 ? this.cols - 1 - thirdCol : thirdCol);
+                const thirdSteps = Math.floor(Math.random() * maxThirdSteps) + 1;
+                let actualThirdSteps = 0;
+                
+                for (let i = 1; i <= thirdSteps; i++) {
+                    const newCol = thirdCol + (thirdDirection * i);
+                    if (newCol >= 0 && newCol < this.cols && !this.isRestrictedArea(thirdRow, newCol)) {
+                        path.push({ row: thirdRow, col: newCol });
+                        actualThirdSteps = i;
+                    } else {
+                        break;
+                    }
+                }
+                
+                // Fourth turn: go down to bottom row
+                const finalCol = thirdCol + (thirdDirection * actualThirdSteps);
+                const finalRow = this.rows - 1; // Bottom row
+                
+                // Go down to bottom row, stopping at restricted areas
+                for (let i = thirdRow + 1; i <= finalRow && i < this.rows; i++) {
+                    if (!this.isRestrictedArea(i, finalCol)) {
+                        path.push({ row: i, col: finalCol });
+                    } else {
+                        break;
+                    }
+                }
+                
+                // Add the generated path to allPaths and history
+                this.allPaths.push([...path]);
+                this.history.push([...path]);
+                
+                // Update visuals
+                this.updateGridVisuals();
+                this.drawLines();
+                this.updateStatus(`Generated complex line with ${path.length} points`);
+            }
+            
+            updateStatus(message) {
+                this.status.textContent = message;
+            }
+        }
+        
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new GridDrawingApp();
+        });
+    </script>
+</body>
+</html>
