@@ -615,6 +615,31 @@
             margin-top: 2px;
         }
 
+        .lightbox-slack-btn {
+            background: linear-gradient(135deg, #4a154b 0%, #611f69 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(74, 21, 75, 0.3);
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .lightbox-slack-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 21, 75, 0.4);
+        }
+
+        .lightbox-slack-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         /* Ownership toggle styles */
         .ownership-toggle {
             display: inline-flex;
@@ -805,6 +830,7 @@
                         <div class="color-name" id="glazeName"></div>
                     </div>
                 </div>
+                <button class="lightbox-slack-btn" id="lightboxSlackBtn">Send to Slack</button>
             </div>
         </div>
     </div>
@@ -818,6 +844,8 @@
         let ownedUnderglazes = new Set(); // Track owned underglazes by ID
         let ownedGlazes = new Set(); // Track owned glazes by ID
         let showOnlyOwned = false; // Filter toggle state
+        let currentLightboxUnderglaze = null; // Track current lightbox underglaze
+        let currentLightboxGlaze = null; // Track current lightbox glaze
 
         // Load colors data
         async function loadColorsData() {
@@ -1746,6 +1774,10 @@
             const underglazeName = document.getElementById('underglazeName');
             const glazeName = document.getElementById('glazeName');
 
+            // Store current lightbox colors for Slack sending
+            currentLightboxUnderglaze = underglaze;
+            currentLightboxGlaze = glaze;
+
             try {
                 // Load the metaAndLines.svg for the lightbox
                 const svgResponse = await fetch('patterns/metaAndLines.svg');
@@ -1761,6 +1793,7 @@
                 // Create a container div with the background color and SVG
                 const svgContainer = document.createElement('div');
                 svgContainer.style.backgroundColor = underglazeColor;
+                svgContainer.id = 'lightboxSvgContainer';
                 
                 svgContainer.style.borderRadius = '10px';
                 svgContainer.style.width = '100%';
@@ -1792,6 +1825,153 @@
             }
         }
 
+        // Send lightbox pattern to Slack
+        async function sendLightboxToSlack() {
+            if (!currentLightboxUnderglaze || !currentLightboxGlaze) {
+                alert('No pattern selected');
+                return;
+            }
+
+            const slackBtn = document.getElementById('lightboxSlackBtn');
+            const originalText = slackBtn.textContent;
+            slackBtn.textContent = 'Sending...';
+            slackBtn.disabled = true;
+
+            try {
+                console.log('🚀 Starting Slack send for lightbox pattern...');
+                
+                const underglazeColor = currentLightboxUnderglaze.left || currentLightboxUnderglaze.color || '#ffffff';
+                const glazeColor = currentLightboxGlaze.left || currentLightboxGlaze.color || '#000000';
+                
+                // Generate PNG from the lightbox SVG
+                const pngBlob = await generateLightboxPNG(underglazeColor, glazeColor);
+                
+                // Convert blob to base64
+                const base64 = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result.split(',')[1]);
+                    reader.readAsDataURL(pngBlob);
+                });
+                
+                console.log('📝 Generated PNG, size:', pngBlob.size, 'bytes');
+                
+                // Prepare the data for the API
+                const requestData = {
+                    pngData: base64,
+                    pattern: 'metaAndLines.svg',
+                    bgColor: underglazeColor,
+                    patternColor: glazeColor,
+                    bgColorName: currentLightboxUnderglaze.name,
+                    patternColorName: currentLightboxGlaze.name,
+                    channel: '#color-requests'
+                };
+
+                // Send to the bot API
+                const response = await fetch('/api/send-to-slack', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    console.log('✅ Pattern sent successfully:', result);
+                } else {
+                    console.error('❌ API error:', result);
+                    throw new Error(result.error || 'Failed to send to Slack');
+                }
+
+            } catch (error) {
+                console.error('💥 Error sending to Slack:', error);
+                alert('Error sending to Slack: ' + error.message);
+            } finally {
+                slackBtn.textContent = originalText;
+                slackBtn.disabled = false;
+            }
+        }
+
+        // Generate PNG from lightbox SVG
+        async function generateLightboxPNG(bgColor, patternColor) {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    // Load the SVG
+                    const svgResponse = await fetch('patterns/metaAndLines.svg');
+                    const svgText = await svgResponse.text();
+                    
+                    // Parse the SVG
+                    const parser = new DOMParser();
+                    const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                    const svgElement = svgDoc.querySelector('svg');
+                    
+                    if (!svgElement) {
+                        throw new Error('SVG element not found');
+                    }
+                    
+                    // Apply colors
+                    svgElement.style.backgroundColor = bgColor;
+                    
+                    // Find and modify the path element
+                    const path = svgDoc.querySelector('#main') || svgDoc.querySelector('path');
+                    if (path) {
+                        path.setAttribute('fill', patternColor);
+                        path.style.fill = patternColor;
+                    }
+                    
+                    // Get dimensions from viewBox
+                    const viewBox = svgElement.getAttribute('viewBox');
+                    let width = 800;
+                    let height = 600;
+                    
+                    if (viewBox) {
+                        const parts = viewBox.split(' ').map(Number);
+                        if (parts.length >= 4) {
+                            width = parts[2] || 800;
+                            height = parts[3] || 600;
+                        }
+                    }
+                    
+                    // Serialize the SVG
+                    const svgString = new XMLSerializer().serializeToString(svgElement);
+                    
+                    // Create canvas
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Draw background
+                    ctx.fillStyle = bgColor;
+                    ctx.fillRect(0, 0, width, height);
+                    
+                    // Create image from SVG
+                    const img = new Image();
+                    const svgBlob = new Blob([svgString], { type: 'image/svg+xml' });
+                    const url = URL.createObjectURL(svgBlob);
+                    
+                    img.onload = function() {
+                        ctx.drawImage(img, 0, 0, width, height);
+                        canvas.toBlob(function(blob) {
+                            URL.revokeObjectURL(url);
+                            resolve(blob);
+                        }, 'image/png');
+                    };
+                    
+                    img.onerror = function() {
+                        URL.revokeObjectURL(url);
+                        reject(new Error('Failed to load SVG image'));
+                    };
+                    
+                    img.src = url;
+                    
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+
         function hideLightbox() {
             const lightbox = document.getElementById('lightbox');
             lightbox.style.display = 'none';
@@ -1803,6 +1983,10 @@
             if (e.target.id === 'lightbox') {
                 hideLightbox();
             }
+        });
+        document.getElementById('lightboxSlackBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            sendLightboxToSlack();
         });
 
         // Close lightbox with Escape key
