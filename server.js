@@ -98,7 +98,24 @@ async function initializeDatabase() {
       CREATE INDEX IF NOT EXISTS idx_cell_key ON toggle_states(cell_key)
     `);
     
-    console.log('✅ Database table and index created successfully');
+    // Create ownership_states table if it doesn't exist
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS ownership_states (
+        id SERIAL PRIMARY KEY,
+        item_id VARCHAR(255) UNIQUE NOT NULL,
+        item_type VARCHAR(50) NOT NULL,
+        is_owned BOOLEAN NOT NULL DEFAULT false,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    
+    // Create index for ownership lookups
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS idx_ownership_item ON ownership_states(item_id, item_type)
+    `);
+    
+    console.log('✅ Database tables and indexes created successfully');
     client.release();
     
   } catch (error) {
@@ -870,30 +887,71 @@ expressApp.post('/api/save-ownership-states', async (req, res) => {
       return res.status(400).json({ error: 'ownedUnderglazes and ownedGlazes must be arrays' });
     }
     
-    // Save to file (simple approach - could use database too)
-    const ownershipPath = path.join(__dirname, 'ownership-states.json');
-    const ownershipData = {
-      ownedUnderglazes,
-      ownedGlazes,
-      lastUpdated: new Date().toISOString()
-    };
-    
-    fs.writeFileSync(ownershipPath, JSON.stringify(ownershipData, null, 2));
-    
-    console.log('💾 Ownership states saved:', {
-      underglazes: ownedUnderglazes.length,
-      glazes: ownedGlazes.length,
-      timestamp: ownershipData.lastUpdated
-    });
-    
-    res.json({ 
-      success: true, 
-      message: 'Ownership states saved successfully',
-      counts: {
-        underglazes: ownedUnderglazes.length,
-        glazes: ownedGlazes.length
+    if (db) {
+      // Use database
+      const client = await db.connect();
+      try {
+        // Clear existing ownership states
+        await client.query('DELETE FROM ownership_states');
+        
+        // Insert underglaze ownership states
+        if (ownedUnderglazes.length > 0) {
+          const underglazeValues = ownedUnderglazes.map(id => `('${id}', 'underglaze', true)`).join(',');
+          await client.query(`INSERT INTO ownership_states (item_id, item_type, is_owned) VALUES ${underglazeValues}`);
+        }
+        
+        // Insert glaze ownership states
+        if (ownedGlazes.length > 0) {
+          const glazeValues = ownedGlazes.map(id => `('${id}', 'glaze', true)`).join(',');
+          await client.query(`INSERT INTO ownership_states (item_id, item_type, is_owned) VALUES ${glazeValues}`);
+        }
+        
+        console.log('💾 Ownership states saved to database:', {
+          underglazes: ownedUnderglazes.length,
+          glazes: ownedGlazes.length,
+          timestamp: new Date().toISOString()
+        });
+        
+        res.json({ 
+          success: true, 
+          message: 'Ownership states saved successfully',
+          source: 'database',
+          counts: {
+            underglazes: ownedUnderglazes.length,
+            glazes: ownedGlazes.length
+          }
+        });
+        
+      } finally {
+        client.release();
       }
-    });
+    } else {
+      // Fallback to file-based storage
+      const ownershipPath = path.join(__dirname, 'ownership-states.json');
+      const ownershipData = {
+        ownedUnderglazes,
+        ownedGlazes,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      fs.writeFileSync(ownershipPath, JSON.stringify(ownershipData, null, 2));
+      
+      console.log('💾 Ownership states saved to file (database unavailable):', {
+        underglazes: ownedUnderglazes.length,
+        glazes: ownedGlazes.length,
+        timestamp: ownershipData.lastUpdated
+      });
+      
+      res.json({ 
+        success: true, 
+        message: 'Ownership states saved successfully (file fallback)',
+        source: 'file',
+        counts: {
+          underglazes: ownedUnderglazes.length,
+          glazes: ownedGlazes.length
+        }
+      });
+    }
     
   } catch (error) {
     console.error('Error saving ownership states:', error);
@@ -905,33 +963,67 @@ expressApp.post('/api/save-ownership-states', async (req, res) => {
 });
 
 // API endpoint to load ownership states
-expressApp.get('/api/load-ownership-states', (req, res) => {
+expressApp.get('/api/load-ownership-states', async (req, res) => {
   try {
-    const ownershipPath = path.join(__dirname, 'ownership-states.json');
-    
-    if (!fs.existsSync(ownershipPath)) {
-      return res.json({ 
+    if (db) {
+      // Use database
+      const client = await db.connect();
+      try {
+        const underglazeResult = await client.query(
+          "SELECT item_id FROM ownership_states WHERE item_type = 'underglaze' AND is_owned = true"
+        );
+        const glazeResult = await client.query(
+          "SELECT item_id FROM ownership_states WHERE item_type = 'glaze' AND is_owned = true"
+        );
+        
+        const ownedUnderglazes = underglazeResult.rows.map(row => row.item_id);
+        const ownedGlazes = glazeResult.rows.map(row => row.item_id);
+        
+        console.log('📂 Ownership states loaded from database:', {
+          underglazes: ownedUnderglazes.length,
+          glazes: ownedGlazes.length
+        });
+        
+        res.json({ 
+          success: true, 
+          ownedUnderglazes,
+          ownedGlazes,
+          source: 'database'
+        });
+        
+      } finally {
+        client.release();
+      }
+    } else {
+      // Fallback to file-based storage
+      const ownershipPath = path.join(__dirname, 'ownership-states.json');
+      
+      if (!fs.existsSync(ownershipPath)) {
+        return res.json({ 
+          success: true, 
+          ownedUnderglazes: [],
+          ownedGlazes: [],
+          message: 'No saved ownership states found',
+          source: 'file'
+        });
+      }
+      
+      const ownershipData = JSON.parse(fs.readFileSync(ownershipPath, 'utf8'));
+      
+      console.log('📂 Ownership states loaded from file:', {
+        underglazes: ownershipData.ownedUnderglazes?.length || 0,
+        glazes: ownershipData.ownedGlazes?.length || 0,
+        lastUpdated: ownershipData.lastUpdated
+      });
+      
+      res.json({ 
         success: true, 
-        ownedUnderglazes: [],
-        ownedGlazes: [],
-        message: 'No saved ownership states found'
+        ownedUnderglazes: ownershipData.ownedUnderglazes || [],
+        ownedGlazes: ownershipData.ownedGlazes || [],
+        lastUpdated: ownershipData.lastUpdated,
+        source: 'file'
       });
     }
-    
-    const ownershipData = JSON.parse(fs.readFileSync(ownershipPath, 'utf8'));
-    
-    console.log('📂 Ownership states loaded:', {
-      underglazes: ownershipData.ownedUnderglazes?.length || 0,
-      glazes: ownershipData.ownedGlazes?.length || 0,
-      lastUpdated: ownershipData.lastUpdated
-    });
-    
-    res.json({ 
-      success: true, 
-      ownedUnderglazes: ownershipData.ownedUnderglazes || [],
-      ownedGlazes: ownershipData.ownedGlazes || [],
-      lastUpdated: ownershipData.lastUpdated
-    });
     
   } catch (error) {
     console.error('Error loading ownership states:', error);
