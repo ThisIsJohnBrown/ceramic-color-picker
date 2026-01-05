@@ -861,6 +861,87 @@ expressApp.get('/api/load-toggle-states', async (req, res) => {
   }
 });
 
+// API endpoint to save ownership states
+expressApp.post('/api/save-ownership-states', async (req, res) => {
+  try {
+    const { ownedUnderglazes, ownedGlazes } = req.body;
+    
+    if (!Array.isArray(ownedUnderglazes) || !Array.isArray(ownedGlazes)) {
+      return res.status(400).json({ error: 'ownedUnderglazes and ownedGlazes must be arrays' });
+    }
+    
+    // Save to file (simple approach - could use database too)
+    const ownershipPath = path.join(__dirname, 'ownership-states.json');
+    const ownershipData = {
+      ownedUnderglazes,
+      ownedGlazes,
+      lastUpdated: new Date().toISOString()
+    };
+    
+    fs.writeFileSync(ownershipPath, JSON.stringify(ownershipData, null, 2));
+    
+    console.log('💾 Ownership states saved:', {
+      underglazes: ownedUnderglazes.length,
+      glazes: ownedGlazes.length,
+      timestamp: ownershipData.lastUpdated
+    });
+    
+    res.json({ 
+      success: true, 
+      message: 'Ownership states saved successfully',
+      counts: {
+        underglazes: ownedUnderglazes.length,
+        glazes: ownedGlazes.length
+      }
+    });
+    
+  } catch (error) {
+    console.error('Error saving ownership states:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to save ownership states' 
+    });
+  }
+});
+
+// API endpoint to load ownership states
+expressApp.get('/api/load-ownership-states', (req, res) => {
+  try {
+    const ownershipPath = path.join(__dirname, 'ownership-states.json');
+    
+    if (!fs.existsSync(ownershipPath)) {
+      return res.json({ 
+        success: true, 
+        ownedUnderglazes: [],
+        ownedGlazes: [],
+        message: 'No saved ownership states found'
+      });
+    }
+    
+    const ownershipData = JSON.parse(fs.readFileSync(ownershipPath, 'utf8'));
+    
+    console.log('📂 Ownership states loaded:', {
+      underglazes: ownershipData.ownedUnderglazes?.length || 0,
+      glazes: ownershipData.ownedGlazes?.length || 0,
+      lastUpdated: ownershipData.lastUpdated
+    });
+    
+    res.json({ 
+      success: true, 
+      ownedUnderglazes: ownershipData.ownedUnderglazes || [],
+      ownedGlazes: ownershipData.ownedGlazes || [],
+      lastUpdated: ownershipData.lastUpdated
+    });
+    
+  } catch (error) {
+    console.error('Error loading ownership states:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to load ownership states' 
+    });
+  }
+});
+
 // API endpoint to send matrix data to Slack
 expressApp.post('/api/send-matrix-to-slack', async (req, res) => {
   try {

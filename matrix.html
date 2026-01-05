@@ -280,8 +280,15 @@
             font-size: 0.6rem;
             padding: 2px 4px;
             border-radius: 8px;
-            margin-top: 2px;
             font-weight: 600;
+        }
+
+        .count-with-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            margin-top: 2px;
         }
 
         .pattern-cell {
@@ -608,6 +615,108 @@
             margin-top: 2px;
         }
 
+        /* Ownership toggle styles */
+        .ownership-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            margin-left: 4px;
+        }
+
+        .ownership-toggle .toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            font-size: 0.6rem;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .ownership-toggle .toggle-btn.not-owned {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .ownership-toggle .toggle-btn.owned {
+            background: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+
+        .ownership-toggle .toggle-btn:hover {
+            transform: scale(1.15);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Show only owned filter toggle */
+        .ownership-filter-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ownership-filter-toggle label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .ownership-filter-toggle .switch {
+            position: relative;
+            width: 44px;
+            height: 22px;
+            background: #ccc;
+            border-radius: 22px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .ownership-filter-toggle .switch.active {
+            background: #28a745;
+        }
+
+        .ownership-filter-toggle .switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .ownership-filter-toggle .switch.active::after {
+            transform: translateX(22px);
+        }
+
+        /* Hidden items when filtering */
+        .glaze-header.hidden-by-filter,
+        .underglaze-row.hidden-by-filter {
+            display: none !important;
+        }
+
+        .pattern-cell.hidden-by-filter {
+            display: none !important;
+        }
+
+        /* Ownership stats */
+        .ownership-stats {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-left: 10px;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
@@ -650,6 +759,11 @@
                 <div class="control-group">
                     <label class="control-label" for="glazeFilter">Filter Glazes:</label>
                     <input type="text" id="glazeFilter" class="filter-input" placeholder="Search glazes...">
+                </div>
+                <div class="control-group ownership-filter-toggle">
+                    <label for="showOnlyOwned">Show Only Owned:</label>
+                    <div class="switch" id="showOnlyOwnedSwitch" title="Toggle to show only owned glazes and underglazes"></div>
+                    <span class="ownership-stats" id="ownershipStats"></span>
                 </div>
                 <div class="control-group">
                     <button id="sendToSlackBtn" class="send-to-slack-btn">Send to Slack</button>
@@ -701,6 +815,9 @@
         let filteredGlazes = [];
         let svgCache = new Map(); // Cache for modified SVGs
         let disabledCells = new Set(); // Track disabled cells by underglaze-glaze combination
+        let ownedUnderglazes = new Set(); // Track owned underglazes by ID
+        let ownedGlazes = new Set(); // Track owned glazes by ID
+        let showOnlyOwned = false; // Filter toggle state
 
         // Load colors data
         async function loadColorsData() {
@@ -709,6 +826,10 @@
                 colorsData = await response.json();
                 filteredUnderglazes = colorsData.underglazes || [];
                 filteredGlazes = colorsData.glazes || [];
+                
+                // Load ownership states before building matrix
+                await loadOwnershipStates();
+                
                 updateStats();
                 await buildMatrix();
             } catch (error) {
@@ -719,9 +840,23 @@
 
         // Update statistics
         function updateStats() {
-            const totalCombinations = filteredUnderglazes.length * filteredGlazes.length;
+            let underglazeCount = filteredUnderglazes.length;
+            let glazeCount = filteredGlazes.length;
+            let prefix = '';
+            
+            // If showing only owned, count only owned items
+            if (showOnlyOwned) {
+                underglazeCount = filteredUnderglazes.filter(u => ownedUnderglazes.has(u.id)).length;
+                glazeCount = filteredGlazes.filter(g => ownedGlazes.has(g.id)).length;
+                prefix = '🏠 Owned: ';
+            }
+            
+            const glazeCombinations = underglazeCount * glazeCount;
+            const underglazeCombinations = underglazeCount * underglazeCount;
+            const totalCombinations = glazeCombinations + underglazeCombinations;
+            
             document.getElementById('stats').textContent = 
-                `${filteredUnderglazes.length} underglazes × ${filteredGlazes.length} glazes = ${totalCombinations} combinations`;
+                `${prefix}${underglazeCount} underglazes × ${glazeCount} glazes = ${totalCombinations} combinations (${glazeCombinations} UG×Glaze + ${underglazeCombinations} UG×UG)`;
         }
 
         // Build the matrix table
@@ -756,6 +891,7 @@
             limitedGlazes.forEach(glaze => {
                 const glazeHeader = document.createElement('th');
                 glazeHeader.className = 'glaze-header';
+                glazeHeader.dataset.glazeId = glaze.id;
                 
                 const glazeInfo = document.createElement('div');
                 glazeInfo.className = 'glaze-info';
@@ -772,14 +908,37 @@
                 glazeName.className = 'glaze-name';
                 glazeName.textContent = glaze.name;
                 
+                // Wrapper for count and ownership toggle
+                const countWrapper = document.createElement('div');
+                countWrapper.className = 'count-with-toggle';
+                
                 const glazeCount = document.createElement('div');
                 glazeCount.className = 'glaze-count';
                 glazeCount.id = `glaze-count-${glaze.id}`;
                 glazeCount.textContent = '0';
                 
+                // Add ownership toggle
+                const ownershipToggle = document.createElement('div');
+                ownershipToggle.className = 'ownership-toggle';
+                const isOwned = ownedGlazes.has(glaze.id);
+                ownershipToggle.innerHTML = `
+                    <div class="toggle-btn ${isOwned ? 'owned' : 'not-owned'}" 
+                         data-ownership-toggle="glaze-${glaze.id}"
+                         title="Click to toggle ownership">
+                        ${isOwned ? '✓' : '✗'}
+                    </div>
+                `;
+                ownershipToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleGlazeOwnership(glaze.id);
+                });
+                
+                countWrapper.appendChild(glazeCount);
+                countWrapper.appendChild(ownershipToggle);
+                
                 glazeInfo.appendChild(glazeImage);
                 glazeInfo.appendChild(glazeName);
-                glazeInfo.appendChild(glazeCount);
+                glazeInfo.appendChild(countWrapper);
                 glazeHeader.appendChild(glazeInfo);
                 headerRow.appendChild(glazeHeader);
             });
@@ -788,6 +947,7 @@
             limitedUnderglazes.forEach(underglaze => {
                 const underglazeHeader = document.createElement('th');
                 underglazeHeader.className = 'glaze-header';
+                underglazeHeader.dataset.underglazeColumnId = underglaze.id;
                 
                 const underglazeInfo = document.createElement('div');
                 underglazeInfo.className = 'glaze-info';
@@ -804,14 +964,37 @@
                 underglazeName.className = 'glaze-name';
                 underglazeName.textContent = underglaze.name;
                 
+                // Wrapper for count and ownership toggle
+                const countWrapper = document.createElement('div');
+                countWrapper.className = 'count-with-toggle';
+                
                 const underglazeCount = document.createElement('div');
                 underglazeCount.className = 'glaze-count';
                 underglazeCount.id = `underglaze-column-count-${underglaze.id}`;
                 underglazeCount.textContent = '0';
                 
+                // Add ownership toggle for column underglazes
+                const ownershipToggle = document.createElement('div');
+                ownershipToggle.className = 'ownership-toggle';
+                const isOwned = ownedUnderglazes.has(underglaze.id);
+                ownershipToggle.innerHTML = `
+                    <div class="toggle-btn ${isOwned ? 'owned' : 'not-owned'}" 
+                         data-ownership-toggle="underglaze-${underglaze.id}"
+                         title="Click to toggle ownership">
+                        ${isOwned ? '✓' : '✗'}
+                    </div>
+                `;
+                ownershipToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleUnderglazeOwnership(underglaze.id);
+                });
+                
+                countWrapper.appendChild(underglazeCount);
+                countWrapper.appendChild(ownershipToggle);
+                
                 underglazeInfo.appendChild(underglazeImage);
                 underglazeInfo.appendChild(underglazeName);
-                underglazeInfo.appendChild(underglazeCount);
+                underglazeInfo.appendChild(countWrapper);
                 underglazeHeader.appendChild(underglazeInfo);
                 headerRow.appendChild(underglazeHeader);
             });
@@ -822,6 +1005,7 @@
             for (const underglaze of limitedUnderglazes) {
                 const row = document.createElement('tr');
                 row.className = 'underglaze-row';
+                row.dataset.underglazeId = underglaze.id;
 
                 // Underglaze info cell
                 const underglazeCell = document.createElement('td');
@@ -842,14 +1026,37 @@
                 underglazeName.className = 'underglaze-name';
                 underglazeName.textContent = underglaze.name;
                 
+                // Wrapper for counts and ownership toggle
+                const countWrapper = document.createElement('div');
+                countWrapper.className = 'count-with-toggle';
+                
                 const underglazeCount = document.createElement('div');
                 underglazeCount.className = 'underglaze-count';
                 underglazeCount.id = `underglaze-count-${underglaze.id}`;
                 underglazeCount.innerHTML = '<div class="count-glazes">0</div><div class="count-underglazes">0</div>';
                 
+                // Add ownership toggle for row underglazes
+                const ownershipToggle = document.createElement('div');
+                ownershipToggle.className = 'ownership-toggle';
+                const isOwned = ownedUnderglazes.has(underglaze.id);
+                ownershipToggle.innerHTML = `
+                    <div class="toggle-btn ${isOwned ? 'owned' : 'not-owned'}" 
+                         data-ownership-toggle="underglaze-${underglaze.id}"
+                         title="Click to toggle ownership">
+                        ${isOwned ? '✓' : '✗'}
+                    </div>
+                `;
+                ownershipToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleUnderglazeOwnership(underglaze.id);
+                });
+                
+                countWrapper.appendChild(underglazeCount);
+                countWrapper.appendChild(ownershipToggle);
+                
                 underglazeInfo.appendChild(underglazeImage);
                 underglazeInfo.appendChild(underglazeName);
-                underglazeInfo.appendChild(underglazeCount);
+                underglazeInfo.appendChild(countWrapper);
                 underglazeCell.appendChild(underglazeInfo);
                 row.appendChild(underglazeCell);
 
@@ -857,6 +1064,8 @@
                 for (const glaze of limitedGlazes) {
                     const patternCell = document.createElement('td');
                     patternCell.className = 'pattern-cell';
+                    patternCell.dataset.rowUnderglazeId = underglaze.id;
+                    patternCell.dataset.colGlazeId = glaze.id;
                     
                     // Create the pattern with underglaze as background and glaze as pattern color
                     const patternDiv = await createPatternCell(underglaze, glaze);
@@ -868,6 +1077,8 @@
                 for (const underglazePattern of limitedUnderglazes) {
                     const patternCell = document.createElement('td');
                     patternCell.className = 'pattern-cell';
+                    patternCell.dataset.rowUnderglazeId = underglaze.id;
+                    patternCell.dataset.colUnderglazeId = underglazePattern.id;
                     
                     // Create the pattern with underglaze as background and underglaze as pattern color
                     const patternDiv = await createPatternCell(underglaze, underglazePattern);
@@ -878,12 +1089,8 @@
                 tableBody.appendChild(row);
             }
             
-            // Update stats
-            const stats = document.getElementById('stats');
-            const glazeCombinations = limitedUnderglazes.length * limitedGlazes.length;
-            const underglazeCombinations = limitedUnderglazes.length * limitedUnderglazes.length;
-            const totalCombinations = glazeCombinations + underglazeCombinations;
-            stats.textContent = `Showing ${totalCombinations} combinations (${glazeCombinations} UG×Glaze + ${underglazeCombinations} UG×UG)`;
+            // Update stats using the shared function
+            updateStats();
             
             // Hide loading indicator and show table
             matrixLoading.style.display = 'none';
@@ -897,6 +1104,14 @@
             
             // Initialize counts
             updateCounts();
+            
+            // Update ownership stats
+            updateOwnershipStats();
+            
+            // Apply ownership filter if active
+            if (showOnlyOwned) {
+                applyOwnershipFilter();
+            }
         }
 
         // Create a pattern cell with the SVG pattern
@@ -1184,6 +1399,218 @@
             console.log('🔄 All toggles reset - all cells are now enabled');
         }
 
+        // Save ownership states to server
+        async function saveOwnershipStates() {
+            try {
+                const response = await fetch('/api/save-ownership-states', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ownedUnderglazes: Array.from(ownedUnderglazes),
+                        ownedGlazes: Array.from(ownedGlazes)
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    console.log('💾 Ownership states saved:', result.counts);
+                } else {
+                    console.error('❌ Failed to save ownership states:', result.error);
+                }
+            } catch (error) {
+                console.error('❌ Error saving ownership states:', error);
+            }
+        }
+
+        // Load ownership states from server
+        async function loadOwnershipStates() {
+            try {
+                const response = await fetch('/api/load-ownership-states');
+                const result = await response.json();
+                
+                if (result.success) {
+                    ownedUnderglazes.clear();
+                    ownedGlazes.clear();
+                    
+                    (result.ownedUnderglazes || []).forEach(id => ownedUnderglazes.add(id));
+                    (result.ownedGlazes || []).forEach(id => ownedGlazes.add(id));
+                    
+                    console.log('📂 Ownership states loaded:', {
+                        underglazes: ownedUnderglazes.size,
+                        glazes: ownedGlazes.size
+                    });
+                    
+                    updateOwnershipStats();
+                    return true;
+                } else {
+                    console.error('❌ Failed to load ownership states:', result.error);
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Error loading ownership states:', error);
+                return false;
+            }
+        }
+
+        // Toggle ownership for an underglaze
+        function toggleUnderglazeOwnership(underglazeId) {
+            if (ownedUnderglazes.has(underglazeId)) {
+                ownedUnderglazes.delete(underglazeId);
+            } else {
+                ownedUnderglazes.add(underglazeId);
+            }
+            
+            // Update UI
+            updateOwnershipToggleUI(underglazeId, 'underglaze');
+            updateOwnershipStats();
+            
+            // Apply filter if active
+            if (showOnlyOwned) {
+                applyOwnershipFilter();
+            }
+            
+            // Save to server
+            saveOwnershipStates();
+        }
+
+        // Toggle ownership for a glaze
+        function toggleGlazeOwnership(glazeId) {
+            if (ownedGlazes.has(glazeId)) {
+                ownedGlazes.delete(glazeId);
+            } else {
+                ownedGlazes.add(glazeId);
+            }
+            
+            // Update UI
+            updateOwnershipToggleUI(glazeId, 'glaze');
+            updateOwnershipStats();
+            
+            // Apply filter if active
+            if (showOnlyOwned) {
+                applyOwnershipFilter();
+            }
+            
+            // Save to server
+            saveOwnershipStates();
+        }
+
+        // Update ownership toggle button UI
+        function updateOwnershipToggleUI(id, type) {
+            const isOwned = type === 'underglaze' ? ownedUnderglazes.has(id) : ownedGlazes.has(id);
+            // Update ALL toggles for this item (underglaze appears both as row and column header)
+            const toggleBtns = document.querySelectorAll(`[data-ownership-toggle="${type}-${id}"]`);
+            
+            toggleBtns.forEach(toggleBtn => {
+                toggleBtn.classList.toggle('owned', isOwned);
+                toggleBtn.classList.toggle('not-owned', !isOwned);
+                toggleBtn.textContent = isOwned ? '✓' : '✗';
+            });
+        }
+
+        // Update ownership statistics display
+        function updateOwnershipStats() {
+            const statsEl = document.getElementById('ownershipStats');
+            if (statsEl) {
+                const totalUnderglazes = colorsData?.underglazes?.length || 0;
+                const totalGlazes = colorsData?.glazes?.length || 0;
+                statsEl.textContent = `(${ownedUnderglazes.size}/${totalUnderglazes} UG, ${ownedGlazes.size}/${totalGlazes} Glazes)`;
+            }
+        }
+
+        // Apply ownership filter to show only owned items
+        function applyOwnershipFilter() {
+            const tableBody = document.getElementById('tableBody');
+            const tableHead = document.getElementById('tableHead');
+            
+            if (!tableBody || !tableHead) return;
+            
+            // Get all glaze/underglaze column headers
+            const headerCells = tableHead.querySelectorAll('th');
+            const rows = tableBody.querySelectorAll('tr');
+            
+            // Process header cells (skip corner cell at index 0)
+            headerCells.forEach((th, index) => {
+                if (index === 0) return; // Skip corner cell
+                
+                const glazeId = th.dataset.glazeId;
+                const underglazeId = th.dataset.underglazeColumnId;
+                
+                if (glazeId) {
+                    // This is a glaze column
+                    if (showOnlyOwned && !ownedGlazes.has(glazeId)) {
+                        th.classList.add('hidden-by-filter');
+                    } else {
+                        th.classList.remove('hidden-by-filter');
+                    }
+                } else if (underglazeId) {
+                    // This is an underglaze column (in the UG×UG section)
+                    if (showOnlyOwned && !ownedUnderglazes.has(underglazeId)) {
+                        th.classList.add('hidden-by-filter');
+                    } else {
+                        th.classList.remove('hidden-by-filter');
+                    }
+                }
+            });
+            
+            // Process rows and cells
+            rows.forEach(row => {
+                const rowUnderglazeId = row.dataset.underglazeId;
+                
+                // Hide entire row if row underglaze is not owned
+                if (showOnlyOwned && rowUnderglazeId && !ownedUnderglazes.has(rowUnderglazeId)) {
+                    row.classList.add('hidden-by-filter');
+                } else {
+                    row.classList.remove('hidden-by-filter');
+                    
+                    // Process each cell in the row
+                    const cells = row.querySelectorAll('td');
+                    cells.forEach((cell, cellIndex) => {
+                        if (cellIndex === 0) {
+                            // First cell is the row header - already handled by row visibility
+                            cell.classList.remove('hidden-by-filter');
+                            return;
+                        }
+                        
+                        // Check if this cell's column item is owned
+                        const colGlazeId = cell.dataset.colGlazeId;
+                        const colUnderglazeId = cell.dataset.colUnderglazeId;
+                        
+                        let shouldHide = false;
+                        if (showOnlyOwned) {
+                            if (colGlazeId && !ownedGlazes.has(colGlazeId)) {
+                                shouldHide = true;
+                            } else if (colUnderglazeId && !ownedUnderglazes.has(colUnderglazeId)) {
+                                shouldHide = true;
+                            }
+                        }
+                        
+                        if (shouldHide) {
+                            cell.classList.add('hidden-by-filter');
+                        } else {
+                            cell.classList.remove('hidden-by-filter');
+                        }
+                    });
+                }
+            });
+            
+            // Update stats display
+            updateStats();
+        }
+
+        // Toggle the show only owned filter
+        function toggleShowOnlyOwned() {
+            showOnlyOwned = !showOnlyOwned;
+            
+            const switchEl = document.getElementById('showOnlyOwnedSwitch');
+            if (switchEl) {
+                switchEl.classList.toggle('active', showOnlyOwned);
+            }
+            
+            applyOwnershipFilter();
+        }
+
         // Send toggle states to Slack
         async function sendToSlack() {
             // Show loading state
@@ -1302,6 +1729,11 @@
 
         document.getElementById('sendToSlackBtn').addEventListener('click', () => {
             sendToSlack();
+        });
+
+        // Show only owned toggle
+        document.getElementById('showOnlyOwnedSwitch').addEventListener('click', () => {
+            toggleShowOnlyOwned();
         });
 
 
