@@ -510,6 +510,22 @@
             background: #3a0f3a;
         }
 
+        .import-csv-btn {
+            padding: 8px 16px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+        }
+
+        .import-csv-btn:hover {
+            background: #218838;
+        }
+
         /* Lightbox styles */
         .lightbox {
             display: none;
@@ -792,6 +808,12 @@
                 </div>
                 <div class="control-group">
                     <button id="sendToSlackBtn" class="send-to-slack-btn">Send to Slack</button>
+                </div>
+                <div class="control-group">
+                    <label for="importCsvInput" class="import-csv-btn">
+                        📥 Import CSV
+                        <input type="file" id="importCsvInput" accept=".csv" style="display: none;">
+                    </label>
                 </div>
             </div>
         </div>
@@ -1383,19 +1405,25 @@
 
         // Apply loaded toggle states to existing cells
         function applyToggleStates() {
-            // Find all pattern cells and apply disabled state
+            // Find all pattern cells and apply disabled/enabled state
             const patternCells = document.querySelectorAll('.pattern-svg');
             patternCells.forEach(cell => {
                 // Extract cell key from the cell's data or reconstruct it
-                // We need to find the underglaze and glaze IDs from the cell's context
                 const cellKey = cell._cellKey; // We'll set this when creating cells
-                if (cellKey && disabledCells.has(cellKey)) {
+                if (!cellKey) return;
+                
+                const shouldBeDisabled = disabledCells.has(cellKey);
+                const rightHoverText = cell.querySelector('.hover-text.right');
+                
+                if (shouldBeDisabled) {
                     cell.classList.add('disabled');
-                    
-                    // Update hover text for disabled cells
-                    const rightHoverText = cell.querySelector('.hover-text.right');
                     if (rightHoverText) {
                         rightHoverText.textContent = 'show';
+                    }
+                } else {
+                    cell.classList.remove('disabled');
+                    if (rightHoverText) {
+                        rightHoverText.textContent = 'hide';
                     }
                 }
             });
@@ -1763,6 +1791,124 @@
         document.getElementById('showOnlyOwnedSwitch').addEventListener('click', () => {
             toggleShowOnlyOwned();
         });
+
+        // Import CSV functionality
+        document.getElementById('importCsvInput').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            try {
+                const csvText = await file.text();
+                await importCsvData(csvText);
+                // Reset the input so the same file can be selected again
+                e.target.value = '';
+            } catch (error) {
+                console.error('Error reading CSV file:', error);
+                alert('Error reading CSV file: ' + error.message);
+            }
+        });
+
+        // Import CSV data and restore toggle states
+        async function importCsvData(csvText) {
+            try {
+                console.log('📥 Starting CSV import...');
+                
+                // Parse CSV
+                const lines = csvText.trim().split('\n');
+                if (lines.length < 2) {
+                    throw new Error('CSV file is empty or has no data rows');
+                }
+                
+                // Parse header to find column indices
+                const header = lines[0].split(',').map(col => col.replace(/"/g, '').trim());
+                console.log('📋 CSV headers:', header);
+                
+                // Find the relevant columns
+                const cellKeyIndex = header.findIndex(h => h.toLowerCase() === 'cell key');
+                const isDisabledIndex = header.findIndex(h => h.toLowerCase() === 'is disabled');
+                const statusIndex = header.findIndex(h => h.toLowerCase() === 'status');
+                
+                if (cellKeyIndex === -1) {
+                    throw new Error('CSV file does not have a "Cell Key" column. This may not be a valid export file.');
+                }
+                
+                // Parse data rows and collect disabled cells
+                const newDisabledCells = new Set();
+                let processedRows = 0;
+                
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    // Parse CSV row (handle quoted values)
+                    const row = parseCSVRow(line);
+                    
+                    const cellKey = row[cellKeyIndex]?.replace(/"/g, '').trim();
+                    if (!cellKey) continue;
+                    
+                    // Determine if cell is disabled
+                    let isDisabled = false;
+                    
+                    if (isDisabledIndex !== -1) {
+                        const disabledValue = row[isDisabledIndex]?.replace(/"/g, '').trim().toLowerCase();
+                        isDisabled = disabledValue === 'true' || disabledValue === '1';
+                    } else if (statusIndex !== -1) {
+                        const statusValue = row[statusIndex]?.replace(/"/g, '').trim().toLowerCase();
+                        isDisabled = statusValue === 'disabled';
+                    }
+                    
+                    if (isDisabled) {
+                        newDisabledCells.add(cellKey);
+                    }
+                    processedRows++;
+                }
+                
+                console.log(`📊 Processed ${processedRows} rows, found ${newDisabledCells.size} disabled cells`);
+                
+                // Update the disabledCells set
+                disabledCells.clear();
+                newDisabledCells.forEach(cellKey => disabledCells.add(cellKey));
+                
+                // Apply the states to the UI
+                applyToggleStates();
+                
+                // Update counts
+                updateCounts();
+                
+                // Save to server
+                await saveToggleStates();
+                
+                console.log('✅ CSV import completed successfully');
+                alert(`CSV imported successfully!\n\nProcessed ${processedRows} combinations.\nDisabled: ${newDisabledCells.size}\nEnabled: ${processedRows - newDisabledCells.size}`);
+                
+            } catch (error) {
+                console.error('❌ CSV import error:', error);
+                throw error;
+            }
+        }
+
+        // Helper function to parse CSV row handling quoted values
+        function parseCSVRow(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            result.push(current);
+            
+            return result;
+        }
 
 
         // Lightbox functions
